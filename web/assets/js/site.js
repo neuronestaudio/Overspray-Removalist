@@ -128,17 +128,48 @@
       pane.style.setProperty('--split', pct + '%');
       pane.setAttribute('aria-valuenow', Math.round(pct));
     }
+    function touched() {
+      pane.setAttribute('data-touched', 'true');
+      pane.classList.remove('nudging');
+    }
     function fromEvent(e) {
       var r = pane.getBoundingClientRect();
       var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
       setSplit(x / r.width * 100);
     }
+
+    /* One-time demonstration: when the slider first scrolls into view it sweeps
+       itself open and back. It teaches the interaction without a caption, and
+       it is the one animation on the page that IS the product. */
+    if (!RM && 'IntersectionObserver' in window) {
+      var shown = false;
+      var demo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || shown) return;
+          shown = true;
+          demo.unobserve(pane);
+          setTimeout(function () {
+            if (pane.getAttribute('data-touched') === 'true') return;
+            pane.classList.add('nudging');
+            [[74, 0], [30, 620], [50, 1240]].forEach(function (s) {
+              setTimeout(function () {
+                if (pane.getAttribute('data-touched') !== 'true') setSplit(s[0]);
+              }, s[1]);
+            });
+            setTimeout(function () { pane.classList.remove('nudging'); }, 1900);
+          }, 420);
+        });
+      }, { threshold: 0.45 });
+      demo.observe(pane);
+    }
     pane.addEventListener('pointerdown', function (e) {
       e.preventDefault();          // stop text/image selection hijacking the drag
       dragging = true;
+      touched();
       try { pane.setPointerCapture(e.pointerId); } catch (err) {}
       fromEvent(e);
     });
+    pane.addEventListener('pointerenter', touched);
     pane.addEventListener('dragstart', function (e) { e.preventDefault(); });
     pane.addEventListener('pointermove', function (e) { if (dragging) fromEvent(e); });
     pane.addEventListener('pointerup', function () { dragging = false; });
@@ -147,11 +178,15 @@
     /* keyboard: the slider is a real focusable control */
     pane.addEventListener('keydown', function (e) {
       var cur = parseFloat(pane.getAttribute('aria-valuenow') || '50');
-      if (e.key === 'ArrowLeft') { setSplit(cur - 4); e.preventDefault(); }
-      if (e.key === 'ArrowRight') { setSplit(cur + 4); e.preventDefault(); }
-      if (e.key === 'Home') { setSplit(0); e.preventDefault(); }
-      if (e.key === 'End') { setSplit(100); e.preventDefault(); }
+      var handled = true;
+      if (e.key === 'ArrowLeft') setSplit(cur - 4);
+      else if (e.key === 'ArrowRight') setSplit(cur + 4);
+      else if (e.key === 'Home') setSplit(0);
+      else if (e.key === 'End') setSplit(100);
+      else handled = false;
+      if (handled) { touched(); e.preventDefault(); }
     });
+    pane.addEventListener('focus', touched);
 
     /* job switcher */
     root.querySelectorAll('.compare-thumbs button').forEach(function (btn) {
@@ -164,6 +199,7 @@
         beforeImg.alt = btn.getAttribute('data-alt-before') || '';
         afterImg.alt = btn.getAttribute('data-alt-after') || '';
         if (cap) cap.textContent = btn.getAttribute('data-caption') || '';
+        touched();
         setSplit(50);
       });
     });

@@ -360,11 +360,19 @@ COMPARE_JOBS = [
 
 
 def home():
+    # Each picker button is a miniature of the slider itself: before on the left,
+    # after on the right, split by the same orange line.
     thumbs = "".join(
         f'<button type="button" aria-pressed="{"true" if i == 0 else "false"}" '
         f'data-before="{src(j["before"], 1200)}" data-after="{src(j["after"], 1200)}" '
         f'data-alt-before="{esc(j["alt_b"])}" data-alt-after="{esc(j["alt_a"])}" '
-        f'data-caption="{esc(j["cap"])}">{j["label"]}</button>'
+        f'data-caption="{esc(j["cap"])}">'
+        f'<span class="thumb-media">'
+        f'<img src="{src(j["before"], 640)}" alt="" loading="lazy" decoding="async">'
+        f'<img class="t-after" src="{src(j["after"], 640)}" alt="" loading="lazy" decoding="async">'
+        f'</span>'
+        f'<span class="thumb-label">{j["label"]}</span>'
+        f'</button>'
         for i, j in enumerate(COMPARE_JOBS))
     j0 = COMPARE_JOBS[0]
 
@@ -470,7 +478,7 @@ def home():
       no panel work, no filler.</p>
     </div>
     <div class="compare-wrap" data-compare>
-      <div class="compare" role="slider" tabindex="0"
+      <div class="compare" role="slider" tabindex="0" data-touched="false"
            aria-label="Before and after comparison. Use arrow keys to reveal the restored vehicle."
            aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" style="--split:50%">
         <img class="before-layer" src="{src(j0['before'], 1200)}" alt="{esc(j0['alt_b'])}" loading="lazy" decoding="async">
@@ -478,9 +486,10 @@ def home():
         <span class="compare-tag tag-before">Before</span>
         <span class="compare-tag tag-after">After</span>
         <div class="compare-handle"><div class="compare-knob">{icon('arrows-horizontal')}</div></div>
+        <span class="compare-hint">Drag to remove the paint</span>
       </div>
-      <div class="compare-thumbs" role="group" aria-label="Choose a job">{thumbs}</div>
       <p class="compare-cap">{j0['cap']}</p>
+      <div class="compare-thumbs" role="group" aria-label="Choose a job to compare">{thumbs}</div>
     </div>
   </div>
 </section>
@@ -773,7 +782,7 @@ def service_page(s):
   <div class="shell">
     <div class="head"><h2 class="display">Same vehicle, both frames</h2></div>
     <div class="compare-wrap" data-compare>
-      <div class="compare" role="slider" tabindex="0"
+      <div class="compare" role="slider" tabindex="0" data-touched="false"
            aria-label="Before and after comparison. Use arrow keys to reveal the restored vehicle."
            aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" style="--split:50%">
         <img class="before-layer" src="{src(b, 1200)}" alt="{esc(ab)}" loading="lazy" decoding="async">
@@ -781,6 +790,7 @@ def service_page(s):
         <span class="compare-tag tag-before">Before</span>
         <span class="compare-tag tag-after">After</span>
         <div class="compare-handle"><div class="compare-knob">{icon('arrows-horizontal')}</div></div>
+        <span class="compare-hint">Drag to remove the paint</span>
       </div>
     </div>
   </div>
