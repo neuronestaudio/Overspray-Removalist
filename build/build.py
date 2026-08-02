@@ -478,6 +478,7 @@ def home():
       no panel work, no filler.</p>
     </div>
     <div class="compare-wrap" data-compare>
+      <div class="compare-thumbs" role="group" aria-label="Choose a job to compare">{thumbs}</div>
       <div class="compare" role="slider" tabindex="0" data-touched="false"
            aria-label="Before and after comparison. Use arrow keys to reveal the restored vehicle."
            aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" style="--split:50%">
@@ -489,7 +490,6 @@ def home():
         <span class="compare-hint">Drag to remove the paint</span>
       </div>
       <p class="compare-cap">{j0['cap']}</p>
-      <div class="compare-thumbs" role="group" aria-label="Choose a job to compare">{thumbs}</div>
     </div>
   </div>
 </section>

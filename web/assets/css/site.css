@@ -278,10 +278,13 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 }
 .compare .after-layer { clip-path: inset(0 0 0 var(--split, 50%)); }
 /* --split is registered so the one-time "watch me" nudge can transition it.
-   Browsers without @property simply jump instead of easing. */
+   Browsers without @property simply jump instead of easing.
+   inherits MUST be true: --split is set on .compare but read by its children
+   (.after-layer's clip-path and .compare-handle's left). With inherits:false
+   they only ever see initial-value and the slider looks frozen at 50%. */
 @property --split {
   syntax: '<percentage>';
-  inherits: false;
+  inherits: true;
   initial-value: 50%;
 }
 .compare.nudging { transition: --split .55s var(--ease); }
@@ -334,7 +337,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 /* Job picker. Each thumbnail is itself a split before/after, so the control
    shows what you are switching to and repeats the slider's own idea at a
    glance. */
-.compare-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-top: 1.25rem; }
+.compare-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-bottom: 1.25rem; }
 .compare-thumbs button {
   position: relative; padding: 0; text-align: left; cursor: pointer;
   border: 1px solid var(--border); background: var(--surface);
