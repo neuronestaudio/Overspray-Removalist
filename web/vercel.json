@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.php", "destination": "/", "permanent": true },
+    { "source": "/about.php", "destination": "/about", "permanent": true },
+    { "source": "/overspray-removal.php", "destination": "/overspray-removal", "permanent": true },
+    { "source": "/cement-splatter-removals.php", "destination": "/cement-splatter-removal", "permanent": true },
+    { "source": "/graffiti-removals.php", "destination": "/graffiti-removal", "permanent": true },
+    { "source": "/environmental-damage.php", "destination": "/industrial-fallout", "permanent": true },
+    { "source": "/pricing.php", "destination": "/pricing", "permanent": true },
+    { "source": "/gallery.php", "destination": "/gallery", "permanent": true },
+    { "source": "/contact.php", "destination": "/contact", "permanent": true },
+    { "source": "/quote.php", "destination": "/quote", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

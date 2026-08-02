@@ -5,3 +5,6 @@ desktop.ini
 node_modules/
 .env
 .env.*
+
+# playwright/test scratch
+scratchpad/
