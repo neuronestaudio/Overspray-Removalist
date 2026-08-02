@@ -1,0 +1,5 @@
+# site/ is a byte-for-byte archive of the live site — never normalise line endings there.
+site/** -text
+
+# Docs are normal text files.
+*.md text eol=lf
