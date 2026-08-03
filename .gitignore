@@ -8,3 +8,7 @@ node_modules/
 
 # playwright/test scratch
 scratchpad/
+
+# report render intermediates
+build/.cover.pdf
+build/.body.pdf
