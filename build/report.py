@@ -50,6 +50,15 @@ FONT_CSS = f"""
 COVER_IMG = cover_band()
 
 
+def b64_build(name):
+    with open(os.path.join(ROOT, "build", name), "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+CAP_PRIMARY = b64_build("cap-primary.png")   # widget on oversprayremovalists.com.au
+CAP_ALT = b64_build("cap-alt.png")           # same key on overspray.com.au
+
+
 # ---------------------------------------------------------------- findings
 
 def finding(sev, num, title, body, evidence=None):
@@ -62,17 +71,52 @@ def finding(sev, num, title, body, evidence=None):
 
 S1 = [
     finding(1, "1.1", "The quote form cannot be submitted",
-        """<p><code>quote.php</code> is the destination of the site's most prominent call to action, the
-        red <strong>GET A QUOTE NOW</strong> button in the header of every page. The form carries a
-        mandatory field, <em>Enter code</em>, fed by an image at
+        """<p><code>quote.php</code> is the destination of the site's most prominent call to action,
+        the red <strong>GET A QUOTE NOW</strong> button in the header of every page. It carries a
+        mandatory <em>Enter code</em> field fed by an image at
         <code>verimages/image-verify.php</code>.</p>
         <p>That endpoint returns <strong>HTTP 500</strong> with a zero-byte body, verified repeatedly
         with full browser headers. The image never renders, so there is no code for a visitor to
         read, and the field is marked mandatory.</p>
         <p class="hit">Every person who clicks the site's main call to action lands on a form they
         cannot complete.</p>""",
-        "GET /verimages/image-verify.php\n  attempt 1: 500  (0 bytes)\n  attempt 2: 500  (0 bytes)\n  attempt 3: 500  (0 bytes)"),
-    finding(1, "1.2", "Nothing is measured, at all",
+        "GET /verimages/image-verify.php\n  attempt 1: 500  (0 bytes)\n"
+        "  attempt 2: 500  (0 bytes)\n  attempt 3: 500  (0 bytes)"),
+
+    finding(1, "1.2", "The contact form's reCAPTCHA is registered to the wrong domain",
+        f"""<p><code>contact.php</code> is the only other way to make contact in writing, and it is
+        not promoted anywhere on the site (see 4.5). Its Google reCAPTCHA renders an error where the
+        checkbox should be, so there is nothing to tick and the response field stays empty.</p>
+
+        <div class="cap-compare">
+          <figure>
+            <img src="data:image/png;base64,{CAP_PRIMARY}" alt="">
+            <figcaption class="bad">oversprayremovalists.com.au, the advertised domain</figcaption>
+          </figure>
+          <figure>
+            <img src="data:image/png;base64,{CAP_ALT}" alt="">
+            <figcaption class="good">overspray.com.au, the duplicate</figcaption>
+          </figure>
+        </div>
+
+        <p>The cause connects straight to finding 1.4. The <em>same</em> site key renders a working
+        checkbox on <code>overspray.com.au</code>. The key was registered against the duplicate
+        domain, not the one the business advertises. The contact form works on the domain nobody is
+        sent to, and fails on the one on the business cards.</p>
+
+        <p>Whether the handler rejects the submission depends on server-side code that cannot be read
+        over HTTP, and no form was submitted during this audit. Both possibilities are bad: if it
+        verifies the token, submissions fail; if it does not, the form has no spam protection at all.
+        Either way the visitor sees a red error immediately above the submit button.</p>
+
+        <p class="hit">Between this and 1.1, there is no working written path to this business. The
+        main call to action leads to a dead CAPTCHA image, the fallback leads to a dead CAPTCHA
+        widget. The only route left is the phone.</p>""",
+        "reCAPTCHA site key 6Lfd2HQiAAAAABGYcONkg6LXPai0AE9Xnb9lW98R\n\n"
+        "  overspray.com.au              renders  I'm not a robot\n"
+        "  oversprayremovalists.com.au   renders  ERROR for site owner:\n"
+        "                                         Invalid domain for site key"),
+    finding(1, "1.3", "Nothing is measured, at all",
         """<p>No Google Analytics, no Tag Manager, no Meta Pixel, no call tracking, no conversion
         events. Checked across all ten pages: zero tracking of any kind.</p>
         <ul>
@@ -81,7 +125,7 @@ S1 = [
           <li>Paid advertising cannot run profitably: there is no conversion signal to optimise against</li>
           <li>There is no baseline, so no rebuild can be proven to have worked</li>
         </ul>"""),
-    finding(1, "1.3", "Two identical websites competing with each other",
+    finding(1, "1.4", "Two identical websites competing with each other",
         """<p><code>overspray.com.au</code> serves <strong>byte-identical content</strong> to
         <code>oversprayremovalists.com.au</code>. Same MD5 hash, same server IP. Neither redirects to
         the other, neither carries a canonical tag. Google is shown two copies of the same site and
@@ -212,7 +256,27 @@ S4 = [
         <p>Each is a higher-value, lower-competition buyer than a single retail car owner. None has a
         landing page. None is in the navigation. All three sit mid-paragraph on pages nobody
         lands on.</p>"""),
-    finding(4, "4.5", "Fragmented contact identity",
+    finding(4, "4.5", "The contact form adds friction and is not promoted",
+        """<p>Setting aside the broken reCAPTCHA in 1.2, the form itself works against the enquiry.</p>
+        <ul>
+          <li><strong>Six fields for a first contact</strong>, including First Name and Last Name as
+          separate inputs and an <strong>Address</strong> field. Nobody types their street address to
+          ask a question.</li>
+          <li><strong>No image upload</strong>, the same omission as the quote form, and the same
+          contradiction with the pricing page that explicitly asks for photos.</li>
+          <li><strong>A RESET button beside SUBMIT.</strong> One misclick wipes everything the
+          visitor typed. Mainstream web design abandoned this roughly two decades ago.</li>
+          <li><strong>No context.</strong> No response time, no indication of what happens next, and
+          the only instruction is "Please fill up the form".</li>
+          <li><strong>Labels are not bound to inputs</strong>, so tapping a label on a phone does not
+          focus the field.</li>
+        </ul>
+        <p>It is also <strong>not a call to action anywhere on the site</strong>. Every prominent
+        button, including the red header CTA on all ten pages, points at the quote form. The contact
+        form is reachable only by noticing <em>Contact Us</em> at the end of the navigation. So the
+        weaker of the two forms is the harder one to find, and the stronger one is the one that is
+        most visibly broken.</p>"""),
+    finding(4, "4.6", "Fragmented contact identity",
         """<p>Two mobile numbers presented with equal weight and no routing logic, and an email on a
         different domain to the website. No form-fill confirmation, no auto-responder, and no
         after-hours path, for a service where a construction incident or a fresh insurance claim is
@@ -221,6 +285,7 @@ S4 = [
 
 SUMMARY_ROWS = [
     (1, "Quote form CAPTCHA returns 500, primary call to action is broken", "Critical", "Hours"),
+    (1, "Contact form reCAPTCHA errors 'Invalid domain for site key', the fallback path is broken too", "Critical", "Hours"),
     (1, "No analytics or conversion tracking of any kind", "Critical", "Hours"),
     (1, "Duplicate site on a second domain, no redirect or canonical", "Critical", "Hours"),
     (2, "Zero H1s, duplicate titles, no meta descriptions sitewide", "High", "Days"),
@@ -235,6 +300,7 @@ SUMMARY_ROWS = [
     (3, "4.7 MB page weight, no modern image formats, 684 ms TTFB", "Medium", "Days"),
     (3, "12 broken image requests per page from an unfinished template", "Medium", "Hours"),
     (3, "Accessibility failures: alt text, labels, headings", "Medium", "Days"),
+    (4, "Contact form friction: six fields, split name, address, RESET button, no upload, not a call to action", "Medium", "Hours"),
     (4, "Dead social links, map pointing at the wrong location", "Low", "Hours"),
 ]
 
@@ -336,6 +402,13 @@ em {{ color: #40485c; }}
   font-weight: 700; color: #8f1a15; border-radius: 0 2mm 2mm 0; }}
 blockquote {{ margin: 2mm 0 3mm; padding: 3mm 5mm; border-left: 3px solid #cfd5e2;
   color: #485066; font-style: italic; background: #f7f8fb; }}
+.cap-compare {{ display: flex; gap: 6mm; margin: 4mm 0; }}
+.cap-compare figure {{ margin: 0; flex: 1; }}
+.cap-compare img {{ width: 100%; border: 1px solid #dfe3ec; border-radius: 2mm; display: block; }}
+.cap-compare figcaption {{ font-size: 8pt; margin-top: 2mm; font-weight: 700; }}
+.cap-compare .bad {{ color: #b3231c; }}
+.cap-compare .good {{ color: #1d7a4c; }}
+
 pre.ev {{ font-family: 'Consolas', 'Courier New', monospace; font-size: 8.2pt;
   background: #0e1524; color: #b9c4da; padding: 4mm 5mm; border-radius: 2mm;
   margin: 3mm 0 0; white-space: pre; overflow: hidden; line-height: 1.5; }}
@@ -390,8 +463,8 @@ td.no {{ color: #b3231c; }}
   <p class="cover-cap">Paint overspray across a customer vehicle, from the site's own gallery.</p>
 
   <div class="cover-stats">
-    <div class="cstat"><b>HTTP 500</b><span>The quote form's CAPTCHA endpoint. The site's main
-      call to action leads to a form nobody can complete.</span></div>
+    <div class="cstat"><b>BOTH FORMS</b><span>The quote form's CAPTCHA returns HTTP 500 and the
+      contact form's reCAPTCHA errors. No written enquiry can be sent.</span></div>
     <div class="cstat"><b>ZERO</b><span>H1 tags, meta descriptions and analytics across all ten
       pages. The site is unmeasured and close to unfindable.</span></div>
     <div class="cstat"><b>TWO SITES</b><span>Byte-identical content on a second domain from the
@@ -411,7 +484,7 @@ td.no {{ color: #b3231c; }}
     <h2>The one-line version</h2>
     <p>The business has genuine authority. Thirty years, a specialist process no competitor offers,
     real before and after proof, and strong work in construction and insurance claims.</p>
-    <p><strong>The website converts almost none of it.</strong> The primary quote form is broken,
+    <p><strong>The website converts almost none of it.</strong> Both of its forms are broken,
     nothing on the site is measured, and the site is close to invisible to search.</p>
     <p>This is not a design problem. It is a lead-capture problem.</p>
   </div>
@@ -448,7 +521,7 @@ td.no {{ color: #b3231c; }}
   <div class="sec">
     <h2>All findings</h2>
     <div class="sec-rule"></div>
-    <p class="lede">Sixteen findings, ordered by what they cost.</p>
+    <p class="lede">Eighteen findings, ordered by what they cost.</p>
   </div>
   <table class="summary">
     <tr><th></th><th>Finding</th><th>Severity</th><th>Effort</th></tr>
@@ -463,9 +536,10 @@ td.no {{ color: #b3231c; }}
   </div>
 
   <div class="impact"><h4>They cannot capture the demand they already have.</h4>
-  <p>Whatever traffic arrives today hits a broken quote form. Fixing that single endpoint is likely
-  the highest-return hour of work available on this property, and it can happen before anything else
-  is decided.</p></div>
+  <p>Whatever traffic arrives today hits a broken quote form, and the contact form behind it is
+  broken too. Every written enquiry route on the advertised domain is closed, so anyone who will not
+  pick up the phone leaves. Fixing the two CAPTCHAs is the highest-return hour of work available on
+  this property, and it can happen before anything else is decided.</p></div>
 
   <div class="impact"><h4>They cannot see anything.</h4>
   <p>With no analytics there is no way to know the size of the problem above, no way to prove a
@@ -496,9 +570,11 @@ td.no {{ color: #b3231c; }}
 
   <div class="phase now">
     <h4>Immediate, before any rebuild decision</h4>
-    <p>Fix or remove the broken CAPTCHA so the quote form works. Install GA4 and conversion tracking
-    to establish a baseline. Redirect <code>overspray.com.au</code> to the primary domain. Point the
-    map at Epping. Update the copyright. These are same-week fixes on the existing site.</p>
+    <p>Fix or remove the broken CAPTCHA so the quote form works. Add the advertised domain to the
+    reCAPTCHA key's allowed list so the contact form works, or drop the widget for a honeypot. Both
+    take minutes. Install GA4 and conversion tracking to establish a baseline. Redirect
+    <code>overspray.com.au</code> to the primary domain. Point the map at Epping. Update the
+    copyright. These are same-week fixes on the existing site.</p>
   </div>
 
   <div class="phase">

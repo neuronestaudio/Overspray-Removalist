@@ -97,6 +97,13 @@ em { color: #40485c; }
   font-weight: 700; color: #8f1a15; border-radius: 0 2mm 2mm 0; }
 blockquote { margin: 2mm 0 3mm; padding: 3mm 5mm; border-left: 3px solid #cfd5e2;
   color: #485066; font-style: italic; background: #f7f8fb; }
+.cap-compare { display: flex; gap: 6mm; margin: 4mm 0; }
+.cap-compare figure { margin: 0; flex: 1; }
+.cap-compare img { width: 100%; border: 1px solid #dfe3ec; border-radius: 2mm; display: block; }
+.cap-compare figcaption { font-size: 8pt; margin-top: 2mm; font-weight: 700; }
+.cap-compare .bad { color: #b3231c; }
+.cap-compare .good { color: #1d7a4c; }
+
 pre.ev { font-family: 'Consolas', 'Courier New', monospace; font-size: 8.2pt;
   background: #0e1524; color: #b9c4da; padding: 4mm 5mm; border-radius: 2mm;
   margin: 3mm 0 0; white-space: pre; overflow: hidden; line-height: 1.5; }
@@ -151,8 +158,8 @@ td.no { color: #b3231c; }
   <p class="cover-cap">Paint overspray across a customer vehicle, from the site's own gallery.</p>
 
   <div class="cover-stats">
-    <div class="cstat"><b>HTTP 500</b><span>The quote form's CAPTCHA endpoint. The site's main
-      call to action leads to a form nobody can complete.</span></div>
+    <div class="cstat"><b>BOTH FORMS</b><span>The quote form's CAPTCHA returns HTTP 500 and the
+      contact form's reCAPTCHA errors. No written enquiry can be sent.</span></div>
     <div class="cstat"><b>ZERO</b><span>H1 tags, meta descriptions and analytics across all ten
       pages. The site is unmeasured and close to unfindable.</span></div>
     <div class="cstat"><b>TWO SITES</b><span>Byte-identical content on a second domain from the
@@ -172,7 +179,7 @@ td.no { color: #b3231c; }
     <h2>The one-line version</h2>
     <p>The business has genuine authority. Thirty years, a specialist process no competitor offers,
     real before and after proof, and strong work in construction and insurance claims.</p>
-    <p><strong>The website converts almost none of it.</strong> The primary quote form is broken,
+    <p><strong>The website converts almost none of it.</strong> Both of its forms are broken,
     nothing on the site is measured, and the site is close to invisible to search.</p>
     <p>This is not a design problem. It is a lead-capture problem.</p>
   </div>
@@ -184,9 +191,9 @@ td.no { color: #b3231c; }
   </div>
   <div class="finding s1">
   <div class="f-head"><span class="sev">S1</span><h3>1.1 The quote form cannot be submitted</h3></div>
-  <div class="f-body"><p><code>quote.php</code> is the destination of the site's most prominent call to action, the
-        red <strong>GET A QUOTE NOW</strong> button in the header of every page. The form carries a
-        mandatory field, <em>Enter code</em>, fed by an image at
+  <div class="f-body"><p><code>quote.php</code> is the destination of the site's most prominent call to action,
+        the red <strong>GET A QUOTE NOW</strong> button in the header of every page. It carries a
+        mandatory <em>Enter code</em> field fed by an image at
         <code>verimages/image-verify.php</code>.</p>
         <p>That endpoint returns <strong>HTTP 500</strong> with a zero-byte body, verified repeatedly
         with full browser headers. The image never renders, so there is no code for a visitor to
@@ -197,7 +204,41 @@ td.no { color: #b3231c; }
   attempt 2: 500  (0 bytes)
   attempt 3: 500  (0 bytes)</pre></div>
 </div><div class="finding s1">
-  <div class="f-head"><span class="sev">S1</span><h3>1.2 Nothing is measured, at all</h3></div>
+  <div class="f-head"><span class="sev">S1</span><h3>1.2 The contact form's reCAPTCHA is registered to the wrong domain</h3></div>
+  <div class="f-body"><p><code>contact.php</code> is the only other way to make contact in writing, and it is
+        not promoted anywhere on the site (see 4.5). Its Google reCAPTCHA renders an error where the
+        checkbox should be, so there is nothing to tick and the response field stays empty.</p>
+
+        <div class="cap-compare">
+          <figure>
+            <img src="data:image/png;base64,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" alt="">
+            <figcaption class="bad">oversprayremovalists.com.au, the advertised domain</figcaption>
+          </figure>
+          <figure>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUcAAABPCAIAAAD3D5DlAAAQAElEQVR4nOydCVxVxdvH57K6ASIgKLimiIqUuEuZpbZoWu6JqJmKvmmmlqWvn7esv7622qcyi3JNc88WsyzrdcvEnVwAd5TFBREFUVnv++UMHq+XNUW8XOZX0blz5syZO/P8nm3mnGsnhAgNDQ0ODnZzcxMKCgpli6SkpOXLl4eFhYnSgx2UnjRpkre3t4ODg1BQUChbZGRkeHl5cVCKxDZs2bIlMDBQUVpB4X4hPT09IiKiU6dOopRgV6NGDUVpBYX7CEdHR1dXV1F6sBEKCgrWBcVqBQVrg2K1goK1QbFaQcHaoFitoGBtUKxWULA2KFYrKFgb7ISCQkWC0WgsSTWDwSDKLRSrFSoKsrKylu3ISEhxEEb+EZLcxrz/8j7yv3N7ttX0cPL3rd42wMPLo5qtrU25Y7hitUJFAeRs7nZx93GnxHQnSWyRa7rNiX1016lsQ7UVv1QiPvXxqjyiX4O2Ae71vKvZ2JSbcFXF1QoVBba2tv4PeIYEXnKzTy6sTi7JDTnCmG4w5vAx9mz6W59Gvzh1zyeLotLTM80q5+SUyJkveyhWK1QgODo6PuTn061xiq3IErqhvh03XfF0YcyRMXhC4vUvV8YEv/r3idOX804ajTFxKe+GHSxhlF7GUKxWqFg4kpD12ymfLGFnxkejRnJgkOW5/8swiOy8s0Zx8OjVUf+zL+LweZh8Oj513H/2RRxJycnJEZYHxWqFCoSY8zfC/nJISrM16oG0ljczJbhRGMStQBuTnsdbLok9e33Su4e2hMeP+8+ew8evCkuFypYpVBTcuJHx2f8ZElPzEtoFus4mhQYibK0kU6NJnv07ffb6uBkH0m5oVLdEO50LxWqFCoHs7JxlOzLPJDveKjLe+r/RJAfepH6l9Azby1dtklNsZDrMaJR+uI2Moq+lWyqbb0KxWqFCIC4pc0eMibSbUNrGmFnZNu1qdnVZ8vF/P5KVbYyNS9629+zyjWlZWbaG3OxYtlbZYKFZ79uhWK1g/YCUETEZl69Vvq1Q++tsl9rfL7ZqJbtvDxgSb7hQ4u7uXrly5bp1vAP86wX4Hf1w0bnzSTLyhti2QtzckWKpy1pCsVqhIiAjI+OnA7by+DYuGrIHB5zr8GAjGxsbB8e4eeHZlzJrCG2/ip2dnaura9dOLRzs7Se+F5NltNGYna354ZaeYy4pq//avv2bpUvi4+NFacDb23toyJCHg4KEgsK9R8KlG1fSq+YeGfWNZLk2t6vPqfYBdatUqcLHwGZ1RxpiF+62Z1VbvxCjXa9OrZpu8QkXs41GgzE3f3YraW6Ra9W5KKnWWbrs29KiNKApGhQKCvceuN8HY3OM/JOdk4vsbKP2bzXba0HNXCSlgYODQ0s/n/965Jq9vb1+bUzclSmzD0Np3G2j0XTFy3IpLUpuq2NjY/m7ccNvojTQ7aknZYMKCvcasPp4ok1OdmZeKvvmdjBnx8w6NauZPrnh6OjYopGXra2tyNs9dmXi/+6OPJGWy+dbHDZoW9KMtwJsy4OKqxWsHPAzOU3k5GQYIXZOptB2g0FKBxsbR4eq2dl5u8cIrWG4pDQ4HX9l4szww8dTc/1Zo5Ybw681Ggy6A577X5awSChWK1g/ejc60dUzNX/5zp15Jjj3ca7mzcl+66c83Rw/mtw4PT29sJ3eXOLk5GSZD3IpVitYP2BmYRu2OXXjxg0fHx9nZ2fTcvJkDRo0EEXCoEFYHhSrFawfRg0FnsrKyqpdu7avr2/+X7ApRw9Um0E93aFQccE6toeHR5MmTSpVqlRENT32Li9QrFaouCA3Vr16dVLfhVXAwl+4cGHX7t0pKSmi/KA8sfpDDaKcY8SIEVbwLawDsPrMmTNnz54r0D+XlI6MjEq7evXgwYNXrlwR5QSWzuqrV69269ZN0UDhLmEsBMTVUVGRhw4dSk5OxiHX9qnkcHD58uWoqGjInJWV+2Kj69evU6e8EFt54OY4e/ZsmzZt9u3bJywD9IT+0CuhcKco+j1E5LGxyQcOHGCo/9HAQURERELCbZspJbFTU1OFxaM8sfo1Dch3q1atpk+fzmoEEVGXLl2YjyFDhnBMjBQWFmY2hcwQ9T/55BNZf9iwYVLjUm3Dhg3NmjWjkL8bN24UmpNfv359GuzQoUN+B2Hr1q0tW7akvqenZ2E3mjx5Mosi69evJ8Uyf/58edOgoCC0vl4Tr49uU87ayaZNm2RhgfVx1+kJ/aFXtCkU7g7Y4SKS4TiGSRo44KNZBS68du3a/v3/cFZYNsqlrSZ1AbcPHz4cHR2Ns/Twww8/88wzjDVMe/fdd48cOWJW/+TJk7oa3rVr16pVqyjcvn07nJk5cyYXvvXWWyEhIX/99RdaIyYmJiAgYMeOHRybNnL06NGRI0dOmTIlLS1tzZo1s2bN2rlzZ/4bJSQkQEhIu3LlyhkzZqxevZre9urV69lnnz1+/LisxinuiHIZM2bMqFGjTp06JQvz14fn9IT+0KsePXoIhbsA69KY5QIXrotY+tIr3GzkmuVnzsolq7HJo0ePdnFxwdYh/e3atUPi7e3tO3XqZGdnd+LECbP6DRs2hL1ubm5+fn4dO3bcu3cvk7R48eL+/fs/99xzXDhgwIBBgwZRUsTU1q1bF9r369ePW2CxGzdubGp+9Ru99957jRo1QtMvXLgQu42lxfaOHz++efPmP/zwg6w2adIkuspqSmhoaM2aNcPDw9EsRdRXuHvgCnl7e+NMVatWTVpsUxR9razAH66rWrWqq6ursGxUiLjaxsZG398LMjMzsbdYP9SB3BskNwxSQnlhjUA2DP5DDz1UpUqVFi1awPD8uRP9RkRfhGoPPvigLMcnh+pRUVHyo94Z1BPaIT4+vuj6CncJlCxBEzqdAWeQ3d3dS7gEbcp50mbu7m4IALMjLBtqb1lJgb+Nw7xkyRIcfsjfu3dvoVAegKpFRTo7O8t1aYwtaRQcJbIb4uZDHfmv0smsmejcZzhJbeCLFb1fxUJQQXPgTC2TBFFvOldGonRKKC/sEpIo2FV8b4Qg9zVWRSp7JycnXGvCePmR9ClBctOmTeVH/VqWT44dO4ZnWHR9hbsB84VxNt1qwjFTGRgYiAHHjBNvm12iU5qsDZ4d1ViG8PX1LReUFhWW1cw0yXBSU8SuTBt/OaZEqm3mEn/YLNVJPBYZGbl58+a4uLiPPvqIZFsR7VN5+PDhH3zwAbmu9PT0L7/8khweMbw8O3v2bNLvGHzSe9yoffv2RddH7KhGAlYo3BHyW2OSIx4eHoRdbdu2xZI7ODpKTZ2Jn52VC4yzg4PDAw880L59O39/fypziSgnqLgeOKtHZJhJXD3//PNM3qJFi3CtKWf+unbtShIOmsEuvT5np02bRqoc1uGKk+4qOhc6cOBATC4JucTExNatW3/33XdIj34KAnOL2rVrL1iwQD4bVFh9Xw0I3/vvv//KK68IhdIDiVJyqGS/mAJplmWGHLecU7Cav+XxGQ8DiVyEpth6PXr1FKX6LhT+rv9pnVBQUNDWTUnBilKC2lumoGBtUKxWULA2KFYrKFgbFKsVFKwNitUKCtaGkq5s1alTJzY2VuauSwU0KBQU7iVY51+5cuX+/fs5btmyJWuHchvJrl271q9f//rrr8tNR59//vmhQ4fkNhWqseK4ePHiU6dOyQ0CVapUCQwMHDJkyN9///3999+zlM1i2IsvvlijRo05c+b06dOHZVGq7d69m2bHjh0rtE1EH3744WOPPSbXSsseJWV1SPDgRd8sLq2nfL29vWlQKCjcS6xbt6569eoff/wxxytWrNi6desTTzwBLVnNtbW1PX78uL7xHpa2adPGaDQuXLgQhst9AfLpGrkX6MiRI7D67bffRhEcPnx49erVw4cPL+y+Z86cYZX7n3/+adu2bf6XHJYBSsrqh4OC1M9iKVggMJI///xzRkbGmDFjkpKSli5dmpOT061bN0wlRmjAgAFyY9mgQYNk/fj4eGx47969IyIiAgIC8m87K/BRzaioqHbt2knb3lwDBrnA/qAawsPDn376aXwEOlCvXj1R5igpq9FwP/300969eznu1KkTOo/hOH369Lx58yZMmIBPIr2Oc+fO2dvbV6tWbcSIESys//rrr+np6dnZ2bgxfE/U4fz58xnTzMxMVJ2LiwvOD04LzgyXL1iwgKHnmBlCvzIrqDq9A7/99puzs3OHDh2K7SoqFl+Ae4l/Cbq6ZMmSXr161axZs9jKaOKTJ0/ex2c8GDFGLzU1deLEiVgk8e9x379CacHJyQkhvHjx4p9//jl9+nTc7K+++srX1xeDnN9UQmZMdMOGDTdu3Hj+/HkvLy8Kkb1vv8394bfGjRu3atWqwLvkf1QLSZ49e7b8XS6Ex9/fn4NLly5duXKlSZMmOPD45BbNapwWyDljxgz5yg6kgXACtwTtdeLECVhNHUZz0qRJlMN21OeoUaOefPJJVCnaETcGHYYe7d69O3oOHbZmzZp+/foVeC/OojLQjjBTV6U0Je4xiKxGjhxZwsoPajBVRvnrMDJbtmzBuxP3AAkJCZD51VdfveMXzcuvIMo/4JudnV1aWhqC9+abbwrtdXeQE6ZRaDo1fNy3bx/8R/xQiAcOHJCslh540XdJTk42K9EFXtyMq4Vm1Wl22rRpmC7MG/YP6yXKFuaspnPLli2rXbv2sGHD1q5dyzdxdXXlGFYjAfJ3fUePHi20RyAQrB49enAJ6QTTRlCQ8q1upoUpKSmMpo+PD8e1atV6+eWX0WoF9gll0blzZyyJrkrFTQuM5vv6668JWmghJCREbrhnqiiEYHSVrAYlqGFsO4P+0ksvbdu2jYmktzgLLVq0IBHCMYrjkUceQcXAul9++YXRR1vxvfjKUHTnzp3Hjh2jw7SAK8EgfPHFFyh+LsSyyemX2gp5gro//vjj448/js4y7RiCRTcI3v744w9cDLwAfTB///13Yjw/Pz/GOTIyEtWOvoeiFy5cIImIF8Ml9JkBHDx4sL57nBIGgVt07NiR8SHMi46Oxjp17dqVs1xrOjKXL18mRMTDatCgAXM0d+5cKpC8oVecRezoWN26dfkKOKumo8eBfqF8RYQoJ8DAYIHRy/h0fFnGMy4ujkGTIkdcje3x8PBAirDn0tPE/WQkS9J406ZNqRwUFCTjama2wLgaCdmzZ8/UqVOhOmbsm2++wf6RgRNliwLmjLnv27cvkocPg7AisqgfphnRN60mf9QST4MoArqikFBOJAmRA9iI6Jg9tgZtHDSYFqIv8XwwkrSP9y5uPoRIuhJZ50BntQTKBbccOeYUNXG9hPauItQKcQFMlq83otvt27fHijKvfIsuXbrQQ6gCq7lRcHAw0r98+XL6SYOoVT7is+l3QcdzF9kCmmvHjh2EZ1yLvjMbK25KT8iaEkSZdYzhgjB8XwrNBpP57t+/P+3DUqSqdevW3B0tg+igdJADErBoPSSPBeJgZgAABepJREFUbssbMRrQ+LXXXpPuJTXhNgMuKZ1/ZDZs2PDUU0/hEyJYUBdZRNT4i+qB8CSEuKl8OsVs9NAy+oVMcbG/SmM58PT0JPR95513mOJmzZoNHTq0Z8+ejCepL+YXajHC6FbdAYTeaGr5eqliwfRxIaLCscyBF5gGk6SQ6zvchUtQ30hOGSvHAm4m39RBHo/pR0QQLAZFGh/TaogRckaUggwhZDg8GBxMmXRICmw2Q4NpfIL0Y470uFpojiUyh3gxN6gMRN90RFCWqEx0LeW6wKGYZbwtvXR6bvrmE+wSFpg5kPdlrPWncDCGKCPoB43NXvVu2gKXIDFCW+QQhaDAjukwG8z87TN0dEC+VYuuooawn3zUczxczljJ34KqX78+w1hEBzDXDCOuAfoIOUMi5bdmBDgldTSGmnE2Gz0CRXSffiHiaPmsbqNBaMMYpMH0rPQrdYSGhurHyBWunNAsU4Et60/CysY7azCtMHny5PzdIMLXC5tpEGWOQlUIs44/g3nBIPCV4DDZL3KGMq5m7JDUWbNmobeYftR8sREaEunu7o7xhEhFxNW4TC+88AJmB8HFFYQGpuYanxMRxNDRBzwoqUFIbmGOOKYbuFimrZGx4I5MHqxAXs3uhaBjA6W2KiylKbSsJladlot4uWSBHdNhNpgkHUThoM/EJuTAMCN8IxmW40/i18igICYmhtE2I7ZpB+gtvj11oCUKCw7rL0KmBO0J83XdajZ6phea/j67QjlCoayGt4sWLSLCZGqhGdOMjkfUMDIodZnolnkI7BhULyxI1oE0E9mGhYVhhSA2beb/JRSoBeGRfqEF5xgKVIkpq4n9EEpOoSP0crpKm0TIeD5YOfnmGokqGqZMmQIruMTsrReU4IiSX8E1LUKCSXjMmTOH0aDDZnodbsgVUUKG/B2DJHQGJxD9ZTqYokhwFwYBjYkK0M0FI4bLLV9mzPclVsRRN73KbGTwolmeIGVAeZ8+ffRq2GpKTJ+9NRs9FJB+Id3GYye+uC+JXIU7Rkmfr7ZWYKuhAZZ81apV5IoK9LExnnhrEJK4GieCxQ+hoFCqKN3nqyv02whxrbGfJLrIomMVCwubcWhXr16NR4qbWo6yRwoVFhXdVisoWALUu1AUFBSKwm0eOMkkslmkXkn2krMhH0b22DRTcsebMc1Q8u2fCgoK/xa3sZpVE/m0CtnURx99tLCV5zuGvnu0DLZ/KihUWBSTLcNuk/gl/cuqZkhIiCwMDw9nlSs4OHjz5s179uyhhFPSpLM0SjKZJWLWqAYPHoxeYI2ExVJWhllroT7ZZtZOWO/B5rNAz3pPcnIy6zGsynKvbdu2sQxLXmrs2LEsbgsFBYV/j2JYjR8+btw4lnPhttxgSFh/4cKF0NBQ/sbExLzxxhunT59mtXPo0KFC262FX12/fn1of+zYMbn0OnXqVEz01q1bO3fuzEFgYKBcUt6+fXvTpk1ZnSYLDfk5RjX07dsXPx+GK1YrKNwZimE1hnTJkiWurq5wWJZs2rSpY8eO0DUxMRGbjK+OacUyE5PLjd8wfN26dZhcPz+/ixcvenp6stgLXVkNxgM3bVzfq4jdjoyMFLfvo1RQULgzFMNqlnP79esHJ+G2LBk5cmR0dDSON1T08fHBc8a7zszMlBvFYmNjMdfjx49nwQzOY2/37t2LWy5tNTw3bRyvXm6u5GwJf6NQQUGhWBTDan9//88++6xy5cpYUfnDrhyQ7po3bx6xNJ72zJkzMcXdu3eXj5t5eXklJSVNmDDBxcUFXUAsXatWrRkzZhCZjxo1CvKvWLFC34EsN6Xih3MWZWH29Mx+Dffo4WQFBSuG2oWioHD/cW93jOqJbgvBwIEDe/bsKRQUFEoMc1YvXbpUKCgolGfYXLp0Kf8j+AoKCmUGVpHyvxTtbmCzcuVK1qhoVygoKJQ5oB4EXLt2rSg92M2dO5e0dt++feV7QhUUFMoSrBlB6U8//VSUHu7wpbMKCgoWC/UkpoKCtUGxWkHB2vD/AAAA//9WgWDoAAAABklEQVQDAAdkX5HeQNJiAAAAAElFTkSuQmCC" alt="">
+            <figcaption class="good">overspray.com.au, the duplicate</figcaption>
+          </figure>
+        </div>
+
+        <p>The cause connects straight to finding 1.4. The <em>same</em> site key renders a working
+        checkbox on <code>overspray.com.au</code>. The key was registered against the duplicate
+        domain, not the one the business advertises. The contact form works on the domain nobody is
+        sent to, and fails on the one on the business cards.</p>
+
+        <p>Whether the handler rejects the submission depends on server-side code that cannot be read
+        over HTTP, and no form was submitted during this audit. Both possibilities are bad: if it
+        verifies the token, submissions fail; if it does not, the form has no spam protection at all.
+        Either way the visitor sees a red error immediately above the submit button.</p>
+
+        <p class="hit">Between this and 1.1, there is no working written path to this business. The
+        main call to action leads to a dead CAPTCHA image, the fallback leads to a dead CAPTCHA
+        widget. The only route left is the phone.</p><pre class="ev">reCAPTCHA site key 6Lfd2HQiAAAAABGYcONkg6LXPai0AE9Xnb9lW98R
+
+  overspray.com.au              renders  I'm not a robot
+  oversprayremovalists.com.au   renders  ERROR for site owner:
+                                         Invalid domain for site key</pre></div>
+</div><div class="finding s1">
+  <div class="f-head"><span class="sev">S1</span><h3>1.3 Nothing is measured, at all</h3></div>
   <div class="f-body"><p>No Google Analytics, no Tag Manager, no Meta Pixel, no call tracking, no conversion
         events. Checked across all ten pages: zero tracking of any kind.</p>
         <ul>
@@ -207,7 +248,7 @@ td.no { color: #b3231c; }
           <li>There is no baseline, so no rebuild can be proven to have worked</li>
         </ul></div>
 </div><div class="finding s1">
-  <div class="f-head"><span class="sev">S1</span><h3>1.3 Two identical websites competing with each other</h3></div>
+  <div class="f-head"><span class="sev">S1</span><h3>1.4 Two identical websites competing with each other</h3></div>
   <div class="f-body"><p><code>overspray.com.au</code> serves <strong>byte-identical content</strong> to
         <code>oversprayremovalists.com.au</code>. Same MD5 hash, same server IP. Neither redirects to
         the other, neither carries a canonical tag. Google is shown two copies of the same site and
@@ -372,7 +413,28 @@ images/home-services/bottom-img.png 404</pre></div>
         landing page. None is in the navigation. All three sit mid-paragraph on pages nobody
         lands on.</p></div>
 </div><div class="finding s4">
-  <div class="f-head"><span class="sev">S4</span><h3>4.5 Fragmented contact identity</h3></div>
+  <div class="f-head"><span class="sev">S4</span><h3>4.5 The contact form adds friction and is not promoted</h3></div>
+  <div class="f-body"><p>Setting aside the broken reCAPTCHA in 1.2, the form itself works against the enquiry.</p>
+        <ul>
+          <li><strong>Six fields for a first contact</strong>, including First Name and Last Name as
+          separate inputs and an <strong>Address</strong> field. Nobody types their street address to
+          ask a question.</li>
+          <li><strong>No image upload</strong>, the same omission as the quote form, and the same
+          contradiction with the pricing page that explicitly asks for photos.</li>
+          <li><strong>A RESET button beside SUBMIT.</strong> One misclick wipes everything the
+          visitor typed. Mainstream web design abandoned this roughly two decades ago.</li>
+          <li><strong>No context.</strong> No response time, no indication of what happens next, and
+          the only instruction is "Please fill up the form".</li>
+          <li><strong>Labels are not bound to inputs</strong>, so tapping a label on a phone does not
+          focus the field.</li>
+        </ul>
+        <p>It is also <strong>not a call to action anywhere on the site</strong>. Every prominent
+        button, including the red header CTA on all ten pages, points at the quote form. The contact
+        form is reachable only by noticing <em>Contact Us</em> at the end of the navigation. So the
+        weaker of the two forms is the harder one to find, and the stronger one is the one that is
+        most visibly broken.</p></div>
+</div><div class="finding s4">
+  <div class="f-head"><span class="sev">S4</span><h3>4.6 Fragmented contact identity</h3></div>
   <div class="f-body"><p>Two mobile numbers presented with equal weight and no routing logic, and an email on a
         different domain to the website. No form-fill confirmation, no auto-responder, and no
         after-hours path, for a service where a construction incident or a fresh insurance claim is
@@ -383,11 +445,11 @@ images/home-services/bottom-img.png 404</pre></div>
   <div class="sec">
     <h2>All findings</h2>
     <div class="sec-rule"></div>
-    <p class="lede">Sixteen findings, ordered by what they cost.</p>
+    <p class="lede">Eighteen findings, ordered by what they cost.</p>
   </div>
   <table class="summary">
     <tr><th></th><th>Finding</th><th>Severity</th><th>Effort</th></tr>
-    <tr><td><span class="sev s1">S1</span></td><td>Quote form CAPTCHA returns 500, primary call to action is broken</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s1">S1</span></td><td>No analytics or conversion tracking of any kind</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s1">S1</span></td><td>Duplicate site on a second domain, no redirect or canonical</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s2">S2</span></td><td>Zero H1s, duplicate titles, no meta descriptions sitewide</td><td class="p-high">High</td><td class="eff">Days</td></tr><tr><td><span class="sev s2">S2</span></td><td>No robots.txt, sitemap or schema markup</td><td class="p-high">High</td><td class="eff">Hours</td></tr><tr><td><span class="sev s2">S2</span></td><td>1,836 words total, content too thin to rank</td><td class="p-high">High</td><td class="eff">Weeks</td></tr><tr><td><span class="sev s2">S2</span></td><td>No CMS, the business cannot edit its own site</td><td class="p-high">High</td><td class="eff">Rebuild</td></tr><tr><td><span class="sev s4">S4</span></td><td>No social proof, no reviews, testimonials or client logos</td><td class="p-high">High</td><td class="eff">Days</td></tr><tr><td><span class="sev s4">S4</span></td><td>No image upload on the quote form despite the pricing page asking for photos</td><td class="p-high">High</td><td class="eff">Hours</td></tr><tr><td><span class="sev s4">S4</span></td><td>Three business-to-business offers with no landing pages</td><td class="p-high">High</td><td class="eff">Weeks</td></tr><tr><td><span class="sev s3">S3</span></td><td>jQuery 1.12.4 with known XSS CVEs, no SRI</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s3">S3</span></td><td>Zero security headers</td><td class="p-medium">Medium</td><td class="eff">Hours</td></tr><tr><td><span class="sev s3">S3</span></td><td>4.7 MB page weight, no modern image formats, 684 ms TTFB</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s3">S3</span></td><td>12 broken image requests per page from an unfinished template</td><td class="p-medium">Medium</td><td class="eff">Hours</td></tr><tr><td><span class="sev s3">S3</span></td><td>Accessibility failures: alt text, labels, headings</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s4">S4</span></td><td>Dead social links, map pointing at the wrong location</td><td class="p-low">Low</td><td class="eff">Hours</td></tr>
+    <tr><td><span class="sev s1">S1</span></td><td>Quote form CAPTCHA returns 500, primary call to action is broken</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s1">S1</span></td><td>Contact form reCAPTCHA errors 'Invalid domain for site key', the fallback path is broken too</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s1">S1</span></td><td>No analytics or conversion tracking of any kind</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s1">S1</span></td><td>Duplicate site on a second domain, no redirect or canonical</td><td class="p-critical">Critical</td><td class="eff">Hours</td></tr><tr><td><span class="sev s2">S2</span></td><td>Zero H1s, duplicate titles, no meta descriptions sitewide</td><td class="p-high">High</td><td class="eff">Days</td></tr><tr><td><span class="sev s2">S2</span></td><td>No robots.txt, sitemap or schema markup</td><td class="p-high">High</td><td class="eff">Hours</td></tr><tr><td><span class="sev s2">S2</span></td><td>1,836 words total, content too thin to rank</td><td class="p-high">High</td><td class="eff">Weeks</td></tr><tr><td><span class="sev s2">S2</span></td><td>No CMS, the business cannot edit its own site</td><td class="p-high">High</td><td class="eff">Rebuild</td></tr><tr><td><span class="sev s4">S4</span></td><td>No social proof, no reviews, testimonials or client logos</td><td class="p-high">High</td><td class="eff">Days</td></tr><tr><td><span class="sev s4">S4</span></td><td>No image upload on the quote form despite the pricing page asking for photos</td><td class="p-high">High</td><td class="eff">Hours</td></tr><tr><td><span class="sev s4">S4</span></td><td>Three business-to-business offers with no landing pages</td><td class="p-high">High</td><td class="eff">Weeks</td></tr><tr><td><span class="sev s3">S3</span></td><td>jQuery 1.12.4 with known XSS CVEs, no SRI</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s3">S3</span></td><td>Zero security headers</td><td class="p-medium">Medium</td><td class="eff">Hours</td></tr><tr><td><span class="sev s3">S3</span></td><td>4.7 MB page weight, no modern image formats, 684 ms TTFB</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s3">S3</span></td><td>12 broken image requests per page from an unfinished template</td><td class="p-medium">Medium</td><td class="eff">Hours</td></tr><tr><td><span class="sev s3">S3</span></td><td>Accessibility failures: alt text, labels, headings</td><td class="p-medium">Medium</td><td class="eff">Days</td></tr><tr><td><span class="sev s4">S4</span></td><td>Contact form friction: six fields, split name, address, RESET button, no upload, not a call to action</td><td class="p-medium">Medium</td><td class="eff">Hours</td></tr><tr><td><span class="sev s4">S4</span></td><td>Dead social links, map pointing at the wrong location</td><td class="p-low">Low</td><td class="eff">Hours</td></tr>
   </table>
 
   <div class="pagebreak"></div>
@@ -398,9 +460,10 @@ images/home-services/bottom-img.png 404</pre></div>
   </div>
 
   <div class="impact"><h4>They cannot capture the demand they already have.</h4>
-  <p>Whatever traffic arrives today hits a broken quote form. Fixing that single endpoint is likely
-  the highest-return hour of work available on this property, and it can happen before anything else
-  is decided.</p></div>
+  <p>Whatever traffic arrives today hits a broken quote form, and the contact form behind it is
+  broken too. Every written enquiry route on the advertised domain is closed, so anyone who will not
+  pick up the phone leaves. Fixing the two CAPTCHAs is the highest-return hour of work available on
+  this property, and it can happen before anything else is decided.</p></div>
 
   <div class="impact"><h4>They cannot see anything.</h4>
   <p>With no analytics there is no way to know the size of the problem above, no way to prove a
@@ -431,9 +494,11 @@ images/home-services/bottom-img.png 404</pre></div>
 
   <div class="phase now">
     <h4>Immediate, before any rebuild decision</h4>
-    <p>Fix or remove the broken CAPTCHA so the quote form works. Install GA4 and conversion tracking
-    to establish a baseline. Redirect <code>overspray.com.au</code> to the primary domain. Point the
-    map at Epping. Update the copyright. These are same-week fixes on the existing site.</p>
+    <p>Fix or remove the broken CAPTCHA so the quote form works. Add the advertised domain to the
+    reCAPTCHA key's allowed list so the contact form works, or drop the widget for a honeypot. Both
+    take minutes. Install GA4 and conversion tracking to establish a baseline. Redirect
+    <code>overspray.com.au</code> to the primary domain. Point the map at Epping. Update the
+    copyright. These are same-week fixes on the existing site.</p>
   </div>
 
   <div class="phase">

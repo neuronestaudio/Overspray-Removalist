@@ -10,33 +10,70 @@ source review. Passive only — no forms were submitted, no intrusive testing pe
 ## The one-line version
 
 The business has genuine authority — 30 years, a specialist process, real before/after proof, and
-strong B2B work in construction and insurance claims. The website converts almost none of it. The
-primary quote form is broken, nothing on the site is measured, and the site is close to invisible
-to search. This is not a design problem. It is a lead-capture problem.
+strong B2B work in construction and insurance claims. The website converts almost none of it.
+**Both of its forms are broken**, nothing on the site is measured, and the site is close to
+invisible to search. This is not a design problem. It is a lead-capture problem.
 
 ---
 
 ## Severity 1 — Actively losing money right now
 
+The site has two forms. Neither can be completed on `oversprayremovalists.com.au`.
+
 ### 1.1 The quote form cannot be submitted
 
-`quote.php` is the destination of the site's most prominent CTA — the red **GET A QUOTE NOW**
-button in the header of every page. The form has a mandatory field:
+`quote.php` is the destination of the site's most prominent CTA, the red **GET A QUOTE NOW**
+button in the header of every page. It has a mandatory field:
 
 > `Enter code*:` with `<img src="verimages/image-verify.php">`
 
 That endpoint returns **HTTP 500 Internal Server Error** with a zero-byte body. The CAPTCHA image
-never renders. There is no code for a visitor to read, and the field is marked mandatory.
-
-Every person who clicks the site's main call to action lands on a form they cannot complete.
+never renders, so there is no code for a visitor to read, and the field is marked mandatory.
 
 ```
 GET /verimages/image-verify.php  →  500 Internal Server Error, Content-Length: 0
+  attempt 1: 500 (0 bytes)   attempt 2: 500 (0 bytes)   attempt 3: 500 (0 bytes)
 ```
 
-This is the single highest-value fix on the site and it is also the cheapest.
+Every person who clicks the site's main call to action lands on a form they cannot complete.
 
-### 1.2 Nothing is measured — at all
+### 1.2 The contact form's reCAPTCHA is registered to the wrong domain
+
+`contact.php` is the only other way to make contact in writing, and it is not promoted anywhere on
+the site (see 4.5). It carries a Google reCAPTCHA v2 widget which renders this in place of the
+checkbox:
+
+> **ERROR for site owner: Invalid domain for site key**
+
+There is no checkbox to tick. The `g-recaptcha-response` field stays empty because nothing can
+populate it.
+
+The cause connects directly to finding 1.4. The same site key
+(`6Lfd2HQiAAAAABGYcONkg6LXPai0AE9Xnb9lW98R`) renders a **working** "I'm not a robot" checkbox on
+`overspray.com.au`. The key was registered against the duplicate domain, not the one the business
+advertises. The contact form works on the domain nobody is sent to, and fails on the one on the
+business cards.
+
+```
+https://overspray.com.au/contact.php             reCAPTCHA renders  "I'm not a robot"
+https://oversprayremovalists.com.au/contact.php  reCAPTCHA renders  "ERROR for site owner:
+                                                                     Invalid domain for site key"
+```
+
+Whether `response.php` actually rejects the submission depends on server-side code that cannot be
+read over HTTP, and no form was submitted during this audit. Both possibilities are bad: if the
+handler verifies the token, submissions fail; if it does not, the form has no spam protection at
+all. Either way the visitor is shown a red error message where the anti-spam control should be,
+immediately before the submit button.
+
+**Between 1.1 and 1.2 there is no working written path to this business.** The prominent CTA leads
+to a form with a dead CAPTCHA image, and the fallback leads to a form with a dead CAPTCHA widget.
+The only route left is the phone.
+
+Fixing both is cheap, and 1.2 is a settings change on the reCAPTCHA key. Together this is the
+highest-value work available on the site.
+
+### 1.3 Nothing is measured — at all
 
 No Google Analytics, no Google Tag Manager, no Meta Pixel, no call tracking, no conversion events.
 Checked across all 10 pages: zero tracking of any kind.
@@ -48,7 +85,7 @@ Consequences:
 - Paid advertising cannot be run profitably — there is no conversion signal to optimise against
 - There is no baseline, which means no rebuild can be proven to have worked
 
-### 1.3 Two identical websites competing with each other
+### 1.4 Two identical websites competing with each other
 
 `overspray.com.au` serves **byte-identical content** to `oversprayremovalists.com.au` — same MD5
 hash, same server IP (`192.185.161.245`). Neither redirects to the other. Neither has a canonical
@@ -57,6 +94,10 @@ tag. Google is being shown two copies of the same site and asked to choose.
 The result is split ranking authority and diluted backlink value. Compounding it: the email address
 used everywhere on the site is `info@overspray.com.au` — the *other* domain — so the brand's
 contact identity and its web presence point at different places.
+
+This is not only an SEO problem. As finding 1.2 shows, the reCAPTCHA key was registered against
+`overspray.com.au`, which is why the contact form fails on the advertised domain. The duplicate
+site is actively breaking lead capture on the primary one.
 
 ---
 
@@ -99,7 +140,11 @@ box with no image, title or description.
 | contact | **8** |
 
 Service pages at 200–270 words will not compete for "overspray removal Melbourne" or any
-suburb-qualified variant. The contact page has eight words on it.
+suburb-qualified variant.
+
+The contact page figure needs a caveat: it counts prose, not form furniture. The page does carry a
+six-field contact form (see 4.5). Its entire written content is the heading and the instruction
+"Please fill up the form", which is both the sum of the copy and a grammatical error.
 
 The copy that does exist is good — it is written by someone who clearly knows the trade. There just
 isn't enough of it, and none of it is structured for search.
@@ -229,12 +274,32 @@ Read the body copy and there are three genuinely strong B2B propositions hidden 
 Each of these is a higher-value, lower-competition buyer than a single retail car owner. None has a
 landing page. None is in the navigation. All three are mid-paragraph on pages nobody lands on.
 
-### 4.5 Fragmented contact identity
+### 4.5 The contact form adds friction and is not promoted
+
+Setting aside the broken reCAPTCHA in 1.2, the form itself works against the enquiry.
+
+- **Six fields for a first contact**, including **First Name and Last Name as separate inputs** and
+  an **Address** field. Nobody types their street address to ask a question.
+- **No image upload**, the same omission as the quote form, and the same contradiction with the
+  pricing page which explicitly asks for photos.
+- **A RESET button sitting beside SUBMIT.** A single misclick wipes everything the visitor typed.
+  This pattern was abandoned by mainstream web design roughly two decades ago.
+- **No context or reassurance.** No response time, no indication of what happens next, no
+  alternative if the form fails, and the only instruction is "Please fill up the form".
+- **Labels are not bound to inputs**, so tapping a label on a phone does not focus the field.
+
+It is also **not a call to action anywhere on the site**. Every prominent button, including the red
+header CTA on all ten pages, points at the quote form. The contact form is reachable only by
+noticing "Contact Us" at the end of the navigation. So the weaker of the two forms is also the
+harder one to find, and the stronger one is the one that is most visibly broken.
+
+### 4.6 Fragmented contact identity
 
 Two mobile numbers (Adrianus and Renny) presented with equal weight and no routing logic, and an
 email on a different domain to the website. No form-fill confirmation, no auto-responder visible,
 no business hours beyond "Mon–Fri 8:00–5:00" in the footer, and no after-hours path — for a service
 where a construction incident or a fresh insurance claim is inherently urgent.
+
 
 ---
 
@@ -243,21 +308,23 @@ where a construction incident or a fresh insurance claim is inherently urgent.
 | # | Finding | Severity | Effort to fix |
 |---|---|---|---|
 | 1 | Quote form CAPTCHA returns 500 — primary CTA is broken | Critical | Hours |
-| 2 | No analytics or conversion tracking of any kind | Critical | Hours |
-| 3 | Duplicate site on second domain, no redirect or canonical | Critical | Hours |
-| 4 | Zero H1s, duplicate titles, no meta descriptions sitewide | High | Days |
-| 5 | No robots.txt, sitemap, or schema markup | High | Hours |
-| 6 | 1,836 words total — content too thin to rank | High | Weeks |
-| 7 | No CMS — business can't edit its own site | High | Rebuild |
-| 8 | jQuery 1.12.4 with known XSS CVEs, no SRI | Medium | Days |
-| 9 | Zero security headers | Medium | Hours |
-| 10 | 4.7 MB page weight, no modern image formats, 684 ms TTFB | Medium | Days |
-| 11 | 12 broken image requests per page from unfinished template | Medium | Hours |
-| 12 | Accessibility failures — alt text, labels, headings | Medium | Days |
-| 13 | Dead social links, map pointing at the wrong location | Low | Hours |
-| 14 | No social proof — no reviews, testimonials or client logos | High | Days |
-| 15 | No image upload on quote form despite pricing page asking for photos | High | Hours |
-| 16 | Three B2B offers with no landing pages | High | Weeks |
+| 2 | Contact form reCAPTCHA errors "Invalid domain for site key" — the fallback path is broken too | Critical | Hours |
+| 3 | No analytics or conversion tracking of any kind | Critical | Hours |
+| 4 | Duplicate site on second domain, no redirect or canonical | Critical | Hours |
+| 5 | Zero H1s, duplicate titles, no meta descriptions sitewide | High | Days |
+| 6 | No robots.txt, sitemap, or schema markup | High | Hours |
+| 7 | 1,836 words total — content too thin to rank | High | Weeks |
+| 8 | No CMS — business can't edit its own site | High | Rebuild |
+| 9 | jQuery 1.12.4 with known XSS CVEs, no SRI | Medium | Days |
+| 10 | Zero security headers | Medium | Hours |
+| 11 | 4.7 MB page weight, no modern image formats, 684 ms TTFB | Medium | Days |
+| 12 | 12 broken image requests per page from unfinished template | Medium | Hours |
+| 13 | Accessibility failures — alt text, labels, headings | Medium | Days |
+| 14 | Dead social links, map pointing at the wrong location | Low | Hours |
+| 15 | No social proof — no reviews, testimonials or client logos | High | Days |
+| 16 | No image upload on quote form despite pricing page asking for photos | High | Hours |
+| 17 | Three B2B offers with no landing pages | High | Weeks |
+| 18 | Contact form friction: 6 fields, split name, address, RESET button, no upload, not a CTA | Medium | Hours |
 
 ---
 
@@ -266,8 +333,10 @@ where a construction incident or a fresh insurance claim is inherently urgent.
 The site's problems are not cosmetic. In order of what they cost:
 
 **They cannot capture the demand they already have.** Whatever traffic arrives today hits a broken
-quote form. Fixing that single endpoint is likely the highest-ROI hour of work available on this
-property, and it can be done before anything else is decided.
+quote form, and the contact form behind it is broken too. Every written enquiry route on the
+advertised domain is closed. Anyone who will not pick up the phone leaves. Fixing the two CAPTCHAs
+is likely the highest-ROI hour of work available on this property, and it can be done before
+anything else is decided.
 
 **They cannot see anything.** With no analytics, there is no way to know the size of the problem
 above, no way to prove a rebuild worked, and no way to run paid acquisition without burning budget
@@ -293,9 +362,11 @@ deciding whether to call. The work is 30 years deep. The website makes it look a
 ## Recommended sequencing
 
 **Immediate (before any rebuild decision)**
-Fix or remove the broken CAPTCHA so the quote form works. Install GA4 and conversion tracking to
-establish a baseline. 301 `overspray.com.au` to the primary domain. Point the map at Epping.
-Update the copyright. These are same-week fixes on the existing site.
+Fix or remove the broken CAPTCHA so the quote form works. Add `oversprayremovalists.com.au` to the
+allowed domains on the reCAPTCHA key so the contact form works, or drop the widget entirely and use
+a honeypot. Install GA4 and conversion tracking to establish a baseline. 301 `overspray.com.au` to
+the primary domain. Point the map at Epping. Update the copyright. These are same-week fixes on the
+existing site, and the two CAPTCHA fixes take minutes.
 
 **Phase 1 — Foundation**
 Modern rebuild on a stack the business can edit itself. Unique titles, meta descriptions and H1s.
