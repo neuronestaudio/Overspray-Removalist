@@ -12,3 +12,8 @@ scratchpad/
 # report render intermediates
 build/.cover.pdf
 build/.body.pdf
+
+# app build output and deps
+app/node_modules/
+app/dist/
+app/.vercel
