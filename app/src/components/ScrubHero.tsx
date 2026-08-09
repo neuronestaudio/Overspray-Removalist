@@ -23,13 +23,25 @@ import type { Pair } from '../data/pairs';
 
 const GRID_X = 28;
 const GRID_Y = 16;
-/* Fraction of the grid that must be wiped before it finishes itself.
-   Tuned by measurement rather than feel: a single straight pass across the hero
-   clears about 12% of the canvas, and two full sweeps land near 35% of cells.
-   0.34 therefore completes on the second deliberate pass. High enough that it
-   is clearly the visitor doing the work, low enough that nobody has to colour
-   in the whole panel to get the payoff. */
-const COMPLETE_AT = 0.34;
+
+/* Completion is a two-stage check, and the two stages measure different things.
+ *
+ * The grid is a cheap running estimate updated on every pointer move, but it
+ * over-reports: a cell counts as wiped the moment the brush clips any part of
+ * it, so grid coverage runs well ahead of the pixels actually erased. Gating
+ * the reveal on the grid alone hands over the clean photo while a good third of
+ * the paint is still on screen.
+ *
+ * So the grid is only the trigger. Once it crosses GRID_GATE we read the canvas
+ * back once and finish only if genuinely PIXEL_TARGET of it is transparent.
+ * getImageData is far too expensive per pointer move, but perfectly affordable
+ * a handful of times at the end of the wipe, throttled by SAMPLE_EVERY_MS. */
+const GRID_GATE = 0.72;
+const PIXEL_TARGET = 0.9;
+const SAMPLE_EVERY_MS = 220;
+/** Every Nth pixel's alpha byte. Sparse enough to be quick, dense enough to be right. */
+const SAMPLE_STRIDE = 37;
+
 const BRUSH_RATIO = 0.09; // of the smaller edge
 
 interface Props {
@@ -47,6 +59,7 @@ export default function ScrubHero({ pair, onComplete }: Props) {
   const drawing = useRef(false);
   const last = useRef<{ x: number; y: number } | null>(null);
   const doneRef = useRef(false);
+  const lastSample = useRef(0);
 
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(false);
@@ -99,6 +112,7 @@ export default function ScrubHero({ pair, onComplete }: Props) {
       if (cancelled) return;
       cells.current = new Uint8Array(GRID_X * GRID_Y);
       doneRef.current = false;
+      lastSample.current = 0;
       setDone(false);
       setStarted(false);
       paint();
@@ -175,7 +189,13 @@ export default function ScrubHero({ pair, onComplete }: Props) {
 
       let hit = 0;
       for (let i = 0; i < cells.current.length; i++) hit += cells.current[i];
-      if (hit / cells.current.length >= COMPLETE_AT) finish();
+      if (hit / cells.current.length < GRID_GATE) return;
+
+      // Past the gate: confirm against the real pixels, at most every 220ms.
+      const now = performance.now();
+      if (now - lastSample.current < SAMPLE_EVERY_MS) return;
+      lastSample.current = now;
+      if (clearedFraction(ctx, canvas) >= PIXEL_TARGET) finish();
     },
     [finish],
   );
@@ -203,6 +223,7 @@ export default function ScrubHero({ pair, onComplete }: Props) {
   function reset() {
     cells.current = new Uint8Array(GRID_X * GRID_Y);
     doneRef.current = false;
+    lastSample.current = 0;
     setDone(false);
     setStarted(false);
     paint();
@@ -271,3 +292,25 @@ export default function ScrubHero({ pair, onComplete }: Props) {
     </div>
   );
 }
+
+/**
+ * Fraction of the canvas actually erased, by reading back alpha.
+ *
+ * Sampled every SAMPLE_STRIDE'th pixel rather than all of them: on a 1440-wide
+ * panel that is a few thousand reads instead of a million, which is the
+ * difference between imperceptible and a visible hitch. Alpha under 20 counts
+ * as clear, since the brush edges leave partially-erased pixels behind.
+ */
+function clearedFraction(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): number {
+  const { width, height } = canvas;
+  if (!width || !height) return 0;
+  const data = ctx.getImageData(0, 0, width, height).data;
+  let clear = 0;
+  let total = 0;
+  for (let i = 3; i < data.length; i += 4 * SAMPLE_STRIDE) {
+    total++;
+    if (data[i] < 20) clear++;
+  }
+  return total ? clear / total : 0;
+}
+
