@@ -14,7 +14,7 @@ export default function QuotePage() {
         ogAlt="Overspray being removed from a black sedan"
       />
 
-      <section className="pbanner">
+      <section className="pbanner carbon">
         <div className="shell">
           <p className="crumb">
             <Link to="/">Home</Link> / <span>Get a quote</span>

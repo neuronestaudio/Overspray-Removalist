@@ -20,8 +20,16 @@
   --border-soft: #141d33;
 
   --accent: #d52a22;          /* Overspray brand red */
-  --accent-hot: #ff7900;      /* the fallout orange in their own photography */
+  --accent-hot: #ff3b2f;      /* the bright end of the same red, not orange */
   --accent-ink: #ffffff;
+  /* One ramp, used by every gradient on the site so nothing drifts. */
+  --accent-grad: linear-gradient(135deg, #ff4f42 0%, #d52a22 48%, #9e1911 100%);
+  --accent-grad-h: linear-gradient(90deg, #d52a22, #ff3b2f);
+
+  /* One outline colour, and one hover state for it. Borders were drifting
+     between four near-identical blues picked ad hoc per component. */
+  --outline: rgba(255, 255, 255, .14);
+  --outline-hover: rgba(255, 255, 255, .34);
 
   --text: #f4f6fb;
   --muted: #9aa6bd;
@@ -133,7 +141,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   color: var(--accent-ink);
   /* Lit from the top left, deepening to the shadow side, so the pill reads as a
      lozenge with form rather than a flat red capsule. */
-  background: linear-gradient(135deg, #f04a3f 0%, #d52a22 46%, #9e1911 100%);
+  background: var(--accent-grad);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .34),
     inset 0 -1px 0 rgba(0, 0, 0, .28),
@@ -233,7 +241,9 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .hero-inner { position: relative; z-index: 1; width: 100%; padding-block: clamp(3rem, 7vw, 5.5rem) clamp(3rem, 6vw, 4.5rem); }
 .hero-copy { max-width: 46rem; }
 .hero h1 { margin: .85rem 0 1.1rem; }
-.hero h1 .hl { color: var(--accent-hot); }
+/* Accent word in a display heading. Global: it is used in headings across
+   the site, not only the one hero it was first written for. */
+.hl { color: var(--accent-hot); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.9rem; }
 
 /* ---------- stat row (no cards, hairline separated) ---------- */
@@ -260,7 +270,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   padding: 1.6rem; isolation: isolate;
   transition: border-color .35s var(--ease), transform .35s var(--ease);
 }
-.cell:hover { border-color: #33405f; transform: translateY(-3px); }
+.cell:hover { border-color: var(--outline-hover); transform: translateY(-3px); }
 .cell-img { position: absolute; inset: 0; z-index: -2; }
 .cell-img img { width: 100%; height: 100%; object-fit: cover; transition: scale .7s var(--ease); }
 .cell:hover .cell-img img { scale: 1.06; }
@@ -371,7 +381,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   border-radius: var(--r-box); overflow: hidden;
   transition: border-color .3s var(--ease), transform .3s var(--ease);
 }
-.compare-thumbs button:hover { border-color: #33405f; transform: translateY(-2px); }
+.compare-thumbs button:hover { border-color: var(--outline-hover); transform: translateY(-2px); }
 .compare-thumbs button[aria-pressed="true"] { border-color: var(--accent); }
 .thumb-media { display: block; position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
 .thumb-media img {
@@ -412,7 +422,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
 .rail::before {
   content: ''; position: absolute; left: 0; right: 0; top: 21px; height: 1px;
-  background: linear-gradient(to right, var(--border), #33405f, var(--border));
+  background: linear-gradient(to right, var(--border), var(--outline-hover), var(--border));
 }
 .step { position: relative; padding: 0 1.5rem 0 0; }
 .step-dot {

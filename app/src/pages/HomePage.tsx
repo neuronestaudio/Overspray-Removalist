@@ -1,8 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import Coverflow from '../components/Coverflow';
 import ScrubHero from '../components/ScrubHero';
+import WipeVehicle from '../components/WipeVehicle';
 import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
 import { GALLERY } from '../data/gallery';
@@ -20,6 +21,12 @@ export default function HomePage() {
   const onScrubbed = useCallback(() => {
     pushGtmEvent('service_wipe_complete', { page_path: '/' });
   }, []);
+
+  /* The 3D panel is an upgrade, not a dependency. It reports whether it managed
+     to start, and the 2D photo wipe underneath stays mounted until it does, so
+     no WebGL, reduced motion or a model that never arrives all still leave a
+     working demonstration rather than a hole in the page. */
+  const [threeUp, setThreeUp] = useState(false);
 
   return (
     <>
@@ -55,8 +62,12 @@ export default function HomePage() {
       {/* Browsing the deck shows the damage. This shows the transformation. */}
       <section>
         <div className="shell">
-          <div className="head">
-            <h2 className="display">Pick a car. Drag the handle.</h2>
+          <div className="head beam">
+            <h2 className="display">
+              Let the results speak for itself.
+              <br />
+              <span className="hl">Pick any job.</span>
+            </h2>
             <p className="lede">
               Every pair is the same vehicle photographed before and after, with no respray and no
               panel work in between.
@@ -119,9 +130,14 @@ export default function HomePage() {
           </div>
 
           <div className="wipe-frame">
-            <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
+            {!threeUp && <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />}
+            <WipeVehicle onClean={onScrubbed} onReady={setThreeUp} />
           </div>
-          <p className="wipe-caption">{HERO_PAIR.caption}</p>
+          <p className="wipe-caption">
+            {threeUp
+              ? 'A Hilux under industrial fallout. Wipe it down and watch the duco come back.'
+              : HERO_PAIR.caption}
+          </p>
 
         </div>
       </section>

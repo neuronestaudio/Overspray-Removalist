@@ -72,7 +72,7 @@ html[data-splash="run"] .splash-logo {
 .splash-rule {
   width: min(420px, 62vw);
   height: 2px;
-  background: linear-gradient(90deg, var(--accent, #d52a22), var(--accent-hot, #ff7900));
+  background: var(--accent-grad-h, linear-gradient(90deg, #d52a22, #ff3b2f));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform .9s cubic-bezier(.22, 1, .36, 1) .34s;
