@@ -1,0 +1,257 @@
+/* ============================================================
+   Home: physical demonstration.
+
+   The argument this site has to make is "if they can get concrete
+   off a car, they can fix mine". These three components make that
+   argument by hand rather than in a sentence.
+   ============================================================ */
+
+/* ---------- glass system ---------- */
+:root {
+  --glass-bg: rgba(255, 255, 255, .055);
+  --glass-brd: rgba(255, 255, 255, .13);
+  --glass-hi: rgba(255, 255, 255, .30);
+  --glass-blur: 18px;
+}
+
+/* ---------- scrub hero ---------- */
+.scrub-hero {
+  position: relative;
+  min-height: min(94dvh, 900px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--bg);
+  padding: 0;
+}
+.scrub { position: absolute; inset: 0; z-index: 0; }
+.scrub-layer {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 45%;
+  user-select: none; -webkit-user-drag: none;
+}
+.scrub-before { z-index: 1; }
+.scrub-before[data-hidden="true"] { opacity: 0; }
+.scrub-canvas {
+  position: absolute; inset: 0; z-index: 2;
+  width: 100%; height: 100%;
+  cursor: crosshair;
+  /* pan-y, never none: a full-height hero that swallows vertical drags traps
+     mobile visitors above the fold. Vertical scrolls the page, horizontal
+     wipes, which is the natural gesture for this anyway. */
+  touch-action: pan-y;
+  transition: opacity .9s var(--ease);
+}
+.scrub-canvas[data-done="true"] { opacity: 0; pointer-events: none; }
+
+/* Scrim: enough to keep the headline legible, no more. The demonstration is
+   the argument, so it is kept bright and the darkening is pulled tight around
+   the copy in the lower left rather than spread over the whole frame. */
+.scrub-hero::after {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    linear-gradient(to top, var(--bg) 2%, rgba(8, 11, 22, .55) 30%, rgba(8, 11, 22, 0) 62%),
+    linear-gradient(105deg, rgba(8, 11, 22, .88) 0%, rgba(8, 11, 22, .42) 30%, rgba(8, 11, 22, 0) 58%);
+}
+/* the source photos are workshop snaps; a touch of lift stops them reading muddy */
+.scrub-layer { filter: brightness(1.06) contrast(1.04) saturate(1.03); }
+.scrub-hero > .shell { position: relative; z-index: 4; pointer-events: none; }
+.scrub-hero .btn { pointer-events: auto; }
+
+.scrub-tags {
+  position: absolute; z-index: 4; top: 1.4rem; left: 0; right: 0;
+  display: flex; justify-content: space-between;
+  padding-inline: var(--gutter); pointer-events: none;
+}
+.scrub-tags span {
+  font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+  padding: .4rem .8rem; border-radius: var(--r-int);
+  background: rgba(8, 11, 22, .7); border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  transition: opacity .5s var(--ease), color .5s var(--ease), border-color .5s var(--ease);
+}
+.scrub-tags .tag-before { color: var(--accent-hot); }
+.scrub-tags .tag-before[data-off="true"] { opacity: .22; }
+.scrub-tags .tag-after { color: var(--muted-dim); }
+.scrub-tags .tag-after[data-on="true"] { color: #7ee0a8; border-color: rgba(126, 224, 168, .4); }
+
+.scrub-hint {
+  position: absolute; z-index: 5; left: 50%; top: 42%; translate: -50% -50%;
+  display: inline-flex; align-items: center; gap: .6rem; white-space: nowrap;
+  font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
+  padding: .7rem 1.15rem; border-radius: 999px; pointer-events: none;
+  background: rgba(8, 11, 22, .74); border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(10px);
+  animation: hintFloat 2.8s var(--ease) infinite;
+}
+.scrub-hint-dot {
+  width: 9px; height: 9px; border-radius: 999px; background: var(--accent-hot);
+  animation: hintPulse 2.2s var(--ease) infinite;
+}
+@keyframes hintFloat {
+  0%, 100% { translate: -50% -50%; }
+  50% { translate: -50% calc(-50% - 7px); }
+}
+@keyframes hintPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 121, 0, .55); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 121, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 121, 0, 0); }
+}
+
+.scrub-reset {
+  position: absolute; z-index: 5; right: var(--gutter); bottom: 1.5rem;
+  font-size: .76rem; font-weight: 700; letter-spacing: .06em;
+  padding: .6rem 1.05rem; border-radius: 999px; cursor: pointer; color: var(--text);
+  background: rgba(8, 11, 22, .7); border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(10px);
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.scrub-reset:hover { border-color: var(--accent-hot); background: rgba(8, 11, 22, .92); }
+
+/* ---------- before / after ---------- */
+/* inherits MUST be true: --split is set on the pane and read by its children
+   (the clipped image and the handle). With inheritance off they only ever see
+   initial-value and the slider looks frozen at 50%. */
+@property --split {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+.ba { display: grid; gap: 1.25rem; }
+.ba-switch { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+.ba-tile {
+  position: relative; padding: 0; text-align: left; cursor: pointer; overflow: hidden;
+  background: var(--glass-bg); border: 1px solid var(--glass-brd); border-radius: var(--r-box);
+  backdrop-filter: blur(10px);
+  transition: border-color .3s var(--ease), transform .3s var(--ease);
+}
+.ba-tile:hover { transform: translateY(-3px); border-color: #3a4a6d; }
+.ba-tile[aria-pressed="true"] { border-color: var(--accent); }
+.ba-tile-media { display: block; position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+.ba-tile-media img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: .5; transition: opacity .3s var(--ease);
+}
+.ba-tile-media .ba-tile-after { clip-path: inset(0 0 0 50%); }
+.ba-tile-media::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
+  background: var(--accent-hot); opacity: .85;
+}
+.ba-tile:hover .ba-tile-media img,
+.ba-tile[aria-pressed="true"] .ba-tile-media img { opacity: 1; }
+.ba-tile-label { display: block; padding: .65rem .85rem .75rem; }
+.ba-tile-label strong { display: block; font-size: .85rem; color: var(--muted); font-weight: 700; }
+.ba-tile-label em { display: block; font-style: normal; font-size: .75rem; color: var(--muted-dim); }
+.ba-tile:hover .ba-tile-label strong,
+.ba-tile[aria-pressed="true"] .ba-tile-label strong { color: var(--text); }
+
+.ba-pane {
+  position: relative; overflow: hidden; border-radius: var(--r-box);
+  border: 1px solid var(--border); background: #000;
+  aspect-ratio: 4 / 3; cursor: ew-resize; user-select: none; touch-action: pan-y;
+}
+.ba-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  /* pointer-events off so the browser's native image drag never starts and
+     cancels the pointer stream mid-swipe. The pane is the drag surface. */
+  pointer-events: none; -webkit-user-drag: none;
+}
+.ba-after { clip-path: inset(0 0 0 var(--split, 50%)); }
+.ba-pane.nudging { transition: --split .55s var(--ease); }
+.ba-handle {
+  position: absolute; top: 0; bottom: 0; left: var(--split, 50%); width: 2px; z-index: 3;
+  background: var(--accent-hot); box-shadow: 0 0 22px rgba(255, 121, 0, .75); pointer-events: none;
+}
+.ba-pane.nudging .ba-handle { transition: left .55s var(--ease); }
+.ba-knob {
+  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+  width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center;
+  background: var(--accent-hot); color: #0b0f1c; box-shadow: 0 6px 24px rgba(0, 0, 0, .6);
+}
+.ba-pane[data-touched="false"] .ba-knob { animation: hintPulse 2.4s var(--ease) infinite; }
+.ba-tag {
+  position: absolute; top: 1rem; z-index: 4;
+  font-size: .64rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+  padding: .35rem .7rem; border-radius: var(--r-int);
+  background: rgba(8, 11, 22, .82); border: 1px solid var(--border); backdrop-filter: blur(6px);
+}
+.ba-tag-before { left: 1rem; color: var(--accent-hot); }
+.ba-tag-after { right: 1rem; color: #7ee0a8; }
+.ba-hint {
+  position: absolute; z-index: 4; left: 50%; bottom: 1rem; translate: -50% 0;
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+  padding: .4rem .8rem; border-radius: 999px; pointer-events: none; color: var(--text);
+  background: rgba(8, 11, 22, .8); border: 1px solid var(--glass-brd); backdrop-filter: blur(8px);
+}
+.ba-caption { font-size: .92rem; color: var(--muted); min-height: 2.6em; margin: 0; max-width: 62ch; }
+
+/* ---------- infinite rail ---------- */
+.rail {
+  position: relative; overflow: hidden; cursor: grab;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.rail.rail-dragging { cursor: grabbing; }
+.rail-track {
+  display: flex; align-items: stretch; gap: 1rem; width: max-content;
+  translate: var(--drag, 0px) 0;
+  animation: railSlide var(--rail-duration, 64s) linear infinite;
+}
+.rail[data-reverse="true"] .rail-track { animation-direction: reverse; }
+.rail:hover .rail-track { animation-play-state: paused; }
+.rail-clone { display: contents; }
+/* the track holds two copies, so -50% lands on an identical frame and the
+   loop point is invisible */
+@keyframes railSlide { to { transform: translateX(-50%); } }
+
+.rail-card {
+  position: relative; margin: 0; flex: none;
+  width: clamp(230px, 24vw, 330px); aspect-ratio: 4 / 3;
+  border-radius: var(--r-box); overflow: hidden;
+  border: 1px solid var(--glass-brd);
+  box-shadow: 0 18px 50px -26px rgba(0, 0, 0, .9);
+  transition: transform .45s var(--ease), border-color .45s var(--ease);
+}
+.rail-card img { width: 100%; height: 100%; object-fit: cover; }
+.rail-card:hover { transform: translateY(-6px) scale(1.015); border-color: rgba(255, 255, 255, .3); }
+/* glass edge: a highlight along the top corner and a soft foot, not a milky
+   sheet over the photograph */
+.rail-glass {
+  position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 38%);
+  box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 -60px 60px -50px rgba(8, 11, 22, .9);
+}
+
+/* ---------- section chrome ---------- */
+.proof-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;
+}
+
+@media (max-width: 860px) {
+  .ba-switch { grid-template-columns: repeat(2, 1fr); }
+  .scrub-hero { min-height: 88dvh; }
+  /* Sits well above the copy block. At 38% it landed on top of the eyebrow,
+     because the headline occupies far more of a narrow hero than a wide one. */
+  .scrub-hint { top: 24%; font-size: .68rem; padding: .6rem .9rem; }
+  .scrub-tags { top: 1rem; }
+}
+
+@media (max-width: 620px) {
+  .ba-pane { aspect-ratio: 3 / 4; }
+  .rail-card { width: clamp(200px, 62vw, 260px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail-track { animation: none; }
+  .scrub-hint, .scrub-hint-dot, .ba-knob { animation: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ba-tile, .rail-card, .scrub-hint, .scrub-reset, .ba-hint, .ba-tag, .scrub-tags span {
+    backdrop-filter: none;
+    background: var(--surface);
+  }
+}

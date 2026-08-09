@@ -1,24 +1,37 @@
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import Img from '../components/Img';
+import ScrubHero from '../components/ScrubHero';
+import BeforeAfter from '../components/BeforeAfter';
+import PhotoRail from '../components/PhotoRail';
 import { SERVICES } from '../data/services';
+import { GALLERY } from '../data/gallery';
+import { HERO_PAIR, PAIRS } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
+import { pushGtmEvent } from '../lib/gtm';
 
 export default function HomePage() {
+  /* Wiping the hero clean is the strongest engagement signal on the page and
+     costs nothing to measure. Not a conversion, just an interaction. */
+  const onScrubbed = useCallback(() => {
+    pushGtmEvent('hero_scrub_complete', { page_path: '/' });
+  }, []);
+
   return (
     <>
       <PageMeta
         title={`Overspray Removal Australia | Paint, Cement & Fallout | ${BUSINESS.name}`}
         description={`Specialist paint overspray, cement splatter, graffiti and industrial fallout removal from vehicles, fleets and property. Over 30 years, non-abrasive, Australia wide. Call ${BUSINESS.phone}.`}
         path="/"
-        ogImage="job-splatter-2"
-        ogAlt="Black sedan covered in orange paint overspray being restored"
+        ogImage="job-tarago-before"
+        ogAlt="Vehicle covered in paint overspray, restored without respraying"
       />
 
-      <section className="hero">
-        <div className="hero-media">
-          <Img stem="job-splatter-2" alt="Black sedan covered in orange paint overspray being pressure rinsed by a technician" sizes="100vw" priority />
-        </div>
+      {/* The claim is made by hand before it is made in words. */}
+      <section className="scrub-hero">
+        <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
+
         <div className="shell hero-inner">
           <div className="hero-copy">
             <p className="eyebrow">Overspray &amp; industrial fallout specialists</p>
@@ -28,8 +41,7 @@ export default function HomePage() {
               <span className="hl">Not your paint.</span>
             </h1>
             <p className="lede">
-              Australia's only specialist in overspray and fallout removal. Thirty years, no
-              abrasives, no respray, factory finish intact.
+              Thirty years, no abrasives, no respray. Wipe the panel above and see what comes back.
             </p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
@@ -40,6 +52,25 @@ export default function HomePage() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Four more vehicles, four different contaminants. The point is breadth:
+          whatever landed on yours, one of these is close enough. */}
+      <section className="band">
+        <div className="shell">
+          <div className="proof-head">
+            <div className="head" style={{ marginBottom: 0 }}>
+              <p className="eyebrow">Real jobs, real vehicles</p>
+              <h2 className="display">Pick a car. Drag the handle.</h2>
+              <p className="lede">
+                Paint, industrial fallout, graffiti. Every pair is the same vehicle photographed
+                before and after, with no respray and no panel work in between.
+              </p>
+            </div>
+          </div>
+
+          <BeforeAfter pairs={PAIRS} />
         </div>
       </section>
 
@@ -62,6 +93,23 @@ export default function HomePage() {
             <div className="stat-l">Volume pricing for whole lots</div>
           </div>
         </div>
+      </section>
+
+      <section style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
+        <div className="shell">
+          <div className="head">
+            <h2 className="display">Off the tools</h2>
+            <p className="lede">
+              Vehicles restored and released.{' '}
+              <Link to="/gallery" style={{ color: 'var(--accent-hot)', fontWeight: 700 }}>
+                See the full gallery
+              </Link>
+            </p>
+          </div>
+        </div>
+        <PhotoRail items={GALLERY.slice(0, 13)} duration={70} />
+        <div style={{ height: '1rem' }} />
+        <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
       </section>
 
       <section>

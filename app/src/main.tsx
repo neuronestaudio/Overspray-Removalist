@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { hydrateRoot, createRoot } from 'react-dom/client';
 import './index.css';
+import './styles/home.css';
 import App from './App';
 import { initPhoneCtaTracking } from './lib/gtm';
 import { captureAttribution } from './lib/attribution';
