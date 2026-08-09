@@ -35,16 +35,9 @@ export default function HomePage() {
       <section className="hero-deck">
         <div className="shell">
           <div className="hero-deck-copy">
-            <p className="eyebrow">Overspray &amp; industrial fallout specialists</p>
-            <h1 className="display">
-              We take the paint off.
-              <br />
-              <span className="hl">Not your paint.</span>
-            </h1>
-            <p className="lede">
-              Thirty years, no abrasives, no respray. Whatever landed on yours, one of these is
-              close enough.
-            </p>
+            <h1 className="display hero-shine">The Overspray Removalists</h1>
+            <p className="hero-kicker">Over 30 years servicing automobiles</p>
+            <p className="lede">We&rsquo;ll take anything off your paint.</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
                 Get a quote

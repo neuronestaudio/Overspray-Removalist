@@ -11,6 +11,26 @@
     })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
     <!-- End Google Tag Manager -->
 
+
+    <!-- Splash gate. Runs before the body paints, so there is never a flash of
+         page followed by a splash slapped over the top. Sets the attribute only
+         when the splash should actually play; no script or no JS means no
+         attribute, which means no overlay for a crawler or a no-JS visitor. -->
+    <script>
+    (function () {
+      try {
+        var path = location.pathname.replace(/\/+$/, '') || '/';
+        if (path !== '/') return;
+        if (sessionStorage.getItem('osr_splash') === 'seen') return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        sessionStorage.setItem('osr_splash', 'seen');
+        document.documentElement.setAttribute('data-splash', 'armed');
+      } catch (e) {
+        /* private mode, blocked storage: simply do not play it */
+      }
+    })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#080b16" />
@@ -61,7 +81,60 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- Landing splash. Inert unless html[data-splash] is set above. -->
+    <div class="splash" role="presentation">
+      <div class="splash-inner">
+        <img
+          class="splash-logo"
+          src="/assets/images/logo.webp"
+          alt=""
+          width="520"
+          height="250"
+          fetchpriority="high"
+        />
+        <span class="splash-rule"></span>
+        <span class="splash-tag">Thirty years, Australia wide</span>
+      </div>
+      <button class="splash-skip" type="button" data-splash-skip>Skip</button>
+    </div>
+
     <div id="root"></div>
+    <script>
+    (function () {
+      var html = document.documentElement;
+      if (html.getAttribute('data-splash') !== 'armed') return;
+      var splash = document.querySelector('.splash');
+      if (!splash) { html.removeAttribute('data-splash'); return; }
+
+      var timers = [];
+      function clear() { timers.forEach(clearTimeout); timers = []; }
+
+      function dismiss() {
+        if (html.getAttribute('data-splash') === 'out') return;
+        clear();
+        html.setAttribute('data-splash', 'out');
+        // Take it out of the tree once the wipe has finished.
+        timers.push(setTimeout(function () {
+          html.removeAttribute('data-splash');
+          if (splash.parentNode) splash.parentNode.removeChild(splash);
+        }, 1100));
+      }
+
+      // Start the reveal on the next frame so the transitions have a from-state.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { html.setAttribute('data-splash', 'run'); });
+      });
+
+      timers.push(setTimeout(dismiss, 2300));
+
+      var skip = splash.querySelector('[data-splash-skip]');
+      if (skip) skip.addEventListener('click', dismiss);
+      splash.addEventListener('click', dismiss);
+      window.addEventListener('keydown', dismiss, { once: true });
+      window.addEventListener('wheel', dismiss, { once: true, passive: true });
+      window.addEventListener('touchstart', dismiss, { once: true, passive: true });
+    })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

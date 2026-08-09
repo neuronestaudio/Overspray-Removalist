@@ -28,7 +28,7 @@
 /* Smaller than the standalone h1 scale on purpose. The deck below is the hero's
    real payload, and both have to clear the fold together; an oversized headline
    pushes the counter and pips off screen. */
-.hero-deck-copy h1 { font-size: clamp(2.1rem, 4.2vw, 3.4rem); margin: .6rem 0 .8rem; }
+.hero-deck-copy h1 { font-size: clamp(2.3rem, 5.4vw, 4.4rem); margin: 0 0 .2rem; }
 .hero-deck-copy .lede { margin-bottom: 0; }
 .hero-deck .hero-actions { margin-top: 1.3rem; }
 
@@ -274,4 +274,43 @@
     backdrop-filter: none;
     background: var(--surface);
   }
+}
+
+/* ---------- hero title: metallic shine ----------
+   Ported from the Premier hero. The gradient is a brushed-metal ramp clipped to
+   the glyphs and slid across on a long loop, so the wordmark catches light the
+   way a polished panel does rather than sitting flat white. Slow on purpose:
+   6s reads as a sheen, anything quicker reads as a loading bar. */
+.hero-shine {
+  display: inline-block;
+  letter-spacing: -.01em;
+  line-height: .95;
+  background-image: linear-gradient(90deg,
+    #bfc2c7 0%, #ffffff 5%, #fafbfc 15%, #cfd2d6 30%, #ffffff 65%,
+    #bfc2c7 80%, #f8f9fa 90%, #ffffff 95%, #bfc2c7 100%);
+  background-repeat: repeat;
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  text-shadow: none;
+  animation: heroShine 6s ease-in-out infinite;
+}
+@keyframes heroShine {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.hero-kicker {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: clamp(.9rem, 2vw, 1.05rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, .6);
+  margin: 1.1rem 0 .5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shine { animation: none; background-position: 50% 0; }
 }

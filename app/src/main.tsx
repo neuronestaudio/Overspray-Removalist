@@ -4,6 +4,7 @@ import './index.css';
 import './styles/home.css';
 import './styles/coverflow.css';
 import './styles/wizard.css';
+import './styles/splash.css';
 import App from './App';
 import { initPhoneCtaTracking } from './lib/gtm';
 import { captureAttribution } from './lib/attribution';
