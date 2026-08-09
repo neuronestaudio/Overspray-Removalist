@@ -14,16 +14,35 @@
   --glass-blur: 18px;
 }
 
-/* ---------- scrub hero ---------- */
-.scrub-hero {
-  position: relative;
-  min-height: min(94dvh, 900px);
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
+/* ---------- hero: the deck ---------- */
+.hero-deck {
+  padding-block: clamp(1.5rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
   background: var(--bg);
-  padding: 0;
 }
+.hero-deck-copy { max-width: 44rem; margin-bottom: clamp(1.25rem, 2.5vw, 2rem); }
+/* Smaller than the standalone h1 scale on purpose. The deck below is the hero's
+   real payload, and both have to clear the fold together; an oversized headline
+   pushes the counter and pips off screen. */
+.hero-deck-copy h1 { font-size: clamp(2.1rem, 4.2vw, 3.4rem); margin: .6rem 0 .8rem; }
+.hero-deck-copy .lede { margin-bottom: 0; }
+.hero-deck .hero-actions { margin-top: 1.3rem; }
+
+/* ---------- wipe panel ----------
+   The scrub used to be the full-bleed hero background. It reads better as a
+   framed demonstration inside the services section: the visitor understands it
+   as a thing to operate rather than as decorative artwork, and nothing has to
+   stay legible on top of it. */
+.wipe-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-box);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #06080f;
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .95);
+}
+.wipe-caption { margin: 1rem 0 0; font-size: .92rem; color: var(--muted); max-width: 62ch; }
+
 .scrub { position: absolute; inset: 0; z-index: 0; }
 .scrub-layer {
   position: absolute; inset: 0;
@@ -45,24 +64,15 @@
 }
 .scrub-canvas[data-done="true"] { opacity: 0; pointer-events: none; }
 
-/* Scrim: enough to keep the headline legible, no more. The demonstration is
-   the argument, so it is kept bright and the darkening is pulled tight around
-   the copy in the lower left rather than spread over the whole frame. */
-.scrub-hero::after {
-  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
-  background:
-    linear-gradient(to top, var(--bg) 2%, rgba(8, 11, 22, .55) 30%, rgba(8, 11, 22, 0) 62%),
-    linear-gradient(105deg, rgba(8, 11, 22, .88) 0%, rgba(8, 11, 22, .42) 30%, rgba(8, 11, 22, 0) 58%);
-}
-/* the source photos are workshop snaps; a touch of lift stops them reading muddy */
+/* No scrim: nothing sits on top of the panel any more, so it runs at full
+   brightness. The source photos are workshop snaps and a touch of lift stops
+   them reading muddy. */
 .scrub-layer { filter: brightness(1.06) contrast(1.04) saturate(1.03); }
-.scrub-hero > .shell { position: relative; z-index: 4; pointer-events: none; }
-.scrub-hero .btn { pointer-events: auto; }
 
 .scrub-tags {
-  position: absolute; z-index: 4; top: 1.4rem; left: 0; right: 0;
+  position: absolute; z-index: 4; top: 1rem; left: 0; right: 0;
   display: flex; justify-content: space-between;
-  padding-inline: var(--gutter); pointer-events: none;
+  padding-inline: 1rem; pointer-events: none;
 }
 .scrub-tags span {
   font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
@@ -100,7 +110,7 @@
 }
 
 .scrub-reset {
-  position: absolute; z-index: 5; right: var(--gutter); bottom: 1.5rem;
+  position: absolute; z-index: 5; right: 1rem; bottom: 1rem;
   font-size: .76rem; font-weight: 700; letter-spacing: .06em;
   padding: .6rem 1.05rem; border-radius: 999px; cursor: pointer; color: var(--text);
   background: rgba(8, 11, 22, .7); border: 1px solid var(--glass-brd);
@@ -232,7 +242,7 @@
 
 @media (max-width: 860px) {
   .ba-switch { grid-template-columns: repeat(2, 1fr); }
-  .scrub-hero { min-height: 88dvh; }
+  .wipe-frame { aspect-ratio: 4 / 3; }
   /* Sits well above the copy block. At 38% it landed on top of the eyebrow,
      because the headline occupies far more of a narrow hero than a wide one. */
   .scrub-hint { top: 24%; font-size: .68rem; padding: .6rem .9rem; }

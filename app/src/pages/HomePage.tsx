@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import Img from '../components/Img';
+import Coverflow from '../components/Coverflow';
 import ScrubHero from '../components/ScrubHero';
 import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
@@ -11,11 +12,15 @@ import { HERO_PAIR, PAIRS } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
 import { pushGtmEvent } from '../lib/gtm';
 
+/* All five jobs ride the hero deck: the visitor picks their own problem off it
+   before reading a word. */
+const DECK = [HERO_PAIR, ...PAIRS];
+
 export default function HomePage() {
-  /* Wiping the hero clean is the strongest engagement signal on the page and
-     costs nothing to measure. Not a conversion, just an interaction. */
+  /* Wiping the panel clean is the strongest engagement signal on the page and
+     costs nothing to measure. An interaction, not a conversion. */
   const onScrubbed = useCallback(() => {
-    pushGtmEvent('hero_scrub_complete', { page_path: '/' });
+    pushGtmEvent('service_wipe_complete', { page_path: '/' });
   }, []);
 
   return (
@@ -28,12 +33,10 @@ export default function HomePage() {
         ogAlt="Vehicle covered in paint overspray, restored without respraying"
       />
 
-      {/* The claim is made by hand before it is made in words. */}
-      <section className="scrub-hero">
-        <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
-
-        <div className="shell hero-inner">
-          <div className="hero-copy">
+      {/* Hero: five real jobs on an infinite deck. Find yours, then read on. */}
+      <section className="hero-deck">
+        <div className="shell">
+          <div className="hero-deck-copy">
             <p className="eyebrow">Overspray &amp; industrial fallout specialists</p>
             <h1 className="display">
               We take the paint off.
@@ -41,7 +44,8 @@ export default function HomePage() {
               <span className="hl">Not your paint.</span>
             </h1>
             <p className="lede">
-              Thirty years, no abrasives, no respray. Wipe the panel above and see what comes back.
+              Thirty years, no abrasives, no respray. Whatever landed on yours, one of these is
+              close enough.
             </p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
@@ -52,25 +56,42 @@ export default function HomePage() {
               </a>
             </div>
           </div>
+
+          <Coverflow items={DECK} />
         </div>
       </section>
 
-      {/* Four more vehicles, four different contaminants. The point is breadth:
-          whatever landed on yours, one of these is close enough. */}
+      {/* Services, demonstrated. The claim is made by hand before it is made in
+          prose: wipe the panel and the service explains itself. */}
       <section className="band">
         <div className="shell">
-          <div className="proof-head">
-            <div className="head" style={{ marginBottom: 0 }}>
-              <p className="eyebrow">Real jobs, real vehicles</p>
-              <h2 className="display">Pick a car. Drag the handle.</h2>
-              <p className="lede">
-                Paint, industrial fallout, graffiti. Every pair is the same vehicle photographed
-                before and after, with no respray and no panel work in between.
-              </p>
-            </div>
+          <div className="head">
+            <p className="eyebrow">What we take off</p>
+            <h2 className="display">Wipe it off yourself.</h2>
+            <p className="lede">
+              Epoxy, urethane, polyurethane foam, soot, iron filings, cement, concrete sealers and
+              spray paint. Off vehicles, trucks, boats, aircraft and buildings, by hand, with no
+              abrasives touching the duco.
+            </p>
           </div>
 
-          <BeforeAfter pairs={PAIRS} />
+          <div className="wipe-frame">
+            <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
+          </div>
+          <p className="wipe-caption">{HERO_PAIR.caption}</p>
+
+          <div className="bento" style={{ marginTop: 'clamp(2rem,4vw,3rem)' }}>
+            {SERVICES.map((s) => (
+              <Link className="cell" key={s.path} to={s.path}>
+                <div className="cell-img">
+                  <Img stem={s.hero} alt={s.heroAlt} sizes="(max-width:620px) 100vw, 33vw" />
+                </div>
+                <h3 className="display">{s.nav}</h3>
+                <p>{s.lede}</p>
+                <span className="cell-link">Read more</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -95,6 +116,20 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Browsing the deck shows the damage. This shows the transformation. */}
+      <section>
+        <div className="shell">
+          <div className="head">
+            <h2 className="display">Pick a car. Drag the handle.</h2>
+            <p className="lede">
+              Every pair is the same vehicle photographed before and after, with no respray and no
+              panel work in between.
+            </p>
+          </div>
+          <BeforeAfter pairs={PAIRS} />
+        </div>
+      </section>
+
       <section style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">
           <div className="head">
@@ -110,30 +145,6 @@ export default function HomePage() {
         <PhotoRail items={GALLERY.slice(0, 13)} duration={70} />
         <div style={{ height: '1rem' }} />
         <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
-      </section>
-
-      <section>
-        <div className="shell">
-          <div className="head">
-            <h2 className="display">What we take off</h2>
-            <p className="lede">
-              Epoxy, urethane, polyurethane foam, soot, iron filings, cement, concrete sealers and
-              spray paint. Off vehicles, trucks, boats, aircraft and buildings.
-            </p>
-          </div>
-          <div className="bento">
-            {SERVICES.map((s) => (
-              <Link className="cell" key={s.path} to={s.path}>
-                <div className="cell-img">
-                  <Img stem={s.hero} alt={s.heroAlt} sizes="(max-width:620px) 100vw, 33vw" />
-                </div>
-                <h3 className="display">{s.nav}</h3>
-                <p>{s.lede}</p>
-                <span className="cell-link">Read more</span>
-              </Link>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section className="band">

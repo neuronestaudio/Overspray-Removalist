@@ -1,0 +1,203 @@
+/* ==========================================================================
+   Coverflow: the hero.
+
+   Ported from the Formula build and re-pitched to Overspray's red. The
+   backdrop is the active card's photo blurred hard and graded, because glass
+   needs a soft colourful surface to refract against; a sharp photo fights it.
+   It also makes source resolution irrelevant, which matters here since the
+   job photos run as small as 540px and still have to hold up full-bleed.
+   ========================================================================== */
+
+.cf {
+  position: relative;
+  height: clamp(490px, 54vh, 560px);
+  overflow: hidden;
+  border-radius: var(--r-box);
+  background: #06080f;
+  isolation: isolate;
+  /* pan-y, not none: this sits in the hero and the visitor must be able to
+     scroll past it. Horizontal drags swipe the deck, vertical scrolls on. */
+  touch-action: pan-y;
+}
+
+/* ---------- backdrop ---------- */
+.cf-bgs { position: absolute; inset: 0; z-index: 0; }
+.cf-bg {
+  position: absolute; inset: -8%;            /* overscan so blur never shows an edge */
+  opacity: 0;
+  transition: opacity .9s cubic-bezier(.4, 0, .2, 1);
+}
+.cf-bg[data-on="true"] { opacity: 1; }
+.cf-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: blur(38px) saturate(1.3) brightness(.42);
+  transform: scale(1.18);
+  animation: cfDrift 26s ease-in-out infinite alternate;
+}
+@keyframes cfDrift {
+  from { transform: scale(1.18) translate3d(-1.2%, -.8%, 0); }
+  to   { transform: scale(1.28) translate3d(1.2%, .8%, 0); }
+}
+.cf-veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 42%, transparent 30%, rgba(6, 8, 15, .72) 100%),
+    linear-gradient(to top, rgba(6, 8, 15, .95) 0%, transparent 30%),
+    linear-gradient(to bottom, rgba(6, 8, 15, .85) 0%, transparent 24%);
+}
+
+/* ---------- stage ---------- */
+.cf-stage {
+  position: absolute; inset: 0; z-index: 2;
+  display: grid; place-items: center;
+  perspective: 1700px; perspective-origin: 50% 46%;
+  cursor: grab;
+}
+.cf-stage:active { cursor: grabbing; }
+.cf-track { position: relative; width: 100%; height: 400px; transform-style: preserve-3d; }
+
+/* ---------- glass card ---------- */
+.cf-card {
+  position: absolute; top: 0; left: 50%;
+  width: 320px; height: 400px; margin-left: -160px;
+  border-radius: 20px; overflow: hidden; cursor: pointer;
+  text-align: left; color: #fff; padding: 0;
+  transform-style: preserve-3d;
+
+  background: rgba(255, 255, 255, .055);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, .13);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .18),
+    inset 0 -1px 0 rgba(255, 255, 255, .04),
+    0 36px 70px -24px rgba(0, 0, 0, .92);
+
+  /* placement is entirely from --d / --ad, set in JS */
+  transform:
+    translate3d(calc(var(--d) * 290px), calc(var(--ad) * 14px), calc(var(--ad) * -230px))
+    rotateY(calc(var(--d) * -21deg))
+    scale(var(--s, 1));
+  opacity: var(--o, 1);
+  filter: blur(calc(var(--ad) * 1.1px));
+  z-index: var(--z, 1);
+  transition:
+    transform .62s var(--ease), opacity .5s ease, filter .5s ease,
+    border-color .5s ease, box-shadow .5s ease;
+  will-change: transform, opacity;
+}
+.cf-card[data-active="true"] {
+  border-color: rgba(213, 42, 34, .55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 0 0 1px rgba(213, 42, 34, .25),
+    0 0 60px -6px rgba(213, 42, 34, .42),
+    0 44px 80px -26px rgba(0, 0, 0, .95);
+}
+/* sheen, active card only */
+.cf-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .14) 50%, transparent 62%);
+  transition: opacity .6s ease;
+}
+.cf-card[data-active="true"]::after { opacity: 1; }
+
+.cf-art { position: relative; height: 178px; overflow: hidden; }
+.cf-art img {
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.04); transition: transform .8s var(--ease);
+  -webkit-user-drag: none;
+}
+.cf-card[data-active="true"] .cf-art img { transform: scale(1.12); }
+.cf-art::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8, 11, 22, .96), rgba(8, 11, 22, .1) 60%, transparent);
+}
+
+.cf-body { padding: 0 1.4rem 1.4rem; margin-top: -2.4rem; position: relative; }
+.cf-idx {
+  font-family: 'Bebas Neue', sans-serif; font-size: .9rem; letter-spacing: .2em;
+  color: var(--accent-hot); display: block; margin-bottom: .3rem;
+}
+.cf-name {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.85rem; line-height: .95;
+  text-transform: uppercase; margin: 0 0 .5rem; letter-spacing: .02em; font-weight: 400;
+}
+.cf-blurb {
+  font-size: .85rem; line-height: 1.5; color: rgba(255, 255, 255, .66); margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cf-blurb strong { color: rgba(255, 255, 255, .88); font-weight: 700; }
+
+/* the CTA exists only on the selected card: that is the "select" beat */
+.cf-go {
+  margin-top: 1rem; display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: #fff; background: var(--accent); padding: .7rem 1.15rem; border-radius: var(--r-int);
+  opacity: 0; transform: translateY(8px); pointer-events: none;
+  transition: opacity .45s ease .12s, transform .45s var(--ease) .12s, background .25s ease;
+}
+.cf-card[data-active="true"] .cf-go { opacity: 1; transform: none; pointer-events: auto; }
+.cf-go:hover { background: #e8352c; }
+
+/* targeting brackets: the game-select tell. z-index keeps all four above the
+   artwork, which is opaque and would otherwise paint over the top pair. */
+.cf-reticle { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .5s ease; }
+.cf-card[data-active="true"] .cf-reticle { opacity: 1; }
+.cf-reticle i { position: absolute; width: 22px; height: 22px; border: 2px solid var(--accent); }
+.cf-reticle i:nth-child(1) { top: 10px; left: 10px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.cf-reticle i:nth-child(2) { top: 10px; right: 10px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+.cf-reticle i:nth-child(3) { bottom: 10px; left: 10px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+.cf-reticle i:nth-child(4) { bottom: 10px; right: 10px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+
+/* ---------- arrows ---------- */
+.cf-arrow {
+  position: absolute; top: 50%; margin-top: -26px; z-index: 4;
+  width: 52px; height: 52px; border-radius: 999px; display: grid; place-items: center;
+  cursor: pointer; color: var(--text);
+  background: rgba(255, 255, 255, .07); border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(10px);
+  transition: background .25s ease, border-color .25s ease, transform .25s var(--ease);
+}
+.cf-arrow:hover { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .3); }
+.cf-arrow:active { transform: scale(.94); }
+.cf-prev { left: clamp(.75rem, 3vw, 2.5rem); }
+.cf-next { right: clamp(.75rem, 3vw, 2.5rem); }
+
+/* ---------- hud ---------- */
+.cf-hud {
+  position: absolute; left: 0; right: 0; bottom: clamp(1rem, 3vh, 1.9rem); z-index: 4;
+  display: grid; gap: .9rem; justify-items: center; pointer-events: none;
+}
+.cf-counter {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: .2em;
+  color: rgba(255, 255, 255, .5); margin: 0;
+}
+.cf-counter b { color: var(--accent); font-weight: 400; }
+.cf-pips { display: flex; gap: .5rem; pointer-events: auto; }
+.cf-pip {
+  width: 26px; height: 3px; border: 0; padding: 0; border-radius: 2px; cursor: pointer;
+  background: rgba(255, 255, 255, .2);
+  transition: background .35s ease, width .35s var(--ease);
+}
+.cf-pip[aria-selected="true"] { background: var(--accent); width: 42px; }
+
+@media (max-width: 860px) {
+  .cf { height: clamp(470px, 66vh, 560px); }
+  .cf-track { height: 390px; }
+  .cf-card { width: 280px; height: 390px; margin-left: -140px; }
+  .cf-card { transform:
+    translate3d(calc(var(--d) * 232px), calc(var(--ad) * 12px), calc(var(--ad) * -210px))
+    rotateY(calc(var(--d) * -20deg)) scale(var(--s, 1)); }
+  .cf-art { height: 168px; }
+  .cf-arrow { width: 44px; height: 44px; margin-top: -22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-bg img { animation: none; }
+  .cf-card { transition: opacity .2s ease; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cf-card, .cf-arrow { backdrop-filter: none; background: var(--surface); }
+}
