@@ -1,0 +1,137 @@
+/* ==========================================================================
+   Quote wizard.
+
+   Structure adopted from the Premier booking flow: numbered steps, a panel of
+   selectable cards per step, Back / Continue, one commit at the end. The
+   questions are Overspray's own.
+   ========================================================================== */
+
+.wiz { display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); }
+
+/* ---------- step rail ---------- */
+.wiz-steps {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  gap: .5rem; list-style: none; margin: 0; padding: 0;
+}
+.wiz-steps li {
+  display: grid; gap: .5rem; justify-items: center; text-align: center;
+  padding-top: .85rem; border-top: 2px solid var(--border);
+  transition: border-color .4s var(--ease);
+}
+.wiz-steps li[data-state="current"] { border-top-color: var(--accent); }
+.wiz-steps li[data-state="done"] { border-top-color: rgba(213, 42, 34, .5); }
+.wiz-num {
+  width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center;
+  font-size: .78rem; font-weight: 700; color: var(--muted-dim);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: all .35s var(--ease);
+}
+.wiz-steps li[data-state="current"] .wiz-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+.wiz-steps li[data-state="done"] .wiz-num { color: var(--accent-hot); border-color: rgba(255, 121, 0, .45); }
+.wiz-label {
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
+  color: var(--muted-dim);
+}
+.wiz-steps li[data-state="current"] .wiz-label { color: var(--text); }
+
+/* ---------- panel ---------- */
+.wiz-panel { display: grid; gap: 1rem; }
+.wiz-panel h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.wiz-sub { color: var(--muted); margin: -.35rem 0 .35rem; max-width: 60ch; }
+.wiz-legend {
+  margin: .75rem 0 -.35rem; font-size: .82rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ---------- choice cards ---------- */
+.wiz-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+.wiz-cards[data-compact="true"] { grid-template-columns: repeat(4, 1fr); }
+.wiz-card {
+  position: relative; text-align: left; cursor: pointer;
+  padding: 1rem 2.4rem 1rem 1rem; border-radius: var(--r-box);
+  background: var(--glass-bg); border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(10px);
+  transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease);
+}
+.wiz-card:hover { transform: translateY(-2px); border-color: #3a4a6d; }
+.wiz-card[aria-checked="true"] { border-color: var(--accent); background: rgba(213, 42, 34, .1); }
+.wiz-card-label { display: block; font-weight: 700; font-size: .95rem; color: var(--text); }
+.wiz-card-hint { display: block; font-size: .8rem; color: var(--muted); margin-top: .2rem; line-height: 1.4; }
+.wiz-tick {
+  position: absolute; top: .85rem; right: .85rem;
+  width: 20px; height: 20px; border-radius: 999px; display: grid; place-items: center;
+  font-size: .68rem; color: #fff; background: var(--accent);
+  opacity: 0; transform: scale(.7); transition: all .25s var(--ease);
+}
+.wiz-card[aria-checked="true"] .wiz-tick { opacity: 1; transform: none; }
+
+/* ---------- fields ---------- */
+.wiz-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.wiz .field .hint { font-weight: 400; color: var(--muted-dim); font-size: .78rem; }
+
+/* ---------- photos ---------- */
+.wiz .drop {
+  border: 1.5px dashed var(--border); border-radius: var(--r-box); background: var(--surface);
+  padding: 2rem 1.5rem; text-align: center; cursor: pointer;
+  transition: border-color .25s var(--ease), background .25s var(--ease);
+}
+.wiz .drop:hover, .wiz .drop:focus-visible { border-color: var(--accent-hot); background: var(--surface-2); }
+.wiz .drop input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.wiz-thumbs { list-style: none; margin: .85rem 0 0; padding: 0; display: grid; gap: .4rem; }
+.wiz-thumbs li {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .5rem .75rem; border-radius: var(--r-int);
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: .85rem; color: var(--muted);
+}
+.wiz-thumbs button {
+  width: 22px; height: 22px; border-radius: 999px; cursor: pointer; flex: none;
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  display: grid; place-items: center; line-height: 1;
+}
+.wiz-thumbs button:hover { border-color: var(--accent); color: var(--text); }
+
+/* ---------- nav ---------- */
+.wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.wiz-nav .btn { min-width: 9rem; justify-content: center; }
+
+@media (max-width: 860px) {
+  .wiz-cards, .wiz-cards[data-compact="true"] { grid-template-columns: repeat(2, 1fr); }
+  .wiz-row { grid-template-columns: 1fr; }
+  .wiz-label { display: none; }        /* numbers alone carry it on a phone */
+  .wiz-steps li { padding-top: .6rem; }
+}
+
+@media (max-width: 560px) {
+  .wiz-cards, .wiz-cards[data-compact="true"] { grid-template-columns: 1fr; }
+  .wiz-nav .btn { min-width: 0; flex: 1; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .wiz-card { backdrop-filter: none; background: var(--surface); }
+}
+
+/* ---------- quote page layout ----------
+   The wizard needs real width: at 50/50 the choice cards wrap mid-word and the
+   five-step rail crushes. The aside is supporting material, so it gets the
+   narrow column and drops below on tablet. */
+.quote-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+.quote-aside { display: grid; gap: 1.25rem; position: sticky; top: calc(72px + 1.5rem); }
+.quote-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.quote-points li {
+  display: grid; gap: .2rem; padding: .95rem 0;
+  border-top: 1px solid var(--border-soft);
+}
+.quote-points li:last-child { border-bottom: 1px solid var(--border-soft); }
+.quote-points strong { font-size: .95rem; color: var(--text); }
+.quote-points span { font-size: .88rem; color: var(--muted); }
+
+@media (max-width: 1024px) {
+  .quote-layout { grid-template-columns: 1fr; }
+  .quote-aside { position: static; }
+}

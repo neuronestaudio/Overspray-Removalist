@@ -50,8 +50,13 @@ export const GTM_ID = 'GTM-XXXXXXX';
  * URL. Leaving another client's URL here would post this business's leads into
  * that client's CRM, so the form refuses to submit while it still reads
  * REPLACE_ME (see QuoteForm).
+ *
+ * Annotated `: string` deliberately. Without it TypeScript narrows this to the
+ * literal placeholder, and the guard comparing it to 'REPLACE_ME' becomes a
+ * no-overlap type error the moment a real URL is pasted in: setting the webhook
+ * would break the build.
  */
-export const GHL_WEBHOOK = 'REPLACE_ME';
+export const GHL_WEBHOOK: string = 'REPLACE_ME';
 
 /** Paths worth their own dataLayer event because they signal buying intent. */
 export const KEY_SERVICE_PATHS = [

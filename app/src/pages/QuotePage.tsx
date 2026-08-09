@@ -13,6 +13,7 @@ export default function QuotePage() {
         ogImage="job-splatter-2"
         ogAlt="Overspray being removed from a black sedan"
       />
+
       <section className="pbanner">
         <div className="shell">
           <p className="crumb">
@@ -20,15 +21,17 @@ export default function QuotePage() {
           </p>
           <h1 className="display">Get a quote</h1>
           <p className="lede">
-            Photos are the fastest path to an accurate price. Attach them below and we will come
-            back with a number or a time to come and look.
+            Five quick questions and a couple of photos. We come back with a number, or a time to
+            come and look.
           </p>
         </div>
       </section>
-      <section>
-        <div className="shell split">
+
+      <section style={{ paddingTop: 0 }}>
+        <div className="shell quote-layout">
           <QuoteForm />
-          <aside>
+
+          <aside className="quote-aside">
             <div className="pricing-note">
               <strong>Whole lot affected?</strong>
               <p className="body-muted">
@@ -37,8 +40,25 @@ export default function QuotePage() {
                 release forms.
               </p>
             </div>
+
+            <ul className="quote-points">
+              <li>
+                <strong>No abrasives</strong>
+                <span>Removal by hand. The factory finish stays on the car.</span>
+              </li>
+              <li>
+                <strong>We come to you</strong>
+                <span>On site, all suburbs, Australia wide.</span>
+              </li>
+              <li>
+                <strong>Thirty years</strong>
+                <span>Overspray and fallout only. It is the whole business.</span>
+              </li>
+            </ul>
+
             <p className="form-note">
-              Prefer to talk? Call <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>.
+              Prefer to talk? Call {BUSINESS.phoneContact} on{' '}
+              <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>.
             </p>
           </aside>
         </div>

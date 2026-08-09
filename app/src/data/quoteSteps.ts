@@ -1,0 +1,61 @@
+/**
+ * Quote wizard options.
+ *
+ * Adapted from the Premier booking flow. The shape is the same (pick a card,
+ * step forward), but the questions are the ones that actually price an
+ * overspray job: what landed on it, how much of the vehicle it covers, how
+ * many vehicles, and who is carrying the cost.
+ *
+ * That last one is the reason this form exists in five steps rather than one.
+ * The audit found the three highest-value propositions in this business are
+ * construction remediation, insurance claims and fleet volume work, and none
+ * of them were visible anywhere. Asking who is handling it qualifies a
+ * whole-lot job on the way in instead of after a phone call.
+ *
+ * Every `value` is what reaches the CRM. Keep them stable: they have to match
+ * the dropdown values configured in GoHighLevel exactly, or the custom field
+ * saves blank without complaining.
+ */
+
+export interface Choice {
+  value: string;
+  label: string;
+  hint: string;
+}
+
+export const CONTAMINANTS: Choice[] = [
+  { value: 'paint_overspray', label: 'Paint overspray', hint: 'Spray painting, roller work, a wind change' },
+  { value: 'cement_splatter', label: 'Cement or concrete', hint: 'Slab pour splatter, lime staining' },
+  { value: 'graffiti', label: 'Graffiti', hint: 'Aerosol on a vehicle, plant or property' },
+  { value: 'industrial_fallout', label: 'Industrial fallout', hint: 'Iron filings, rail dust, soot' },
+  { value: 'acid_rain', label: 'Acid rain or chemical', hint: 'Etching, chemical fallout' },
+  { value: 'not_sure', label: 'Not sure yet', hint: 'Send photos and we will identify it' },
+];
+
+export const LOCATION_TYPES: Choice[] = [
+  { value: 'on_site', label: 'Come to us', hint: 'We work on site, all suburbs, Australia wide' },
+  { value: 'drop_off', label: 'I can bring it in', hint: 'Drop off at Epping VIC 3076' },
+];
+
+export const COVERAGE: Choice[] = [
+  { value: 'light', label: 'Light', hint: 'A dusting, or one or two panels' },
+  { value: 'partial', label: 'Partial', hint: 'One side, or the top surfaces' },
+  { value: 'full', label: 'Full coverage', hint: 'Whole vehicle, including glass and trims' },
+  { value: 'not_sure', label: 'Not sure', hint: 'Hard to tell, photos will show it' },
+];
+
+export const WHEN_HAPPENED: Choice[] = [
+  { value: 'days', label: 'In the last few days', hint: 'Still fresh' },
+  { value: 'weeks', label: 'A few weeks ago', hint: 'Starting to bond' },
+  { value: 'months', label: 'Months ago or longer', hint: 'Fully cured' },
+  { value: 'unknown', label: 'I do not know', hint: 'Found it like that' },
+];
+
+export const HANDLED_BY: Choice[] = [
+  { value: 'vehicle_owner', label: 'I own the vehicle', hint: 'Paying for it myself' },
+  { value: 'insurance_claim', label: 'Insurance claim', hint: 'We handle the forms and the assessor' },
+  { value: 'construction', label: 'Construction or concreting', hint: 'Our site caused it' },
+  { value: 'fleet_dealer', label: 'Fleet or dealership', hint: 'Multiple vehicles, one owner' },
+];
+
+export const STEPS = ['Damage', 'Location', 'Vehicle', 'Photos', 'Details'] as const;
