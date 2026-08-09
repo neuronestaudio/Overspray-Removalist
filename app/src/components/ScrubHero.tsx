@@ -33,11 +33,17 @@ const GRID_Y = 16;
  * the paint is still on screen.
  *
  * So the grid is only the trigger. Once it crosses GRID_GATE we read the canvas
- * back once and finish only if genuinely PIXEL_TARGET of it is transparent.
- * getImageData is far too expensive per pointer move, but perfectly affordable
- * a handful of times at the end of the wipe, throttled by SAMPLE_EVERY_MS. */
+ * back and act only when genuinely PIXEL_TARGET of it is transparent, which is a
+ * real fraction of the image rather than a fraction of touched cells.
+ * getImageData is far too expensive per pointer move, but perfectly affordable a
+ * handful of times near the end of a wipe, throttled by SAMPLE_EVERY_MS.
+ *
+ * Reaching the target does NOT clear the canvas. The panel never finishes itself:
+ * whatever paint is left is left, and the visitor takes it off. All the threshold
+ * does is fade in the reset button, because by then they have proved the point
+ * and the only thing still worth offering is a way to do it again. */
 const GRID_GATE = 0.72;
-const PIXEL_TARGET = 0.9;
+const PIXEL_TARGET = 0.8;
 const SAMPLE_EVERY_MS = 220;
 /** Every Nth pixel's alpha byte. Sparse enough to be quick, dense enough to be right. */
 const SAMPLE_STRIDE = 37;
@@ -58,11 +64,11 @@ export default function ScrubHero({ pair, onComplete }: Props) {
   const painted = useRef(false);
   const drawing = useRef(false);
   const last = useRef<{ x: number; y: number } | null>(null);
-  const doneRef = useRef(false);
+  const reachedRef = useRef(false);
   const lastSample = useRef(0);
 
   const [started, setStarted] = useState(false);
-  const [done, setDone] = useState(false);
+  const [reached, setReached] = useState(false);
   const [ready, setReady] = useState(false);
 
   const beforeMeta = IMAGES[pair.beforeStem];
@@ -111,9 +117,9 @@ export default function ScrubHero({ pair, onComplete }: Props) {
     const start = () => {
       if (cancelled) return;
       cells.current = new Uint8Array(GRID_X * GRID_Y);
-      doneRef.current = false;
+      reachedRef.current = false;
       lastSample.current = 0;
-      setDone(false);
+      setReached(false);
       setStarted(false);
       paint();
       setReady(true);
@@ -136,10 +142,12 @@ export default function ScrubHero({ pair, onComplete }: Props) {
     };
   }, [paint, pair.beforeStem]);
 
-  const finish = useCallback(() => {
-    if (doneRef.current) return;
-    doneRef.current = true;
-    setDone(true);
+  /* Milestone, not an ending. Fades in the reset button and reports the
+     interaction once; the canvas carries on exactly as before. */
+  const reachTarget = useCallback(() => {
+    if (reachedRef.current) return;
+    reachedRef.current = true;
+    setReached(true);
     onComplete?.();
   }, [onComplete]);
 
@@ -147,7 +155,7 @@ export default function ScrubHero({ pair, onComplete }: Props) {
     (clientX: number, clientY: number) => {
       const canvas = canvasRef.current;
       const wrap = wrapRef.current;
-      if (!canvas || !wrap || !painted.current || doneRef.current) return;
+      if (!canvas || !wrap || !painted.current) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -187,6 +195,9 @@ export default function ScrubHero({ pair, onComplete }: Props) {
         }
       }
 
+      // Once the milestone is passed there is nothing left to measure.
+      if (reachedRef.current) return;
+
       let hit = 0;
       for (let i = 0; i < cells.current.length; i++) hit += cells.current[i];
       if (hit / cells.current.length < GRID_GATE) return;
@@ -195,20 +206,18 @@ export default function ScrubHero({ pair, onComplete }: Props) {
       const now = performance.now();
       if (now - lastSample.current < SAMPLE_EVERY_MS) return;
       lastSample.current = now;
-      if (clearedFraction(ctx, canvas) >= PIXEL_TARGET) finish();
+      if (clearedFraction(ctx, canvas) >= PIXEL_TARGET) reachTarget();
     },
-    [finish],
+    [reachTarget],
   );
 
   function onPointerDown(e: React.PointerEvent) {
-    if (doneRef.current) return;
     drawing.current = true;
     last.current = null;
     setStarted(true);
     erase(e.clientX, e.clientY);
   }
   function onPointerMove(e: React.PointerEvent) {
-    if (doneRef.current) return;
     // Hovering with a mouse wipes too; a finger has to be down.
     if (e.pointerType === 'mouse' || drawing.current) {
       if (!started) setStarted(true);
@@ -222,9 +231,9 @@ export default function ScrubHero({ pair, onComplete }: Props) {
 
   function reset() {
     cells.current = new Uint8Array(GRID_X * GRID_Y);
-    doneRef.current = false;
+    reachedRef.current = false;
     lastSample.current = 0;
-    setDone(false);
+    setReached(false);
     setStarted(false);
     paint();
   }
@@ -259,7 +268,6 @@ export default function ScrubHero({ pair, onComplete }: Props) {
       <canvas
         ref={canvasRef}
         className="scrub-canvas"
-        data-done={done ? 'true' : 'false'}
         aria-hidden="true"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -269,26 +277,31 @@ export default function ScrubHero({ pair, onComplete }: Props) {
       />
 
       <div className="scrub-tags" aria-hidden="true">
-        <span className="tag-before" data-off={done ? 'true' : 'false'}>
+        <span className="tag-before" data-off={reached ? 'true' : 'false'}>
           Overspray
         </span>
-        <span className="tag-after" data-on={done ? 'true' : 'false'}>
+        <span className="tag-after" data-on={reached ? 'true' : 'false'}>
           Restored
         </span>
       </div>
 
-      {!started && !done && (
+      {!started && (
         <div className="scrub-hint" aria-hidden="true">
           <span className="scrub-hint-dot" />
           Drag to clean the paint off
         </div>
       )}
 
-      {done && (
-        <button className="scrub-reset" type="button" onClick={reset}>
-          Put it back
-        </button>
-      )}
+      <button
+        className="scrub-reset"
+        type="button"
+        onClick={reset}
+        data-show={reached ? 'true' : 'false'}
+        aria-hidden={reached ? 'false' : 'true'}
+        tabIndex={reached ? 0 : -1}
+      >
+        Put it back
+      </button>
     </div>
   );
 }

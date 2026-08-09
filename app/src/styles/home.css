@@ -19,7 +19,12 @@
   padding-block: clamp(1.5rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
   background: var(--bg);
 }
-.hero-deck-copy { max-width: 44rem; margin-bottom: clamp(1.25rem, 2.5vw, 2rem); }
+.hero-deck-copy {
+  max-width: 46rem; margin-inline: auto; text-align: center;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+.hero-deck-copy .lede { margin-inline: auto; }
+.hero-deck .hero-actions { justify-content: center; }
 /* Smaller than the standalone h1 scale on purpose. The deck below is the hero's
    real payload, and both have to clear the fold together; an oversized headline
    pushes the counter and pips off screen. */
@@ -62,7 +67,6 @@
   touch-action: pan-y;
   transition: opacity .9s var(--ease);
 }
-.scrub-canvas[data-done="true"] { opacity: 0; pointer-events: none; }
 
 /* No scrim: nothing sits on top of the panel any more, so it runs at full
    brightness. The source photos are workshop snaps and a touch of lift stops
@@ -115,8 +119,14 @@
   padding: .6rem 1.05rem; border-radius: 999px; cursor: pointer; color: var(--text);
   background: rgba(8, 11, 22, .7); border: 1px solid var(--glass-brd);
   backdrop-filter: blur(10px);
-  transition: border-color .3s var(--ease), background .3s var(--ease);
+  /* Fades in once the panel is 80% clear. It never takes the wipe over: the
+     last of the paint is the visitor's to remove, and this only offers a way
+     to start again. */
+  opacity: 0; transform: translateY(6px); pointer-events: none;
+  transition: opacity .55s var(--ease), transform .55s var(--ease),
+              border-color .3s var(--ease), background .3s var(--ease);
 }
+.scrub-reset[data-show="true"] { opacity: 1; transform: none; pointer-events: auto; }
 .scrub-reset:hover { border-color: var(--accent-hot); background: rgba(8, 11, 22, .92); }
 
 /* ---------- before / after ---------- */

@@ -133,12 +133,14 @@
 .cf-go {
   margin-top: 1rem; display: inline-flex; align-items: center; gap: .5rem;
   font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: #fff; background: var(--accent); padding: .7rem 1.15rem; border-radius: var(--r-int);
+  color: #fff; padding: .7rem 1.25rem; border-radius: 999px;
+  background: linear-gradient(135deg, #f04a3f 0%, #d52a22 46%, #9e1911 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 10px 24px -12px rgba(213, 42, 34, .9);
   opacity: 0; transform: translateY(8px); pointer-events: none;
   transition: opacity .45s ease .12s, transform .45s var(--ease) .12s, background .25s ease;
 }
 .cf-card[data-active="true"] .cf-go { opacity: 1; transform: none; pointer-events: auto; }
-.cf-go:hover { background: #e8352c; }
+.cf-go:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 14px 30px -12px rgba(213, 42, 34, 1); }
 
 /* targeting brackets: the game-select tell. z-index keeps all four above the
    artwork, which is opaque and would otherwise paint over the top pair. */

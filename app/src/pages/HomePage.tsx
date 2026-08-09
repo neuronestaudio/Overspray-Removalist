@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
-import Img from '../components/Img';
 import Coverflow from '../components/Coverflow';
 import ScrubHero from '../components/ScrubHero';
 import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
-import { SERVICES } from '../data/services';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
@@ -61,37 +59,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services, demonstrated. The claim is made by hand before it is made in
-          prose: wipe the panel and the service explains itself. */}
-      <section className="band">
+      {/* Browsing the deck shows the damage. This shows the transformation. */}
+      <section>
         <div className="shell">
           <div className="head">
-            <p className="eyebrow">What we take off</p>
-            <h2 className="display">Wipe it off yourself.</h2>
+            <h2 className="display">Pick a car. Drag the handle.</h2>
             <p className="lede">
-              Epoxy, urethane, polyurethane foam, soot, iron filings, cement, concrete sealers and
-              spray paint. Off vehicles, trucks, boats, aircraft and buildings, by hand, with no
-              abrasives touching the duco.
+              Every pair is the same vehicle photographed before and after, with no respray and no
+              panel work in between.
             </p>
           </div>
-
-          <div className="wipe-frame">
-            <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
-          </div>
-          <p className="wipe-caption">{HERO_PAIR.caption}</p>
-
-          <div className="bento" style={{ marginTop: 'clamp(2rem,4vw,3rem)' }}>
-            {SERVICES.map((s) => (
-              <Link className="cell" key={s.path} to={s.path}>
-                <div className="cell-img">
-                  <Img stem={s.hero} alt={s.heroAlt} sizes="(max-width:620px) 100vw, 33vw" />
-                </div>
-                <h3 className="display">{s.nav}</h3>
-                <p>{s.lede}</p>
-                <span className="cell-link">Read more</span>
-              </Link>
-            ))}
-          </div>
+          <BeforeAfter pairs={PAIRS} />
         </div>
       </section>
 
@@ -116,20 +94,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Browsing the deck shows the damage. This shows the transformation. */}
-      <section>
-        <div className="shell">
-          <div className="head">
-            <h2 className="display">Pick a car. Drag the handle.</h2>
-            <p className="lede">
-              Every pair is the same vehicle photographed before and after, with no respray and no
-              panel work in between.
-            </p>
-          </div>
-          <BeforeAfter pairs={PAIRS} />
-        </div>
-      </section>
-
       <section style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">
           <div className="head">
@@ -147,7 +111,29 @@ export default function HomePage() {
         <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
       </section>
 
+      {/* Services, demonstrated. The claim is made by hand before it is made in
+          prose: wipe the panel and the service explains itself. */}
       <section className="band">
+        <div className="shell">
+          <div className="head">
+            <p className="eyebrow">What we take off</p>
+            <h2 className="display">Wipe it off yourself.</h2>
+            <p className="lede">
+              Epoxy, urethane, polyurethane foam, soot, iron filings, cement, concrete sealers and
+              spray paint. Off vehicles, trucks, boats, aircraft and buildings, by hand, with no
+              abrasives touching the duco.
+            </p>
+          </div>
+
+          <div className="wipe-frame">
+            <ScrubHero pair={HERO_PAIR} onComplete={onScrubbed} />
+          </div>
+          <p className="wipe-caption">{HERO_PAIR.caption}</p>
+
+        </div>
+      </section>
+
+      <section>
         <div className="shell cta-panel">
           <div>
             <h2 className="display">Got a car covered in something that should not be there?</h2>

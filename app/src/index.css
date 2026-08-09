@@ -4,9 +4,11 @@
    re-pitched to Overspray's own brand red.
 
    Radius rule (locked, applied everywhere):
-     interactive (buttons, inputs, pills) .... 8px
-     containers (cards, panels, media) ....... 16px
-     full-round ............................... avatars/dots only
+     buttons .................................. full pill
+     inputs, tags, small controls ............. 8px
+     containers (cards, panels, media) ........ 16px
+   Buttons are the one thing that breaks the 8px step, deliberately: a pill
+   reads as the pressable thing on a page where everything else is square.
    ============================================================ */
 
 :root {
@@ -120,26 +122,51 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
-  padding: .92rem 1.6rem; border-radius: var(--r-int);
+  padding: .92rem 1.75rem; border-radius: 999px;
   font-weight: 700; font-size: .95rem; white-space: nowrap;
-  border: 1px solid transparent; cursor: pointer;
+  border: 1px solid transparent; cursor: pointer; position: relative; overflow: hidden;
   transition: transform .28s var(--ease), background .28s var(--ease),
               border-color .28s var(--ease), box-shadow .28s var(--ease);
   translate: var(--tx, 0) var(--ty, 0);
 }
 .btn-primary {
-  background: var(--accent); color: var(--accent-ink);
-  box-shadow: 0 10px 30px -12px rgba(213, 42, 34, .8);
+  color: var(--accent-ink);
+  /* Lit from the top left, deepening to the shadow side, so the pill reads as a
+     lozenge with form rather than a flat red capsule. */
+  background: linear-gradient(135deg, #f04a3f 0%, #d52a22 46%, #9e1911 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .34),
+    inset 0 -1px 0 rgba(0, 0, 0, .28),
+    0 12px 30px -12px rgba(213, 42, 34, .85);
 }
-.btn-primary:hover { background: #e8352c; box-shadow: 0 16px 40px -12px rgba(213, 42, 34, .9); }
+/* travelling sheen, kept to the primary so it stays an event */
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 36%, rgba(255, 255, 255, .28) 50%, transparent 64%);
+  translate: -120% 0;
+  transition: translate .75s var(--ease);
+}
+.btn-primary:hover::after { translate: 120% 0; }
+.btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .4),
+    inset 0 -1px 0 rgba(0, 0, 0, .28),
+    0 18px 42px -12px rgba(213, 42, 34, .95);
+}
+
 .btn-ghost {
-  background: rgba(255, 255, 255, .04); color: var(--text);
-  border-color: var(--border);
-  backdrop-filter: blur(6px);
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .035));
+  border-color: var(--glass-brd, rgba(255, 255, 255, .16));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+  backdrop-filter: blur(10px);
 }
-.btn-ghost:hover { background: rgba(255, 255, 255, .09); border-color: #2b3a5e; }
+.btn-ghost:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .07));
+  border-color: rgba(255, 255, 255, .32);
+}
 .btn:active { transform: scale(.975); }
-.btn-lg { padding: 1.05rem 2rem; font-size: 1rem; }
+.btn-lg { padding: 1.05rem 2.25rem; font-size: 1rem; }
 
 /* ---------- header ---------- */
 .hdr {
