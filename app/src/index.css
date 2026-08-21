@@ -544,21 +544,133 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .crumb { font-size: .82rem; color: var(--muted-dim); margin-bottom: .9rem; }
 .crumb a:hover { color: var(--text); }
 
-/* ---------- footer ---------- */
-.ftr { border-top: 1px solid var(--border-soft); background: var(--bg-lift); padding-block: 3.4rem 2rem; }
-.ftr-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.1fr; gap: 2.5rem; }
-.ftr h5 { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-dim); margin: 0 0 1rem; font-weight: 700; }
-.ftr a { color: var(--muted); font-size: .93rem; }
+/* ---------- footer ----------
+   Same carbon material as the hero and the services band, so the page closes on
+   the surface it opened on rather than on a flat slab. */
+.ftr {
+  position: relative;
+  isolation: isolate;
+  border-top: 1px solid var(--border-soft);
+  background: var(--bg-lift);
+  padding-block: 0 2rem;
+  overflow: hidden;
+}
+.ftr::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(8, 11, 22, .90), rgba(11, 16, 32, .96)),
+    url('/assets/images/carbon-bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+/* The brand line the header already draws, closing the page symmetrically. */
+.ftr::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, var(--accent-hot) 22%, var(--accent) 50%, var(--accent-hot) 78%, transparent);
+  opacity: .75;
+}
+
+/* --- closing call to action --- */
+.ftr-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem 2.5rem;
+  flex-wrap: wrap;
+  margin-block: 3.2rem 3rem;
+  padding: 1.9rem 2.2rem;
+  border: 1px solid var(--outline);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255, 79, 66, .10), rgba(255, 255, 255, .03) 42%, rgba(255, 255, 255, .015));
+  backdrop-filter: blur(6px);
+}
+.ftr-cta-kicker {
+  margin: 0 0 .5rem;
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent-hot);
+  font-weight: 700;
+}
+.ftr-cta-title {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+  line-height: 1.25;
+  color: var(--text);
+  max-width: 24ch;
+}
+.ftr-cta-actions { display: flex; gap: .8rem; flex-wrap: wrap; }
+
+/* --- columns --- */
+.ftr-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1.35fr .8fr 1.1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+.ftr h5 {
+  font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted-dim); margin: 0 0 1.15rem; font-weight: 700;
+}
+/* The heading sits on a short brand tick so the four columns read as a set. */
+.ftr h5::after {
+  content: '';
+  display: block;
+  width: 26px; height: 2px;
+  margin-top: .55rem;
+  border-radius: 2px;
+  background: var(--accent-grad);
+}
+.ftr a { color: var(--muted); font-size: .92rem; transition: color .18s var(--ease); }
 .ftr a:hover { color: var(--text); }
-.ftr li { padding: .3rem 0; }
-.ftr-logo img { height: 40px; width: auto; margin-bottom: 1.1rem; }
-.ftr-blurb { font-size: .92rem; color: var(--muted); max-width: 34ch; }
-.ftr-contact li { display: flex; gap: .6rem; align-items: flex-start; color: var(--muted); font-size: .93rem; }
-.ftr-contact svg { width: 15px; height: 15px; fill: var(--accent-hot); flex: none; margin-top: .35rem; }
+.ftr li { padding: .28rem 0; }
+
+/* `.ftr-logo` IS the img. `.ftr-logo img` matched nothing, so the logo fell back
+   to the reset's max-width:100% and filled its whole column. */
+/* 86px, not the 54 it started at: below roughly 80 the tagline under the
+   letters stops resolving and reads as a red smudge. */
+img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem; }
+.ftr-blurb { font-size: .9rem; line-height: 1.75; color: var(--muted); max-width: 34ch; }
+
+.ftr-links { display: grid; gap: 0; }
+/* Column-major over five rows. Row-major left ragged holes wherever a long
+   service wrapped to two lines while its neighbour did not. */
+.ftr-links-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column;
+  column-gap: 1.4rem;
+}
+.ftr-links a { display: inline-block; }
+
+.ftr-contact { display: grid; gap: .95rem; }
+.ftr-contact li {
+  display: flex; gap: .7rem; align-items: flex-start;
+  color: var(--muted); font-size: .92rem; padding: 0;
+}
+.ftr-contact svg { width: 15px; height: 15px; fill: var(--accent-hot); flex: none; margin-top: .3rem; }
+.ftr-contact span { display: block; line-height: 1.5; }
+/* The contact name under the number, not beside it: side by side the two
+   baselines never lined up and read as two separate broken fields. */
+.ftr-contact em {
+  display: block; font-style: normal;
+  font-size: .76rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted-dim); margin-top: .15rem;
+}
+.ftr-contact a { color: var(--text); font-weight: 600; }
+
 .ftr-bottom {
-  margin-top: 2.6rem; padding-top: 1.5rem; border-top: 1px solid var(--border-soft);
+  margin-top: 2.8rem; padding-top: 1.5rem; border-top: 1px solid var(--border-soft);
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-  font-size: .85rem; color: var(--muted-dim);
+  font-size: .82rem; color: var(--muted-dim);
 }
 
 /* ---------- scroll reveal ---------- */
@@ -569,7 +681,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 @media (max-width: 1024px) {
   .bento { grid-template-columns: repeat(2, 1fr); }
   .cell-tall { grid-row: span 1; min-height: 300px; }
-  .ftr-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .ftr-grid { grid-template-columns: 1fr 1fr; gap: 2.2rem; }
   .rail { grid-template-columns: repeat(2, 1fr); row-gap: 2.5rem; }
   .rail::before { display: none; }
   .gal { grid-template-columns: repeat(2, 1fr); }
@@ -596,7 +708,20 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   .bento, .gal { grid-template-columns: 1fr; }
   .cell-wide { grid-column: span 1; }
   .rail { grid-template-columns: 1fr; }
-  .ftr-grid { grid-template-columns: 1fr; }
+  /* Brand block spans; the three link columns stay side by side rather than
+     stacking into the ~1600px tower the single-column rule produced. */
+  .ftr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 1.4rem; }
+  .ftr-brand { grid-column: 1 / -1; }
+  .ftr-links-2 { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; }
+  /* Contact was alone in a half-width cell, wrapping the address over three
+     lines. Full width, two up. */
+  .ftr-contact-col { grid-column: 1 / -1; margin-top: .4rem; }
+  .ftr-contact { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.2rem; }
+  .ftr-contact li:last-child { grid-column: 1 / -1; }
+  .ftr-cta { margin-block: 2.4rem; padding: 1.5rem 1.35rem; text-align: center; justify-content: center; }
+  .ftr-cta-title { max-width: none; }
+  .ftr-cta-actions { width: 100%; flex-direction: column; }
+  .ftr-cta-actions .btn { width: 100%; justify-content: center; }
   .hero { min-height: 78dvh; }
   .compare { aspect-ratio: 3 / 4; }
 }
@@ -677,8 +802,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
    Two assets, two jobs. The header carries the TOR monogram, which stays legible
    small; the footer carries the full lockup, where the tagline has room. */
 .hdr-logo img { height: 46px; width: auto; }
-.ftr-logo img { height: 62px; width: auto; margin-bottom: 1.1rem; }
 @media (max-width: 620px) {
   .hdr-logo img { height: 40px; }
-  .ftr-logo img { height: 54px; }
+  img.ftr-logo { height: 74px; }
 }
