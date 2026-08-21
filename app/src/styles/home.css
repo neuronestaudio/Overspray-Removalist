@@ -476,7 +476,48 @@
     inset 0 1px 0 rgba(255, 255, 255, .14),
     0 30px 70px -28px rgba(0, 0, 0, 1);
 }
-.rev-stars { color: var(--accent-hot); letter-spacing: .16em; font-size: .85rem; }
+/* --- Google-style review chrome (Premier booking-site pattern) --- */
+.rev-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem; }
+.rev-avatar {
+  width: 38px; height: 38px; border-radius: 999px; display: grid; place-items: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; line-height: 1;
+  color: #fff; background: var(--accent-grad);
+  box-shadow: 0 6px 16px -8px rgba(255, 79, 66, .9);
+}
+.rev-who { display: grid; gap: .1rem; min-width: 0; }
+.rev-who strong { font-size: .92rem; color: var(--text); font-weight: 700; }
+.rev-who > span {
+  font-size: .76rem; color: var(--muted-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rev-g { width: 18px; height: 18px; flex: none; }
+
+/* Five glyphs always drawn; the unearned ones just sit dim, so a four-star
+   review reads as four out of five rather than as four stars. */
+.rev-stars { display: inline-flex; gap: .12em; font-size: .9rem; line-height: 1; }
+.rev-stars span[data-on='true'] { color: #fbbc05; }
+.rev-stars span[data-on='false'] { color: rgba(255, 255, 255, .18); }
+
+.rev blockquote p { font-style: italic; }
+.rev-proof blockquote p { font-style: normal; }
+
+/* Aggregate badge. Every number in it is computed from the reviews array. */
+.rev-badge {
+  display: inline-flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+  margin-bottom: 1.6rem; padding: .8rem 1.3rem;
+  border-radius: 999px; border: 1px solid var(--outline);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02)),
+    rgba(12, 17, 33, .55);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+.rev-badge .rev-g { width: 20px; height: 20px; }
+.rev-badge-score {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; line-height: 1; color: var(--text);
+}
+.rev-badge-count { font-size: .82rem; color: var(--muted); }
+
 .rev-kicker {
   font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
   /* Horizontal, not the 135deg brand gradient: across a dozen condensed
