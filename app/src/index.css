@@ -672,3 +672,13 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
     line-height: 1.7;
   }
 }
+
+/* ---------- logo sizing ----------
+   Two assets, two jobs. The header carries the TOR monogram, which stays legible
+   small; the footer carries the full lockup, where the tagline has room. */
+.hdr-logo img { height: 46px; width: auto; }
+.ftr-logo img { height: 62px; width: auto; margin-bottom: 1.1rem; }
+@media (max-width: 620px) {
+  .hdr-logo img { height: 40px; }
+  .ftr-logo img { height: 54px; }
+}

@@ -14,7 +14,9 @@ export default function Navbar() {
     <header className="hdr">
       <div className="shell hdr-row">
         <Link className="hdr-logo" to="/" aria-label={`${BUSINESS.name} home`}>
-          <img src="/assets/images/logo.webp" alt={BUSINESS.name} width={260} height={125} />
+          {/* Monogram, not the full lockup: at header height the tagline under
+              the letters is unreadable. The wordmark runs in the footer. */}
+          <img src="/assets/images/logo-mark.webp" alt={BUSINESS.name} width={900} height={432} />
         </Link>
 
         <nav className="nav" aria-label="Primary">

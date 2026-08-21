@@ -21,8 +21,8 @@ export default function Footer() {
               className="ftr-logo"
               src="/assets/images/logo.webp"
               alt={BUSINESS.name}
-              width={260}
-              height={125}
+              width={900}
+              height={485}
             />
             <p className="ftr-blurb">
               Australia's overspray and industrial fallout specialists. Over 30 years removing
