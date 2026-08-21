@@ -9,6 +9,10 @@ import {
   COVERAGE,
   WHEN_HAPPENED,
   HANDLED_BY,
+  CERAMIC_SCOPE,
+  PPF_SCOPE,
+  PAINT_CONDITION,
+  isProtectionJob,
   STEPS,
   type Choice,
 } from '../data/quoteSteps';
@@ -21,8 +25,10 @@ const PHOTO_MAX_EDGE = 1600;
 
 type Errors = Record<string, string>;
 
-/** Long enough to register the tick, short enough not to feel like a wait. */
-const AUTO_ADVANCE_MS = 420;
+/* Long enough to register the tick, short enough not to feel like a wait.
+   420ms plus a 420ms panel animation read as a full second of nothing
+   happening after a click. The tick is visible by 150. */
+const AUTO_ADVANCE_MS = 150;
 
 function prefersReducedMotion() {
   return (
@@ -49,6 +55,10 @@ export default function QuoteForm() {
   const [vehicle, setVehicle] = useState('');
   const [vehicles, setVehicles] = useState('1');
   const [coverage, setCoverage] = useState('');
+  /* Protection jobs only. Kept separate from coverage/whenHappened so that
+     switching job type never carries a removal answer onto a coating quote. */
+  const [scope, setScope] = useState('');
+  const [paintCondition, setPaintCondition] = useState('');
   const [whenHappened, setWhenHappened] = useState('');
   const [handledBy, setHandledBy] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
@@ -65,10 +75,13 @@ export default function QuoteForm() {
 
   function validateStep(s: number): Errors {
     const e: Errors = {};
-    if (s === 0 && !contaminant) e.contaminant = 'Pick what landed on it, or "Not sure yet".';
+    if (s === 0 && !contaminant) e.contaminant = 'Pick what you need, or "Not sure yet".';
     if (s === 1) {
       if (!locationType) e.locationType = 'Let us know where the work happens.';
-      if (!location.trim()) e.location = 'A suburb is enough.';
+      /* Only asked for when we are the ones travelling. Demanding an address
+         from someone who just told us they are driving to Epping is a question
+         with no answer. */
+      if (locationType === 'on_site' && !location.trim()) e.location = 'A suburb is enough.';
     }
     if (s === 4) {
       if (!name.trim()) e.name = 'Please tell us your name.';
@@ -104,15 +117,39 @@ export default function QuoteForm() {
     goTo(step - 1);
   }
 
-  /* Step one asks a single question with one answer. Advancing on the pick
-     removes a click from the step most likely to be abandoned. Only safe here:
-     every later step collects more than one value. */
+  /* Step one asks a single question with one answer, so advancing on the pick
+     removes a click from the step most likely to be abandoned. */
   function pickContaminant(value: string) {
+    /* Switching between a removal job and a protection job invalidates the
+       other branch's answers. Clearing them here is what stops a coating quote
+       arriving with "full coverage, months ago" attached. */
+    if (isProtectionJob(value) !== isProtectionJob(contaminant)) {
+      setCoverage('');
+      setWhenHappened('');
+      setScope('');
+      setPaintCondition('');
+    }
     setContaminant(value);
     setErrors({});
+    advance(1);
+  }
+
+  /* "I can bring it in" is a complete answer on its own, so it moves on.
+     "Come to us" is not — it reveals the address field and waits. */
+  function pickLocationType(value: string) {
+    setLocationType(value);
+    setErrors({});
+    if (value === 'drop_off') advance(2);
+    else window.clearTimeout(autoTimer.current);
+  }
+
+  function advance(to: number) {
     window.clearTimeout(autoTimer.current);
-    if (prefersReducedMotion()) return;
-    autoTimer.current = window.setTimeout(() => goTo(1), AUTO_ADVANCE_MS);
+    if (prefersReducedMotion()) {
+      goTo(to);
+      return;
+    }
+    autoTimer.current = window.setTimeout(() => goTo(to), AUTO_ADVANCE_MS);
   }
 
   useEffect(() => () => window.clearTimeout(autoTimer.current), []);
@@ -249,10 +286,17 @@ export default function QuoteForm() {
       location: location.trim(),
       vehicle: vehicle.trim(),
       vehicles: vehicles.trim() || '1',
+      /* Which branch the answers came from, so the CRM does not have to infer
+         it from which fields happen to be blank. */
+      jobKind: isProtectionJob(contaminant) ? 'protection' : 'removal',
       coverage,
       coverageLabel: labelFor(COVERAGE, coverage),
       whenHappened,
       whenHappenedLabel: labelFor(WHEN_HAPPENED, whenHappened),
+      scope,
+      scopeLabel: labelFor(contaminant === 'paint_protection' ? PPF_SCOPE : CERAMIC_SCOPE, scope),
+      paintCondition,
+      paintConditionLabel: labelFor(PAINT_CONDITION, paintCondition),
       handledBy,
       handledByLabel: labelFor(HANDLED_BY, handledBy),
       notes: notes.trim(),
@@ -319,6 +363,8 @@ export default function QuoteForm() {
     }
   }
 
+  const protection = isProtectionJob(contaminant);
+
   return (
     <form className="wiz" onSubmit={handleSubmit} onKeyDown={onKeyDown} noValidate aria-label="Get a quote">
       <div className="wiz-head" ref={headRef}>
@@ -352,7 +398,7 @@ export default function QuoteForm() {
 
       {step === 0 && (
         <Panel
-          title="What landed on it?"
+          title="What do you need?"
           sub="Pick the closest. If none of them fit, choose “Not sure yet” and send photos."
         >
           <Cards options={CONTAMINANTS} value={contaminant} onChange={pickContaminant} name="contaminant" />
@@ -362,27 +408,44 @@ export default function QuoteForm() {
 
       {step === 1 && (
         <Panel title="Where is the vehicle?" sub="We work on site across all suburbs and Australia wide.">
-          <Cards options={LOCATION_TYPES} value={locationType} onChange={setLocationType} name="locationType" />
+          <Cards
+            options={LOCATION_TYPES}
+            value={locationType}
+            onChange={pickLocationType}
+            name="locationType"
+          />
           <Err msg={errors.locationType} />
-          <div className="field" style={{ marginTop: '1.25rem' }}>
-            <label htmlFor="q-location">
-              Suburb or site address <span aria-hidden="true">*</span>
-            </label>
-            <input
-              id="q-location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              autoComplete="address-level2"
-              placeholder="e.g. Epping VIC, or the site address"
-              aria-invalid={errors.location ? true : undefined}
-            />
-            <Err msg={errors.location} />
-          </div>
+          {/* Only when we are travelling. Drop-off already told us the address:
+              it is theirs. */}
+          {locationType === 'on_site' && (
+            <div className="field wiz-reveal" style={{ marginTop: '1.25rem' }}>
+              <label htmlFor="q-location">
+                Suburb or site address <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="q-location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                autoComplete="address-level2"
+                placeholder="e.g. Epping VIC, or the site address"
+                aria-invalid={errors.location ? true : undefined}
+                autoFocus
+              />
+              <Err msg={errors.location} />
+            </div>
+          )}
         </Panel>
       )}
 
       {step === 2 && (
-        <Panel title="Tell us about the vehicle" sub="Rough answers are fine. Photos settle the rest.">
+        <Panel
+          title="Tell us about the vehicle"
+          sub={
+            protection
+              ? 'What it is and what you want on it. Photos settle the rest.'
+              : 'Rough answers are fine. Photos settle the rest.'
+          }
+        >
           <div className="wiz-row">
             <div className="field">
               <label htmlFor="q-vehicle">
@@ -411,11 +474,43 @@ export default function QuoteForm() {
             </div>
           </div>
 
-          <p className="wiz-legend">How much of it is covered?</p>
-          <Cards options={COVERAGE} value={coverage} onChange={setCoverage} name="coverage" compact />
+          {/* A coating job has nothing to measure the spread of and no date it
+              happened. It has a scope and the condition of what is underneath. */}
+          {protection ? (
+            <>
+              <p className="wiz-legend">What would you like covered?</p>
+              <Cards
+                options={contaminant === 'paint_protection' ? PPF_SCOPE : CERAMIC_SCOPE}
+                value={scope}
+                onChange={setScope}
+                name="scope"
+                compact
+              />
 
-          <p className="wiz-legend">When did it happen?</p>
-          <Cards options={WHEN_HAPPENED} value={whenHappened} onChange={setWhenHappened} name="whenHappened" compact />
+              <p className="wiz-legend">Condition of the paint now</p>
+              <Cards
+                options={PAINT_CONDITION}
+                value={paintCondition}
+                onChange={setPaintCondition}
+                name="paintCondition"
+                compact
+              />
+            </>
+          ) : (
+            <>
+              <p className="wiz-legend">How much of it is covered?</p>
+              <Cards options={COVERAGE} value={coverage} onChange={setCoverage} name="coverage" compact />
+
+              <p className="wiz-legend">When did it happen?</p>
+              <Cards
+                options={WHEN_HAPPENED}
+                value={whenHappened}
+                onChange={setWhenHappened}
+                name="whenHappened"
+                compact
+              />
+            </>
+          )}
         </Panel>
       )}
 

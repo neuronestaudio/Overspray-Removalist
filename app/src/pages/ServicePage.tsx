@@ -92,6 +92,38 @@ export default function ServicePage({ slug }: { slug: string }) {
         </section>
       )}
 
+      {s.levels && (
+        <section className="band">
+          <div className="shell">
+            <div className="head">
+              <p className="eyebrow">Coverage</p>
+              <h2 className="display">{s.levelsHeading}</h2>
+              {s.levelsNote && <p className="body-muted">{s.levelsNote}</p>}
+            </div>
+            <ul className="lvls">
+              {s.levels.map((l) => (
+                <li key={l.name} className="lvl" data-common={l.common ? 'true' : 'false'}>
+                  {l.common && <span className="lvl-tag">Most common</span>}
+                  <h3>{l.name}</h3>
+                  <p className="lvl-who">{l.who}</p>
+                  <ul className="lvl-covers">
+                    {l.covers.map((c) => (
+                      <li key={c}>{c}</li>
+                    ))}
+                  </ul>
+                  {/* No figure here on purpose. There is no signed-off price
+                      list, and a made-up "from $X" is the one thing on this
+                      page a customer would hold us to. */}
+                  <Link className="btn btn-ghost" to="/quote">
+                    Get a price
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
       <section>
         <div className="shell">
           <h2 className="display">Other services</h2>

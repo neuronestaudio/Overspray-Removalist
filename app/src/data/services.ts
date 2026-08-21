@@ -23,6 +23,28 @@ export interface ComparePair {
   caption: string;
 }
 
+/**
+ * A coverage level, for the protection services.
+ *
+ * COVERAGE, NOT PRICED TIERS. The client has not signed off a coating range, a
+ * film brand or a price list, and this page already says they match protection
+ * to exposure "rather than selling one package to everybody" — so naming and
+ * pricing three products here would contradict the copy beside it and commit
+ * the business to something it has not agreed.
+ *
+ * What each level covers is factual and is what actually moves the number, so
+ * that is what these say. Add `price` per level once the client signs one off.
+ */
+export interface ProtectionLevel {
+  name: string;
+  /** One line on who it suits. */
+  who: string;
+  /** What is covered, as bullet points. */
+  covers: string[];
+  /** Marks the level most people take. */
+  common?: boolean;
+}
+
 export interface Service {
   slug: string;
   path: string;
@@ -37,6 +59,11 @@ export interface Service {
   heroAlt: string;
   blocks: ServiceBlock[];
   pair?: ComparePair;
+  /** Protection services only. Rendered as the coverage panel. */
+  levels?: ProtectionLevel[];
+  /** Heading above the coverage panel. */
+  levelsHeading?: string;
+  levelsNote?: string;
 }
 
 export const SERVICES: Service[] = [
@@ -109,6 +136,43 @@ export const SERVICES: Service[] = [
         heading: 'Fleets and dealer stock',
         body: [
           'Volume work is priced by the lot, same as our remediation work. For fleets and dealer stock the return is in resale and lease return condition, where a car with original paint in good order is worth demonstrably more than one carrying a repair history.',
+        ],
+      },
+    ],
+    levelsHeading: 'How much of the car to cover',
+    levelsNote:
+      'Every job is quoted on the car in front of us. Send photos and we will tell you which of these actually suits it.',
+    levels: [
+      {
+        name: 'Front end',
+        who: 'The cheapest way to stop the damage that actually happens.',
+        covers: [
+          'Leading edge of the bonnet',
+          'Front bumper',
+          'Mirror caps',
+          'Headlight lenses',
+        ],
+      },
+      {
+        name: 'Full front',
+        who: 'Highway kilometres, where stone chips are constant rather than occasional.',
+        covers: [
+          'Full bonnet',
+          'Full front guards',
+          'Front bumper',
+          'Mirror caps and headlights',
+          'A-pillars where exposed',
+        ],
+        common: true,
+      },
+      {
+        name: 'Full body',
+        who: 'New cars, prestige and anything heading for resale with original paint intact.',
+        covers: [
+          'Every painted panel',
+          'Doors, sills and rear quarters',
+          'Boot and rear bumper',
+          'Door edges and handle cups',
         ],
       },
     ],

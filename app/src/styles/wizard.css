@@ -53,7 +53,7 @@
   width: var(--wiz-fill, 0%);
   background: var(--accent-grad);
   box-shadow: 0 0 14px rgba(255, 79, 66, .55);
-  transition: width .55s var(--ease);
+  transition: width .34s var(--ease);
 }
 .wiz-steps li {
   display: grid; gap: .5rem; justify-items: center; text-align: center;
@@ -87,11 +87,19 @@
 }
 .wiz-pct { color: var(--accent-hot); font-weight: 700; }
 
+/* Reveal for the address field, which only exists once "Come to us" is picked.
+   Same easing as the panel so the two do not read as separate systems. */
+.wiz-reveal { animation: wizReveal .24s var(--ease) both; }
+@keyframes wizReveal {
+  from { opacity: 0; transform: translate3d(0, -6px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* ---------- step transition ----------
    The shell owns the height so the Continue button travels instead of jumping;
    the body owns the slide so the new question arrives from the side it came. */
-.wiz-shell { transition: height .42s var(--ease); }
-.wiz-body { animation: wizIn .42s var(--ease) both; }
+.wiz-shell { transition: height .26s var(--ease); }
+.wiz-body { animation: wizIn .24s var(--ease) both; }
 .wiz-body[data-dir="back"] { animation-name: wizInBack; }
 @keyframes wizIn {
   from { opacity: 0; transform: translate3d(26px, 0, 0); }
@@ -228,7 +236,7 @@
 @media (prefers-reduced-motion: reduce) {
   /* The JS already skips the height animation; this covers the panel slide. */
   .wiz-shell { transition: none; }
-  .wiz-body, .wiz-thumbs li { animation: none; }
+  .wiz-body, .wiz-thumbs li, .wiz-reveal { animation: none; }
   .wiz-steps::after { transition: none; }
 }
 
