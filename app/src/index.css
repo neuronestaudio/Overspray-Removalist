@@ -933,3 +933,33 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 @media (max-width: 620px) {
   .smap-areas { column-count: 1; }
 }
+
+
+/* ---------- woven mesh band ----------
+   The 18x32 carbon tile, not the carbon photograph the other bands use. Drawn
+   at 1.5x so the weave reads at arm's length without turning into noise behind
+   a moving photo rail. Scrim is deliberately light: the texture is the point. */
+.mesh-band { position: relative; isolation: isolate; }
+.mesh-band::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(rgba(8, 11, 22, .74), rgba(11, 16, 32, .82)),
+    url('/assets/images/carbon-mesh.png') repeat;
+  background-size: auto, 27px 48px;
+}
+/* Feathered top and bottom so the band joins the sections either side rather
+   than banding against them. */
+.mesh-band::after {
+  content: '';
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--bg) 0%, transparent 12%),
+    linear-gradient(to top, var(--bg) 0%, transparent 12%);
+}
+
+.gal-sub {
+  margin: .5rem 0 .35rem;
+  font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent-hot);
+}

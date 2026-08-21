@@ -107,17 +107,18 @@ export default function HomePage() {
           day. */}
       <CoatingProcess />
 
-      <section style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
+      <section className="mesh-band" style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">
-          <div className="head">
-            <h2 className="display">Off the tools</h2>
+          <ScrollTitle className="head">
+            <h2 className="display">Our gallery</h2>
+            <p className="gal-sub">Servicing Melbourne for over 30 years</p>
             <p className="lede">
               Vehicles restored and released.{' '}
               <Link to="/gallery" style={{ color: 'var(--accent-hot)', fontWeight: 700 }}>
                 See the full gallery
               </Link>
             </p>
-          </div>
+          </ScrollTitle>
         </div>
         <PhotoRail items={GALLERY.slice(0, 13)} duration={70} />
         <div style={{ height: '1rem' }} />
