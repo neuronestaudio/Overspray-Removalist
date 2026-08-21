@@ -3,16 +3,15 @@ import { IMAGES } from '../data/images';
 import type { Pair } from '../data/pairs';
 
 /**
- * Before/after comparison with a vehicle switcher.
+ * A row of before/after sliders — every job draggable in place.
  *
- * The switcher tiles are themselves miniature before/afters, split by the same
- * orange line as the main slider. Text pills showed neither what you were
- * switching to nor that the big image was draggable at all; this way the whole
- * set of jobs is legible at a glance and each tile rhymes with the control it
- * operates.
+ * This replaced a switcher-plus-one-big-pane layout. That version spent most of
+ * a screen on a single comparison and made the other three jobs look like
+ * thumbnails for it, when they are the proof. Four live sliders in a row show
+ * every job at once and every one of them is the interaction.
  *
- * --split is set on the pane and read by children, so it must inherit. It is
- * registered with @property purely so the intro sweep can ease; see index.css.
+ * --split is set on each pane and read by its children, so it must inherit. It
+ * is registered with @property purely so the intro sweep can ease; see index.css.
  */
 
 interface Props {
@@ -20,13 +19,20 @@ interface Props {
 }
 
 export default function BeforeAfter({ pairs }: Props) {
-  const [index, setIndex] = useState(0);
+  return (
+    <div className="ba-row">
+      {pairs.map((p, i) => (
+        <Compare key={p.id} pair={p} index={i} />
+      ))}
+    </div>
+  );
+}
+
+function Compare({ pair, index }: { pair: Pair; index: number }) {
   const [touched, setTouched] = useState(false);
   const paneRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const demoedRef = useRef(false);
-
-  const pair = pairs[index];
 
   const setSplit = useCallback((pct: number) => {
     const pane = paneRef.current;
@@ -51,9 +57,11 @@ export default function BeforeAfter({ pairs }: Props) {
     [setSplit],
   );
 
-  /* One-time demonstration when the slider first scrolls into view: it sweeps
-     itself open and back, which teaches the interaction without a caption. It
-     never replays and never fights a visitor who has already grabbed it. */
+  /* One-time sweep when the row first scrolls into view: it opens and closes
+     itself, which teaches the interaction without a caption. Staggered by
+     index, because four panes sweeping in unison reads as a page transition
+     rather than as four things you can grab. Never replays, and never fights a
+     visitor who has already taken hold of it. */
   useEffect(() => {
     const pane = paneRef.current;
     if (!pane || demoedRef.current) return;
@@ -68,31 +76,34 @@ export default function BeforeAfter({ pairs }: Props) {
           demoedRef.current = true;
           io.disconnect();
           timers.push(
-            window.setTimeout(() => {
-              if (paneRef.current?.getAttribute('data-touched') === 'true') return;
-              paneRef.current?.classList.add('nudging');
-              ([[74, 0], [30, 620], [50, 1240]] as const).forEach(([v, delay]) => {
+            window.setTimeout(
+              () => {
+                if (paneRef.current?.getAttribute('data-touched') === 'true') return;
+                paneRef.current?.classList.add('nudging');
+                ([[76, 0], [28, 520], [50, 1040]] as const).forEach(([v, delay]) => {
+                  timers.push(
+                    window.setTimeout(() => {
+                      if (paneRef.current?.getAttribute('data-touched') !== 'true') setSplit(v);
+                    }, delay),
+                  );
+                });
                 timers.push(
-                  window.setTimeout(() => {
-                    if (paneRef.current?.getAttribute('data-touched') !== 'true') setSplit(v);
-                  }, delay),
+                  window.setTimeout(() => paneRef.current?.classList.remove('nudging'), 1650),
                 );
-              });
-              timers.push(
-                window.setTimeout(() => paneRef.current?.classList.remove('nudging'), 1900),
-              );
-            }, 420),
+              },
+              360 + index * 190,
+            ),
           );
         }
       },
-      { threshold: 0.45 },
+      { threshold: 0.4 },
     );
     io.observe(pane);
     return () => {
       io.disconnect();
       timers.forEach(clearTimeout);
     };
-  }, [setSplit]);
+  }, [setSplit, index]);
 
   function onPointerDown(e: React.PointerEvent) {
     e.preventDefault(); // stops the native image drag cancelling the pointer stream
@@ -119,47 +130,15 @@ export default function BeforeAfter({ pairs }: Props) {
     setSplit(next);
   }
 
-  function choose(i: number) {
-    setIndex(i);
-    markTouched();
-    setSplit(50);
-  }
-
   return (
-    <div className="ba">
-      <div className="ba-switch" role="group" aria-label="Choose a job to compare">
-        {pairs.map((p, i) => (
-          <button
-            key={p.id}
-            type="button"
-            aria-pressed={i === index}
-            onClick={() => choose(i)}
-            className="ba-tile"
-          >
-            <span className="ba-tile-media">
-              <img src={`/assets/images/${p.beforeStem}-${lastWidth(p.beforeStem)}.webp`} alt="" loading="lazy" />
-              <img
-                className="ba-tile-after"
-                src={`/assets/images/${p.afterStem}-${lastWidth(p.afterStem)}.webp`}
-                alt=""
-                loading="lazy"
-              />
-            </span>
-            <span className="ba-tile-label">
-              <strong>{p.label}</strong>
-              <em>{p.vehicle}</em>
-            </span>
-          </button>
-        ))}
-      </div>
-
+    <figure className="ba-cell">
       <div
         ref={paneRef}
         className="ba-pane"
         role="slider"
         tabIndex={0}
         data-touched={touched ? 'true' : 'false'}
-        aria-label={`Before and after: ${pair.vehicle}. Use arrow keys to reveal the restored vehicle.`}
+        aria-label={`Before and after: ${pair.vehicle}, ${pair.label}. Use arrow keys to reveal the restored vehicle.`}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={50}
@@ -174,17 +153,15 @@ export default function BeforeAfter({ pairs }: Props) {
         onDragStart={(e) => e.preventDefault()}
       >
         <img
-          key={`${pair.id}-b`}
           className="ba-img"
-          src={`/assets/images/${pair.beforeStem}-${lastWidth(pair.beforeStem)}.webp`}
+          src={src(pair.beforeStem)}
           alt={pair.beforeAlt}
           loading="lazy"
           decoding="async"
         />
         <img
-          key={`${pair.id}-a`}
           className="ba-img ba-after"
-          src={`/assets/images/${pair.afterStem}-${lastWidth(pair.afterStem)}.webp`}
+          src={src(pair.afterStem)}
           alt={pair.afterAlt}
           loading="lazy"
           decoding="async"
@@ -195,7 +172,7 @@ export default function BeforeAfter({ pairs }: Props) {
 
         <div className="ba-handle">
           <span className="ba-knob" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
               <path d="M8.5 6.5 4 11l4.5 4.5V12h7v3.5L20 11l-4.5-4.5V10h-7V6.5Z" />
             </svg>
           </span>
@@ -204,14 +181,18 @@ export default function BeforeAfter({ pairs }: Props) {
         {!touched && <span className="ba-hint">Drag</span>}
       </div>
 
-      <p className="ba-caption">{pair.caption}</p>
-    </div>
+      <figcaption className="ba-cap">
+        <strong>{pair.label}</strong>
+        <em>{pair.vehicle}</em>
+      </figcaption>
+    </figure>
   );
 }
 
-/** Widest variant that exists for a stem. */
-function lastWidth(stem: string): number {
+/** Widest variant that exists for a stem. Never hardcode a width here: the
+    manifest is the only thing that knows which files were actually produced. */
+function src(stem: string): string {
   const meta = IMAGES[stem];
-  if (!meta) return 640;
-  return meta.widths[meta.widths.length - 1];
+  const w = meta ? meta.widths[meta.widths.length - 1] : 640;
+  return `/assets/images/${stem}-${w}.webp`;
 }

@@ -79,7 +79,7 @@ export const PAINT_CONDITION: Choice[] = [
 ];
 
 export const LOCATION_TYPES: Choice[] = [
-  { value: 'on_site', label: 'Come to us', hint: 'We work on site, all suburbs, Australia wide' },
+  { value: 'on_site', label: 'Come to us', hint: 'We work on site, all suburbs across Melbourne' },
   { value: 'drop_off', label: 'I can bring it in', hint: 'Drop off at Epping VIC 3076' },
 ];
 

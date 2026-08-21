@@ -407,7 +407,7 @@ export default function QuoteForm() {
       )}
 
       {step === 1 && (
-        <Panel title="Where is the vehicle?" sub="We work on site across all suburbs and Australia wide.">
+        <Panel title="Where is the vehicle?" sub="We work on site across every Melbourne suburb.">
           <Cards
             options={LOCATION_TYPES}
             value={locationType}

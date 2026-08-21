@@ -95,8 +95,13 @@ export default function WordParallax({ stem }: { stem: string }) {
 
       <div className="wpx-copy">
         <p className="eyebrow">What we take off</p>
+        {/* Hard break. Left to wrap it broke as "...IT COMES / OFF THE PAINT",
+            which splits the payoff across both lines instead of landing it on
+            the second one. */}
         <h2 className="display" id="wpx-title">
-          If it landed on the paint, it comes off the paint.
+          If it landed on the paint,
+          <br />
+          <span className="wpx-payoff">it comes off the paint.</span>
         </h2>
       </div>
     </section>

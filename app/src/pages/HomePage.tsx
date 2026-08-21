@@ -8,6 +8,7 @@ import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
 import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
+import ScrollTitle from '../components/ScrollTitle';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
@@ -57,10 +58,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Browsing the deck shows the damage. This shows the transformation. */}
+      {/* Straight under the hero. The deck shows damage; this names what the
+          damage is before the page asks anyone to read anything. */}
+      <WordParallax stem="texture-wide" />
+
+      {/* Then the transformation. */}
       <section>
         <div className="shell">
-          <div className="head beam">
+          <ScrollTitle className="head beam">
             <h2 className="display">
               Let the results speak for itself.
               <br />
@@ -68,9 +73,9 @@ export default function HomePage() {
             </h2>
             <p className="lede">
               Every pair is the same vehicle photographed before and after, with no respray and no
-              panel work in between.
+              panel work in between. Drag any of them.
             </p>
-          </div>
+          </ScrollTitle>
           <BeforeAfter pairs={PAIRS} />
         </div>
       </section>
@@ -82,16 +87,16 @@ export default function HomePage() {
             <div className="stat-l">Years removing overspray</div>
           </div>
           <div className="stat">
-            <div className="stat-n">Australia</div>
+            <div className="stat-n">Melbourne</div>
             <div className="stat-l">Wide, all suburbs, on site</div>
           </div>
           <div className="stat">
-            <div className="stat-n">Zero</div>
-            <div className="stat-l">Abrasives, sanding or respray</div>
+            <div className="stat-n">100%</div>
+            <div className="stat-l">Original paint kept. No sanding, no respray</div>
           </div>
           <div className="stat">
             <div className="stat-n">Fleet</div>
-            <div className="stat-l">Volume pricing for whole lots</div>
+            <div className="stat-l">Commercial HV and LV, priced by the lot</div>
           </div>
         </div>
       </section>
@@ -113,16 +118,14 @@ export default function HomePage() {
         <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
       </section>
 
-      <WordParallax stem="texture-wide" />
-
       <section>
         <div className="shell">
-          <div className="head">
+          <ScrollTitle className="head">
             {/* Not "what people say". There are no reviews to show — the rail
                 carries sourced capability claims until real ones exist. */}
             <p className="eyebrow">The record</p>
             <h2 className="display">Thirty years of not needing to advertise.</h2>
-          </div>
+          </ScrollTitle>
         </div>
         <ReviewRail />
       </section>
