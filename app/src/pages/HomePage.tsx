@@ -6,14 +6,11 @@ import ScrubHero from '../components/ScrubHero';
 import WipeVehicle from '../components/WipeVehicle';
 import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
+import ReviewRail from '../components/ReviewRail';
 import { GALLERY } from '../data/gallery';
-import { HERO_PAIR, PAIRS } from '../data/pairs';
+import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
 import { pushGtmEvent } from '../lib/gtm';
-
-/* All five jobs ride the hero deck: the visitor picks their own problem off it
-   before reading a word. */
-const DECK = [HERO_PAIR, ...PAIRS];
 
 export default function HomePage() {
   /* Wiping the panel clean is the strongest engagement signal on the page and
@@ -113,6 +110,16 @@ export default function HomePage() {
         <PhotoRail items={GALLERY.slice(0, 13)} duration={70} />
         <div style={{ height: '1rem' }} />
         <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
+      </section>
+
+      <section>
+        <div className="shell">
+          <div className="head">
+            <p className="eyebrow">What people say</p>
+            <h2 className="display">Thirty years of not needing to advertise.</h2>
+          </div>
+        </div>
+        <ReviewRail />
       </section>
 
       {/* Services, demonstrated. The claim is made by hand before it is made in

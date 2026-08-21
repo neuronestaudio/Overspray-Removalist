@@ -203,3 +203,30 @@
 @media (prefers-reduced-transparency: reduce) {
   .cf-card, .cf-arrow { backdrop-filter: none; background: var(--surface); }
 }
+
+
+/* ==========================================================================
+   MOBILE TAP TARGETS
+   Lives here, not in index.css: coverflow.css loads later, so an equal-
+   specificity override written upstream simply loses the cascade. That is
+   exactly what happened first time and the pips stayed 26x3.
+   ========================================================================== */
+@media (max-width: 860px) {
+  .cf-go { padding: .95rem 1.4rem; font-size: .72rem; }
+
+  /* A real 44px box with the 3px bar drawn inside it. An oversized ::after hit
+     area was the tidier idea and did not register at all: elementFromPoint
+     found nothing above the bar. */
+  .cf-pip {
+    height: 44px; width: 40px; padding: 0; background: none; border-radius: 0;
+    display: grid; place-items: center;
+  }
+  .cf-pip::before {
+    content: ''; width: 24px; height: 3px; border-radius: 2px;
+    background: rgba(255, 255, 255, .25);
+    transition: background .35s var(--ease), width .35s var(--ease);
+  }
+  .cf-pip[aria-selected="true"] { background: none; width: 46px; }
+  .cf-pip[aria-selected="true"]::before { background: var(--accent); width: 38px; }
+  .cf-pips { gap: .1rem; }
+}

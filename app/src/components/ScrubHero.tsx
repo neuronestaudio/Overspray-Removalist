@@ -43,7 +43,7 @@ const GRID_Y = 16;
  * does is fade in the reset button, because by then they have proved the point
  * and the only thing still worth offering is a way to do it again. */
 const GRID_GATE = 0.72;
-const PIXEL_TARGET = 0.8;
+const PIXEL_TARGET = 0.75;
 const SAMPLE_EVERY_MS = 220;
 /** Every Nth pixel's alpha byte. Sparse enough to be quick, dense enough to be right. */
 const SAMPLE_STRIDE = 37;

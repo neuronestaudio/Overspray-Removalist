@@ -85,3 +85,30 @@ export const PAIRS: Pair[] = [
     href: '/graffiti-removal',
   },
 ];
+
+
+/**
+ * Hero deck.
+ *
+ * Ceramic coating leads, because that is the market this business is moving
+ * into and the deck is the first thing a visitor reads. The proof jobs follow
+ * it: the coating card makes the offer, the four behind it are the evidence
+ * that the paint underneath any coating will actually be clean.
+ *
+ * The deck cards only ever render `beforeStem`, so a service card sets both
+ * stems to the same photo rather than the type needing a second shape.
+ */
+export const CERAMIC_CARD: Pair = {
+  id: 'ceramic',
+  label: 'Ceramic coating',
+  vehicle: 'Paint protection',
+  beforeStem: 'suv-black',
+  afterStem: 'suv-black',
+  beforeAlt: 'Black SUV finished to a deep gloss',
+  afterAlt: 'Black SUV finished to a deep gloss',
+  caption:
+    'A coating is only as good as the paint under it. Thirty years of taking contamination off duco is exactly the preparation one needs.',
+  href: '/ceramic-coating',
+};
+
+export const DECK: Pair[] = [CERAMIC_CARD, HERO_PAIR, ...PAIRS];
