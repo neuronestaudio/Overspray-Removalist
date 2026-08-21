@@ -9,6 +9,7 @@ import PhotoRail from '../components/PhotoRail';
 import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
 import ScrollTitle from '../components/ScrollTitle';
+import CoatingProcess from '../components/CoatingProcess';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
@@ -100,6 +101,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Where the market is. Removal is the reputation; coating is the growth,
+          and the preparation the coating needs is the thing they already do all
+          day. */}
+      <CoatingProcess />
 
       <section style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">

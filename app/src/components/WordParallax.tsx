@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Img from './Img';
 
 /**
@@ -14,11 +15,13 @@ import Img from './Img';
  * transform, which the compositor handles without a repaint.
  */
 
-/* The contaminants, in the client's own vocabulary. Repeated words are fine —
-   the belts are long and a word should reappear before the belt loops. */
+/* Two halves of the business, one belt each.
+   Row 0 is what comes off, row 1 is what goes on. Row 1 is the filled row, so
+   the protection work gets the prominent treatment — this section used to read
+   as a removal-only business. */
 const BELTS: string[][] = [
-  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI', 'RAIL DUST'],
-  ['ACID RAIN', 'SOOT', 'EPOXY', 'CONCRETE', 'URETHANE', 'IRON FILINGS'],
+  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI', 'RAIL DUST', 'ACID RAIN', 'SOOT'],
+  ['CERAMIC COATING', 'PAINT PROTECTION', 'PAINT CORRECTION', 'PPF', 'GLOSS', 'DETAILING'],
 ];
 
 export default function WordParallax({ stem }: { stem: string }) {
@@ -94,7 +97,7 @@ export default function WordParallax({ stem }: { stem: string }) {
       </div>
 
       <div className="wpx-copy">
-        <p className="eyebrow">What we take off</p>
+        <p className="eyebrow">Take it off. Then protect it.</p>
         {/* Hard break. Left to wrap it broke as "...IT COMES / OFF THE PAINT",
             which splits the payoff across both lines instead of landing it on
             the second one. */}
@@ -103,6 +106,18 @@ export default function WordParallax({ stem }: { stem: string }) {
           <br />
           <span className="wpx-payoff">it comes off the paint.</span>
         </h2>
+        {/* The bridge into the protection half. Removal is what they are known
+            for; coating is where the market is, and the two are the same
+            skill in opposite directions. */}
+        <p className="wpx-sub">Then we coat it, so the next thing struggles to stick.</p>
+        <div className="wpx-links">
+          <Link className="btn btn-primary" to="/ceramic-coating">
+            Ceramic coating
+          </Link>
+          <Link className="btn btn-ghost" to="/paint-protection">
+            Paint protection
+          </Link>
+        </div>
       </div>
     </section>
   );

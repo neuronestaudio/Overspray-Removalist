@@ -640,7 +640,7 @@
   position: absolute; inset: 0; z-index: -1;
   display: grid; align-content: center;
   /* Two rows, split around the sentence, rather than three stacked behind it. */
-  gap: clamp(4.5rem, 13vw, 9rem);
+  gap: clamp(7rem, 17vw, 12.5rem);
   pointer-events: none;
 }
 .wpx-belt { display: flex; white-space: nowrap; will-change: transform; }
@@ -682,13 +682,21 @@
 /* The belts run straight behind the sentence. A soft plate underneath keeps it
    readable without boxing it in. */
 .wpx-copy::before {
-  content: ''; position: absolute; inset: -8% -6%; z-index: -1;
-  background: radial-gradient(58% 62% at 50% 50%, rgba(8, 11, 22, .93) 38%, rgba(8, 11, 22, 0) 78%);
+  content: ''; position: absolute; inset: -16% -10%; z-index: -1;
+  background: radial-gradient(62% 66% at 50% 50%, rgba(8, 11, 22, .96) 44%, rgba(8, 11, 22, 0) 80%);
 }
 .wpx-copy .eyebrow { white-space: nowrap; }
 .wpx-payoff {
   background: linear-gradient(180deg, #fff, #ffb2a8 92%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.wpx-sub {
+  margin: .9rem auto 0; max-width: 34ch;
+  font-size: clamp(.95rem, 1.5vw, 1.1rem); color: var(--muted);
+}
+.wpx-links {
+  display: flex; gap: .7rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 1.4rem;
 }
 .wpx-copy .display {
   margin: .5rem 0 0;
@@ -727,3 +735,117 @@
 }
 .scrub-reset[data-show="true"] { transform: none; }
 .scrub-reset:active { transform: scale(.95); }
+
+
+/* ---------- ceramic coating process ----------
+   Full-bleed band. The clip sits behind at low opacity and the card floats on
+   it; the ghost word is the stage name at display size, clipped by the band. */
+.coat {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding-block: clamp(3.5rem, 8vw, 6rem);
+  border-block: 1px solid var(--border-soft);
+  background: var(--bg);
+}
+.coat-media { position: absolute; inset: 0; z-index: -1; }
+.coat-vid {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .9s cubic-bezier(.4, 0, .2, 1);
+}
+/* Low, because it is a backdrop for body copy, not a hero. The source is
+   already greyscale, so no filter is needed to keep it out of the brand. */
+.coat-vid[data-on='true'] { opacity: .62; }
+.coat-scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(100deg, rgba(8, 11, 22, .96) 6%, rgba(8, 11, 22, .8) 34%, rgba(8, 11, 22, .38) 78%, rgba(8, 11, 22, .5)),
+    radial-gradient(90% 70% at 20% 50%, rgba(255, 79, 66, .13), transparent 65%);
+}
+.coat-word {
+  position: absolute; right: 2vw; bottom: -.12em;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(4rem, 13vw, 12rem); line-height: .82;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, .1);
+  pointer-events: none; user-select: none; white-space: nowrap;
+}
+
+.coat-inner { display: grid; gap: clamp(1.5rem, 3vw, 2.4rem); }
+.coat-head { max-width: 46rem; }
+.coat-head .lede { margin-top: .5rem; }
+
+.coat-panel {
+  display: grid; gap: 1.1rem;
+  max-width: 44rem;
+  border-radius: 22px;
+  padding: clamp(1.4rem, 3vw, 2.1rem);
+  border: 1px solid var(--outline);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .015) 48%),
+    rgba(11, 16, 32, .58);
+  backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 28px 66px -34px rgba(0, 0, 0, .95);
+}
+.coat-panel:focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 4px; }
+
+.coat-card {
+  display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start;
+  animation: coatIn .42s var(--ease) both;
+}
+@keyframes coatIn {
+  from { opacity: 0; transform: translate3d(18px, 0, 0); }
+  to   { opacity: 1; transform: none; }
+}
+.coat-n {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; line-height: 1;
+  background: var(--accent-grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.coat-txt h3 { margin: 0 0 .5rem; font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.25; }
+.coat-txt p { margin: 0; color: var(--muted); line-height: 1.7; font-size: .95rem; }
+
+.coat-controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+.coat-arrow {
+  width: 44px; height: 44px; flex: none; border-radius: 999px; cursor: pointer;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, .06); border: 1px solid var(--outline); color: var(--text);
+  transition: background .22s var(--ease), border-color .22s var(--ease);
+}
+.coat-arrow:hover { background: rgba(255, 79, 66, .16); border-color: rgba(255, 79, 66, .55); }
+.coat-arrow svg { width: 18px; height: 18px; }
+
+.coat-pips { display: flex; gap: .4rem; flex-wrap: wrap; flex: 1; }
+.coat-pip {
+  cursor: pointer; padding: .5rem .85rem; border-radius: 999px;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted-dim); background: transparent; border: 1px solid var(--outline);
+  transition: color .22s var(--ease), background .22s var(--ease), border-color .22s var(--ease);
+}
+.coat-pip:hover { color: var(--text); border-color: var(--outline-hover); }
+.coat-pip[aria-selected='true'] {
+  color: #fff; background: var(--accent-grad); border-color: transparent;
+  box-shadow: 0 6px 18px -8px rgba(255, 79, 66, .9);
+}
+.coat-count { margin: 0; font-size: .78rem; color: var(--muted-dim); letter-spacing: .04em; }
+
+@media (max-width: 860px) {
+  .coat-word { font-size: clamp(3rem, 18vw, 6rem); right: auto; left: 50%; translate: -50% 0; }
+  .coat-card { grid-template-columns: 1fr; gap: .5rem; }
+  /* One scrolling line above the arrows. Wrapped, the four labels broke into
+     a ragged three-row block with the arrows stranded mid-way through it. */
+  .coat-pips {
+    order: -1; width: 100%;
+    flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+    scrollbar-width: none; padding-bottom: .15rem;
+  }
+  .coat-pips::-webkit-scrollbar { display: none; }
+  /* 36px is under the thumb target. Padding, not height, so the pill still
+     hugs its label. */
+  .coat-pip { flex: none; padding-block: .78rem; min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coat-card { animation: none; }
+  .coat-vid { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .coat-panel { backdrop-filter: none; background: var(--surface); }
+}
