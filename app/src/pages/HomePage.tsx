@@ -10,6 +10,7 @@ import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
 import ScrollTitle from '../components/ScrollTitle';
 import CoatingProcess from '../components/CoatingProcess';
+import QuoteForm from '../components/QuoteForm';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
@@ -164,22 +165,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section>
-        <div className="shell cta-panel">
-          <div>
-            <h2 className="display">Got a car covered in something that should not be there?</h2>
-            <p className="body-muted">
-              Send us photos and the location. If a whole lot of vehicles is affected in one place,
-              tell us how many and we will price the lot.
+      {/* The real wizard, not a button that goes and finds it. Every other
+          section on this page ends by asking someone to travel to /quote;
+          this one just is /quote. */}
+      <section className="home-quote">
+        <div className="shell">
+          <ScrollTitle className="head">
+            <p className="eyebrow">Get a quote</p>
+            <h2 className="display">
+              Got a car covered in something
+              <br />
+              <span className="hl">that should not be there?</span>
+            </h2>
+            <p className="lede">
+              Five quick questions and a couple of photos. If a whole lot of vehicles is affected in
+              one place, tell us how many and we will price the lot. Prefer to talk?{' '}
+              <a href={BUSINESS.phoneHref} style={{ color: 'var(--accent-hot)', fontWeight: 700 }}>
+                Call {BUSINESS.phone}
+              </a>
             </p>
-          </div>
-          <div className="cta-side">
-            <Link className="btn btn-primary btn-lg" to="/quote">
-              Get a quote
-            </Link>
-            <a className="btn btn-ghost btn-lg" href={BUSINESS.phoneHref}>
-              Call {BUSINESS.phone}
-            </a>
+          </ScrollTitle>
+
+          <div className="home-quote-form">
+            <QuoteForm />
           </div>
         </div>
       </section>

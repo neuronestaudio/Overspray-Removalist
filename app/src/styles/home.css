@@ -773,16 +773,29 @@
 .coat-head .lede { margin-top: .5rem; }
 
 .coat-panel {
+  position: relative; isolation: isolate;
   display: grid; gap: 1.1rem;
   max-width: 44rem;
-  border-radius: 22px;
-  padding: clamp(1.4rem, 3vw, 2.1rem);
-  border: 1px solid var(--outline);
+  border-radius: 24px;
+  padding: clamp(1.6rem, 3.2vw, 2.4rem);
+  border: 1px solid rgba(255, 255, 255, .16);
+  /* Heavier glass than the other cards: this one sits over moving footage, so
+     it needs to frost what is behind it rather than just tint it. */
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .015) 48%),
-    rgba(11, 16, 32, .58);
-  backdrop-filter: blur(18px) saturate(135%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 28px 66px -34px rgba(0, 0, 0, .95);
+    linear-gradient(148deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .04) 42%, rgba(255, 255, 255, .015) 72%),
+    rgba(11, 16, 32, .42);
+  backdrop-filter: blur(26px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    inset 0 -1px 0 rgba(255, 255, 255, .05),
+    0 30px 70px -34px rgba(0, 0, 0, .95);
+}
+/* Brand wash bleeding out of the number corner. */
+.coat-panel::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: radial-gradient(70% 90% at 0% 0%, rgba(255, 79, 66, .18), transparent 62%);
+  pointer-events: none;
 }
 .coat-panel:focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 4px; }
 
@@ -795,11 +808,16 @@
   to   { opacity: 1; transform: none; }
 }
 .coat-n {
-  font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; line-height: 1;
+  font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: .9;
   background: var(--accent-grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.coat-txt h3 { margin: 0 0 .5rem; font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.25; }
+/* Was clamp(1.1, 2vw, 1.35) and read as body copy with a number beside it. */
+.coat-txt h3 {
+  margin: 0 0 .6rem;
+  font-size: clamp(1.35rem, 2.7vw, 1.95rem);
+  line-height: 1.15; letter-spacing: -.01em;
+}
 .coat-txt p { margin: 0; color: var(--muted); line-height: 1.7; font-size: .95rem; }
 
 .coat-controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }

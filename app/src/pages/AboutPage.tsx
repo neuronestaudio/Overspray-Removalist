@@ -182,7 +182,7 @@ export default function AboutPage() {
           <div className="head">
             <h2 className="display">How a job runs</h2>
           </div>
-          <div className="rail">
+          <div className="steprail">
             {STEPS.map((s) => (
               <div className="step" key={s.n}>
                 <div className="step-dot">{s.n}</div>
