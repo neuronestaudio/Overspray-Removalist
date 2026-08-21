@@ -243,14 +243,17 @@
 
 /* ---------- scroll-scrubbed section titles ----------
    Driven by useScrollProgress: arrives from below, holds, lifts away. Same
-   scroll progress the word band uses, so they read as one system. */
-.scrub {
+   scroll progress the word band uses, so they read as one system.
+
+   .scrolltitle, not .scrub - that name is taken by the ScrubHero canvas
+   overlay above, which is position:absolute inset:0. */
+.scrolltitle {
   opacity: var(--fade, 1);
   transform: translate3d(0, var(--shift, 0px), 0);
   will-change: opacity, transform;
 }
 @media (prefers-reduced-motion: reduce) {
-  .scrub { opacity: 1; transform: none; }
+  .scrolltitle { opacity: 1; transform: none; }
 }
 
 

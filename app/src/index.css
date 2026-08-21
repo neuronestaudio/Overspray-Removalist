@@ -45,6 +45,12 @@
 
 /* ---------- fonts ---------- */
 @font-face {
+  /* Self-hosted like the other two. A Google Fonts <link> would put a
+     render-blocking third-party request in front of the hero. */
+  font-family: 'Allura'; src: url('/assets/fonts/allura-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
   font-family: 'Bebas Neue'; src: url('/assets/fonts/bebas-neue-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
@@ -995,3 +1001,19 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 .home-quote .head { text-align: center; margin-inline: auto; }
 .home-quote .head .lede { margin-inline: auto; }
 .home-quote-form { max-width: 62rem; margin-inline: auto; margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+
+
+/* ---------- hero script line ----------
+   Sits between the display title and the lede. Allura is a high-contrast
+   script, so it needs size and letter-spacing to stay legible against the
+   carbon; below ~1.5rem the thin strokes disappear into the weave. */
+.hero-script {
+  font-family: 'Allura', 'Segoe Script', cursive;
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  line-height: 1.15;
+  margin: .35rem 0 .5rem;
+  background: linear-gradient(100deg, #fff 10%, #ffb2a8 55%, var(--accent-hot) 95%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  /* The gradient clip kills any text-shadow, so the glow goes on a filter. */
+  filter: drop-shadow(0 4px 18px rgba(255, 79, 66, .35));
+}

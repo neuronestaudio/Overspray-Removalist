@@ -44,7 +44,10 @@ export default function HomePage() {
         <div className="shell">
           <div className="hero-deck-copy">
             <h1 className="display hero-shine">The Overspray Removalists</h1>
-            <p className="hero-kicker">Over 30 years servicing automobiles</p>
+            {/* The all-caps kicker was a third competing weight under an
+                already loud title. One script line instead, carrying the
+                positioning rather than the tenure. */}
+            <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
             <p className="lede">We&rsquo;ll take anything off your paint.</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
