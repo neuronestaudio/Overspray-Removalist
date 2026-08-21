@@ -13,7 +13,8 @@ exactly that wherever it appears.
 """
 import base64
 import os
-import re
+import pathlib
+
 import subprocess
 import sys
 
@@ -24,6 +25,17 @@ APP = os.path.join(ROOT, "app")
 
 def sh(cmd, cwd=ROOT):
     return subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=cwd).stdout.strip()
+
+
+def git(*args):
+    """Run git with no shell.
+
+    Every git call here carries % in a --format string, and shell=True runs
+    cmd.exe on Windows, which eats %ad%-looking spans as variable expansion and
+    hands git a format it never asked for. A pipe in a --format string is read
+    as a shell pipe for the same reason. No shell, no interpretation.
+    """
+    return subprocess.run(["git", *args], capture_output=True, text=True, cwd=ROOT).stdout.strip()
 
 
 def b64_font(name):
@@ -37,17 +49,24 @@ def b64_img(path):
 
 
 # ------------------------------------------------------------------ repo facts
-COMMITS = sh("git rev-list --count HEAD")
-FIRST = sh("git log --reverse --format=%ad --date=short | head -1")
-LAST = sh("git log -1 --format=%ad --date=short")
+COMMITS = git("rev-list", "--count", "HEAD")
+FIRST = git("log", "--reverse", "--format=%ad", "--date=short").split(chr(10))[0]
+LAST = git("log", "-1", "--format=%ad", "--date=short")
 ACTIVE_DAYS = len(set(sh("git log --format=%ad --date=short").split("\n")))
 INS = sh("git log --pretty=tformat: --numstat | awk '{a+=$1} END {print a}'")
 SRC_FILES = sh(r"""find app/src -type f \( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \) | wc -l""")
 SRC_LINES = sh(r"""find app/src -type f \( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \) -exec cat {} + | wc -l""")
-IMAGES = sh("ls app/public/assets/images/*.webp 2>/dev/null | wc -l")
-VIDEOS = sh("ls app/public/assets/video/*.mp4 2>/dev/null | wc -l")
-COMPONENTS = sh("ls app/src/components | wc -l")
-PAGES = sh("ls app/src/pages | wc -l")
+# Counted in Python, not the shell. subprocess(shell=True) runs cmd.exe here,
+# which reads `2>/dev/null` as a path and returns nothing at all — so these came
+# out blank in the table while the git and find calls happened to still work.
+def count(rel, pattern):
+    return str(len(list((pathlib.Path(ROOT) / rel).glob(pattern))))
+
+
+IMAGES = count("app/public/assets/images", "*.webp")
+VIDEOS = count("app/public/assets/video", "*.mp4")
+COMPONENTS = count("app/src/components", "*.tsx")
+PAGES = count("app/src/pages", "*.tsx")
 
 sitemap = os.path.join(APP, "dist/sitemap.xml")
 ROUTES = str(open(sitemap, encoding="utf-8").read().count("<loc>")) if os.path.exists(sitemap) else "63"
@@ -55,7 +74,12 @@ ROUTES = str(open(sitemap, encoding="utf-8").read().count("<loc>")) if os.path.e
 AREAS = sh("""grep -c "slug: '" app/src/data/areas.ts""") or "46"
 SERVICES = sh("""grep -c "path: '/" app/src/data/services.ts""") or "9"
 
-LOG = [ln.split("|", 1) for ln in sh("git log --format=%ad|%s --date=short --reverse").split("\n") if "|" in ln]
+# Separator is @@, not a pipe: cmd.exe reads a | inside --format as a shell
+# pipe, so the command silently produced nothing and the release log came out
+# empty.
+LOG = [ln.split("|", 1)
+       for ln in git("log", "--format=%ad|%s", "--date=short", "--reverse").split(chr(10))
+       if "|" in ln]
 
 
 def human(d):
@@ -173,7 +197,9 @@ p {{ margin:0 0 .62em; }}
   background-image:url(data:image/png;base64,{b64_img('/assets/images/carbon-mesh.png')});
   background-repeat:repeat; background-size:20px 36px; opacity:.5; }}
 .cover > * {{ position:relative; z-index:1; }}
-.clogo {{ height:20mm; width:auto; margin-bottom:auto; }}
+/* align-self, or the flex column's default `stretch` widens the image to the
+   container and the lockup renders squashed. */
+.clogo {{ height:20mm; width:auto; align-self:flex-start; margin-bottom:auto; }}
 .ceyebrow {{ font-size:8pt; letter-spacing:.3em; text-transform:uppercase; color:#ff6b5e; font-weight:700; }}
 .cover h1 {{ font-size:44pt; line-height:.95; margin:5mm 0 3mm; }}
 .cscript {{ font-family:'Allura',cursive; font-size:22pt; color:#ffb2a8; margin:0 0 7mm; }}
@@ -196,6 +222,11 @@ td {{ padding:2.6mm 0; border-bottom:1px solid #eceff5; vertical-align:top; font
 td.h {{ font-weight:700; width:38mm; padding-right:5mm; color:#0d1220; }}
 td.e {{ width:22mm; text-align:right; font-variant-numeric:tabular-nums; color:#0d1220; font-weight:700; white-space:nowrap; }}
 tr.total td {{ border-bottom:none; border-top:1.5px solid #d9dee8; font-weight:700; padding-top:3mm; }}
+/* A stream split across a page break put its heading on one sheet and its
+   detail on the next, under the footer. */
+tr {{ break-inside: avoid; page-break-inside: avoid; }}
+h2 {{ break-after: avoid; page-break-after: avoid; }}
+.find {{ break-inside: avoid; page-break-inside: avoid; }}
 
 .note {{ background:#f6f8fc; border-left:3px solid #ff4f42; padding:4mm 5mm; margin:4mm 0 6mm;
   font-size:8.6pt; color:#3c4454; }}
@@ -207,7 +238,8 @@ tr.total td {{ border-bottom:none; border-top:1.5px solid #d9dee8; font-weight:7
 .find b {{ display:block; font-size:10pt; color:#0d1220; }}
 
 ol.next {{ margin:0; padding-left:5mm; font-size:9pt; }}
-ol.next li {{ margin-bottom:2.4mm; }}
+ol.next li {{ margin-bottom:2.4mm; break-inside:avoid; page-break-inside:avoid; }}
+ol.next {{ break-inside:avoid; page-break-inside:avoid; }}
 
 .log {{ font-size:8.2pt; }}
 .log td {{ padding:1.7mm 0; }}
