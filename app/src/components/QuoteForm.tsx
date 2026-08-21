@@ -130,7 +130,13 @@ export default function QuoteForm() {
       /* Refuses loudly rather than posting nowhere. Shipping with a placeholder
          would drop every lead silently, which is the exact failure this site is
          being rebuilt to fix. */
-      setSubmitError('This form is not connected yet. Set GHL_WEBHOOK in src/lib/site.ts before going live.');
+      /* Client-safe wording. This is visible on a demo link, so it must not
+         read like a stack trace; the developer-facing note lives in the comment
+         on GHL_WEBHOOK and in the README, not on the customer's screen. */
+      setSubmitError(
+        `Online quotes are not switched on yet. Please call ${BUSINESS.phone} ` +
+          `or email ${BUSINESS.email} and we will come straight back to you.`,
+      );
       return;
     }
 
