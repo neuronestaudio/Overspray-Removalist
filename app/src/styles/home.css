@@ -25,7 +25,10 @@
 .hero-deck::before,
 .pbanner.carbon::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(rgba(8, 11, 22, .88), rgba(11, 16, 32, .93)),
+  /* Scrim alphas scaled ~15% down across every carbon surface. The weave is
+     the material, not the wallpaper; it was being held back by a veil tuned
+     for a flat background. */
+  background: linear-gradient(rgba(8, 11, 22, .75), rgba(11, 16, 32, .79)),
               url('/assets/images/carbon-bg.jpg');
   background-size: cover; background-position: center;
 }
@@ -574,15 +577,16 @@
 
 .wpx-belts {
   position: absolute; inset: 0; z-index: -1;
-  display: grid; align-content: center; gap: clamp(.1rem, 1vw, .6rem);
+  display: grid; align-content: center;
+  /* Two rows, split around the sentence, rather than three stacked behind it. */
+  gap: clamp(4.5rem, 13vw, 9rem);
   pointer-events: none;
 }
 .wpx-belt { display: flex; white-space: nowrap; will-change: transform; }
 /* Each row travels a different distance, and the middle one runs the other
    way, which is what separates this from a marquee. */
-.wpx-belt[data-row="0"] { transform: translate3d(calc(var(--p, .5) * -26vw + 8vw), 0, 0); }
-.wpx-belt[data-row="1"] { transform: translate3d(calc(var(--p, .5) * 34vw - 22vw), 0, 0); }
-.wpx-belt[data-row="2"] { transform: translate3d(calc(var(--p, .5) * -44vw + 14vw), 0, 0); }
+.wpx-belt[data-row="0"] { transform: translate3d(calc(var(--p, .5) * -30vw + 10vw), 0, 0); }
+.wpx-belt[data-row="1"] { transform: translate3d(calc(var(--p, .5) * 40vw - 26vw), 0, 0); }
 
 .wpx-word {
   /* Bebas Neue ships at 400 only. Asking for 900 gets a synthesised bold that
@@ -632,10 +636,9 @@
   .wpx { min-height: 420px; }
   .wpx-word { font-size: clamp(2.6rem, 15vw, 5rem); }
   .wpx-copy { max-width: min(88vw, 26rem); }
-  /* Three belts behind a phone-width sentence is noise, and the copy plate
-     cannot cover them all. Drop the outlined rows and keep the filled one. */
-  .wpx-belt[data-row="0"], .wpx-belt[data-row="2"] { opacity: .3; }
-  .wpx-belts { gap: 1.4rem; }
+  /* Wider split on a phone: the sentence takes four lines less width, so the
+     belts move further out to clear it. */
+  .wpx-belts { gap: clamp(9rem, 34vw, 13rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -308,7 +308,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .cell-mesh { background: var(--surface-2); }
 .cell-mesh::before {
   background:
-    linear-gradient(to top, rgba(8, 11, 22, .9), rgba(8, 11, 22, .55)),
+    linear-gradient(to top, rgba(8, 11, 22, .76), rgba(8, 11, 22, .47)),
     url('/assets/images/carbon-mesh.png') repeat;
   background-size: auto, 27px 48px;
 }
@@ -458,7 +458,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .band { position: relative; isolation: isolate; background: var(--bg); }
 .band::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(rgba(8, 11, 22, .88), rgba(11, 16, 32, .93)), url('/assets/images/carbon-bg.jpg');
+  background: linear-gradient(rgba(8, 11, 22, .75), rgba(11, 16, 32, .79)), url('/assets/images/carbon-bg.jpg');
   background-size: cover; background-position: center;
 }
 
@@ -578,7 +578,7 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(rgba(8, 11, 22, .90), rgba(11, 16, 32, .96)),
+    linear-gradient(rgba(8, 11, 22, .76), rgba(11, 16, 32, .82)),
     url('/assets/images/carbon-bg.jpg');
   background-size: cover;
   background-position: center;

@@ -1,10 +1,12 @@
 import { Link, NavLink } from 'react-router-dom';
 import { BUSINESS } from '../lib/site';
 
+/* Pricing is deliberately absent. It still has a route and a footer link, but
+   it was the one item in the bar over the hero that invited a visitor to price
+   a job before seeing what the job looks like. */
 const NAV = [
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
-  { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ];

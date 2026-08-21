@@ -4,7 +4,7 @@ import Img from './Img';
 /**
  * Full-bleed parallax band of oversized type.
  *
- * Three belts of condensed display words drift across a job photograph at
+ * Two belts of condensed display words drift across a job photograph at
  * different speeds and directions, driven by how far the band has travelled
  * through the viewport. The photo itself lags the scroll, so the type and the
  * plate it sits on separate as you pass.
@@ -17,9 +17,8 @@ import Img from './Img';
 /* The contaminants, in the client's own vocabulary. Repeated words are fine —
    the belts are long and a word should reappear before the belt loops. */
 const BELTS: string[][] = [
-  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI'],
-  ['RAIL DUST', 'ACID RAIN', 'SOOT', 'EPOXY'],
-  ['CONCRETE', 'URETHANE', 'IRON FILINGS', 'TAR'],
+  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI', 'RAIL DUST'],
+  ['ACID RAIN', 'SOOT', 'EPOXY', 'CONCRETE', 'URETHANE', 'IRON FILINGS'],
 ];
 
 export default function WordParallax({ stem }: { stem: string }) {
