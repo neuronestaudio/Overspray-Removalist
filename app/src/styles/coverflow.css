@@ -205,14 +205,27 @@
 .cf-pip[aria-selected="true"] { background: var(--accent); width: 42px; }
 
 @media (max-width: 860px) {
-  .cf { height: clamp(470px, 66vh, 560px); }
-  .cf-track { height: 390px; }
+  /* Taller, so the card clears the HUD instead of the arrows and pips landing
+     on top of the copy. */
+  .cf { height: clamp(560px, 76vh, 640px); }
+  .cf-track { height: 390px; transform: translateY(-26px); }
   .cf-card { width: 280px; height: 390px; margin-left: -140px; }
   .cf-card { transform:
     translate3d(calc(var(--d) * 232px), calc(var(--ad) * 12px), calc(var(--ad) * -210px))
     rotateY(calc(var(--d) * -20deg)) scale(var(--s, 1)); }
   .cf-art { height: 168px; }
-  .cf-arrow { width: 44px; height: 44px; margin-top: -22px; }
+  /* Down to the HUD line and out to the edges. Vertically centred they sat
+     across the middle of the card, over the description. */
+  .cf-arrow {
+    width: 44px; height: 44px;
+    top: auto; bottom: .45rem; margin-top: 0;
+  }
+  .cf-prev { left: .35rem; }
+  .cf-next { right: .35rem; }
+  /* The card already carries its own NN / NN. Two counters that disagree
+     during a transition is worse than one. */
+  .cf-counter { display: none; }
+  .cf-hud { bottom: 1.05rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -232,7 +245,7 @@
    exactly what happened first time and the pips stayed 26x3.
    ========================================================================== */
 @media (max-width: 860px) {
-  .cf-go { padding: .95rem 1.4rem; font-size: .72rem; }
+  .cf-go { padding: 1.05rem 1.4rem; font-size: .72rem; min-height: 46px; }
 
   /* A real 44px box with the 3px bar drawn inside it. An oversized ::after hit
      area was the tidier idea and did not register at all: elementFromPoint

@@ -235,12 +235,14 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
   /* Last track explicitly: with the nav and CTA hidden on mobile the grid has
      two items, and without this the group lands in the middle column. */
   grid-column: -2; justify-self: end;
-  display: none; align-items: center; gap: .6rem;
+  /* Tight: they are one control group, not two separate affordances. */
+  display: none; align-items: center; gap: .28rem;
 }
 .burger {
-  display: grid; place-items: center; background: none; border: 1px solid var(--border);
-  width: 44px; height: 44px;
-  border-radius: var(--r-int); padding: .5rem .6rem; cursor: pointer;
+  display: grid; place-items: center; background: none; border: 1px solid var(--outline);
+  /* Round, to match the call icon beside it. A rounded square next to a circle
+     read as two unrelated buttons. */
+  width: 44px; height: 44px; border-radius: 999px; cursor: pointer;
 }
 .burger svg { width: 22px; height: 22px; stroke: var(--text); fill: none; }
 
@@ -735,6 +737,12 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
   /* Scoped to the desktop group. Unscoped it also hid the call icon that now
      sits beside the burger, which is the whole point of putting one there. */
   .nav, .hdr-cta .hdr-call { display: none; }
+  /* Logo spans the whole row and centres; the controls sit in the same row on
+     top of it, hard right. Putting the logo in a track of its own could not
+     centre it against the page, only against the space left over. */
+  .hdr-logo { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
+  .hdr-mob { grid-row: 1; }
+  .hdr-logo img { height: 60px; }
   .hdr-mob { display: flex; }
   .hdr-cta { display: none; }
   .split, .cta-panel { grid-template-columns: 1fr; }
@@ -849,7 +857,9 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
    small; the footer carries the full lockup, where the tagline has room. */
 .hdr-logo img { height: 46px; width: auto; }
 @media (max-width: 620px) {
-  .hdr-logo img { height: 40px; }
+  /* 60, not 40. On a phone the header carries the logo alone in the centre,
+     so it can afford the size — and it is the only branding on screen. */
+  .hdr-logo img { height: 60px; }
   img.ftr-logo { height: 74px; }
 }
 

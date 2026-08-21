@@ -72,13 +72,13 @@ export default function HomePage() {
         <div className="shell">
           <ScrollTitle className="head beam">
             <h2 className="display">
-              Let the results speak for itself.
+              Let the results
               <br />
-              <span className="hl">Pick any job.</span>
+              <span className="hl">speak for itself.</span>
             </h2>
             <p className="lede">
-              Every pair is the same vehicle photographed before and after, with no respray and no
-              panel work in between. Drag any of them.
+              Pick any job and drag the handle. Every pair is the same vehicle photographed before
+              and after, with no respray and no panel work in between.
             </p>
           </ScrollTitle>
           <BeforeAfter pairs={PAIRS} />

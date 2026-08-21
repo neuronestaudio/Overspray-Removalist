@@ -32,12 +32,20 @@ export interface Choice {
  * isProtectionJob — because "how much of it is covered" and "when did it
  * happen" are removal questions that mean nothing on a coating job.
  */
+/* Five, not eight.
+   Graffiti, industrial fallout and acid rain came out and fold into the first
+   option. They are still separate services with their own pages — but as the
+   opening question of a form they were three extra decisions to answer a
+   question the photos settle anyway, and every one of them takes the same
+   non-abrasive process. The hint carries them so nobody thinks their job is
+   not covered. */
 export const CONTAMINANTS: Choice[] = [
-  { value: 'paint_overspray', label: 'Paint overspray', hint: 'Spray painting, roller work, a wind change' },
+  {
+    value: 'paint_overspray',
+    label: 'Paint overspray or fallout',
+    hint: 'Spray paint, graffiti, iron filings, rail dust, soot, acid rain',
+  },
   { value: 'cement_splatter', label: 'Cement or concrete', hint: 'Slab pour splatter, lime staining' },
-  { value: 'graffiti', label: 'Graffiti', hint: 'Aerosol on a vehicle, plant or property' },
-  { value: 'industrial_fallout', label: 'Industrial fallout', hint: 'Iron filings, rail dust, soot' },
-  { value: 'acid_rain', label: 'Acid rain or chemical', hint: 'Etching, chemical fallout' },
   { value: 'ceramic_coating', label: 'Ceramic coating', hint: 'Protect the paint on a clean or corrected car' },
   { value: 'paint_protection', label: 'Paint protection film', hint: 'Clear film over the panels that cop the damage' },
   { value: 'not_sure', label: 'Not sure yet', hint: 'Send photos and we will identify it' },
