@@ -31,7 +31,10 @@ import QuotePage from './pages/QuotePage';
 import ContactPage from './pages/ContactPage';
 import ThankYouPage from './pages/ThankYouPage';
 import PrivacyPage from './pages/PrivacyPage';
+import SitemapPage from './pages/SitemapPage';
+import AreaPage from './pages/AreaPage';
 import { SERVICES } from './data/services';
+import { AREAS, areaPath } from './data/areas';
 
 export interface RouteDef {
   path: string;
@@ -57,6 +60,16 @@ export const ROUTES: RouteDef[] = [
   { path: '/contact', element: <ContactPage /> },
   { path: '/thank-you', element: <ThankYouPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
+  { path: '/sitemap', element: <SitemapPage /> },
+
+  /* One component, one data file, one URL per suburb. Same generative pattern
+     as the services above, and the pre-render canonical check covers every one
+     of them: a suburb whose route went missing would fail the build rather
+     than quietly publish the 404 page under its URL. */
+  ...AREAS.map((a) => ({
+    path: areaPath(a),
+    element: <AreaPage slug={a.slug} />,
+  })),
 ];
 
 /** Routes the build writes to disk. */

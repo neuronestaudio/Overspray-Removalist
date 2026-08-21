@@ -879,3 +879,57 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 @media (prefers-reduced-transparency: reduce) {
   .lvl { backdrop-filter: none; background: var(--surface); }
 }
+
+/* ---------- HTML sitemap ---------- */
+.smap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); }
+.smap-group { display: grid; gap: 1rem; align-content: start; }
+.smap-group > .display { font-size: clamp(1.5rem, 2.6vw, 2rem); margin: 0; }
+.smap-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
+.smap-list a {
+  display: flex; align-items: baseline; justify-content: space-between; gap: .75rem;
+  padding: .62rem .85rem; border-radius: 10px;
+  color: var(--muted); font-size: .93rem;
+  border: 1px solid transparent;
+  transition: color .18s var(--ease), background .18s var(--ease),
+              border-color .18s var(--ease), transform .18s var(--ease);
+}
+.smap-list a:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, .045);
+  border-color: var(--outline);
+  transform: translateX(3px);
+}
+.smap-list em { font-style: normal; font-size: .76rem; color: var(--muted-dim); flex: none; }
+
+/* Multi-column, not grid. The regions hold 17, 12, 5, 5 and 8 suburbs, so a
+   three-track grid left two thirds of the row empty beside the long one. */
+.smap-areas {
+  margin-top: 2rem;
+  column-count: 3;
+  column-gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.smap-areas .smap-group {
+  break-inside: avoid;
+  margin-bottom: 2.2rem;
+}
+.smap-region {
+  display: flex; align-items: center; gap: .7rem;
+  margin: 0 0 .35rem; padding-bottom: .7rem;
+  border-bottom: 1px solid var(--border-soft);
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: .04em;
+}
+.smap-region span {
+  font-family: 'DM Sans', sans-serif; font-size: .68rem; font-weight: 700;
+  padding: .16rem .5rem; border-radius: 999px; color: #fff;
+  background: var(--accent-grad);
+}
+
+.ftr-bottom-links { display: flex; gap: 1.25rem; }
+
+@media (max-width: 900px) {
+  .smap { grid-template-columns: 1fr; }
+  .smap-areas { column-count: 2; }
+}
+@media (max-width: 620px) {
+  .smap-areas { column-count: 1; }
+}

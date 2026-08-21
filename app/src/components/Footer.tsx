@@ -148,7 +148,10 @@ export default function Footer() {
               build-time year would go stale the same way the moment a year
               turns over without a deploy, and would also mismatch on hydration. */}
           <span>&copy; {BUSINESS.name}. All rights reserved.</span>
-          <Link to="/privacy">Privacy</Link>
+          <span className="ftr-bottom-links">
+            <Link to="/sitemap">Sitemap</Link>
+            <Link to="/privacy">Privacy</Link>
+          </span>
         </div>
       </div>
     </footer>
