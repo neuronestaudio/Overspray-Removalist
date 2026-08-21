@@ -6,33 +6,101 @@
    questions are Overspray's own.
    ========================================================================== */
 
-.wiz { display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); }
+/* The wizard reads as one machined object sitting on the carbon rather than
+   loose controls scattered down the page. */
+.wiz {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: clamp(1.25rem, 2.4vw, 1.75rem);
+  padding: clamp(1.35rem, 3vw, 2.4rem);
+  border-radius: 26px;
+  border: 1px solid var(--outline);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .012) 38%, rgba(255, 255, 255, 0) 70%),
+    rgba(11, 16, 32, .55);
+  backdrop-filter: blur(22px) saturate(135%);
+  box-shadow:
+    0 32px 80px -32px rgba(0, 0, 0, .85),
+    inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+/* A brand wash bleeding out of the top-left corner, clipped to the card. */
+.wiz::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(60% 90% at 0% 0%, rgba(255, 79, 66, .16), transparent 62%);
+  pointer-events: none;
+}
 
 /* ---------- step rail ---------- */
+.wiz-head { display: grid; gap: .85rem; }
 .wiz-steps {
+  position: relative;
   display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
-  gap: .5rem; list-style: none; margin: 0; padding: 0;
+  gap: .5rem; list-style: none; margin: 0; padding: 1.15rem 0 0;
+}
+/* Track and fill, so progress slides instead of five borders flicking. */
+.wiz-steps::before,
+.wiz-steps::after {
+  content: '';
+  position: absolute; top: 0; left: 0; height: 2px; border-radius: 2px;
+}
+.wiz-steps::before { width: 100%; background: var(--border); }
+.wiz-steps::after {
+  width: var(--wiz-fill, 0%);
+  background: var(--accent-grad);
+  box-shadow: 0 0 14px rgba(255, 79, 66, .55);
+  transition: width .55s var(--ease);
 }
 .wiz-steps li {
   display: grid; gap: .5rem; justify-items: center; text-align: center;
-  padding-top: .85rem; border-top: 2px solid var(--border);
-  transition: border-color .4s var(--ease);
 }
-.wiz-steps li[data-state="current"] { border-top-color: var(--accent); }
-.wiz-steps li[data-state="done"] { border-top-color: rgba(213, 42, 34, .5); }
 .wiz-num {
-  width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center;
+  width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center;
   font-size: .78rem; font-weight: 700; color: var(--muted-dim);
-  background: var(--surface); border: 1px solid var(--border);
-  transition: all .35s var(--ease);
+  background: rgba(255, 255, 255, .045); border: 1px solid var(--outline);
+  backdrop-filter: blur(8px);
+  transition: color .3s var(--ease), background .3s var(--ease),
+              border-color .3s var(--ease), box-shadow .3s var(--ease), transform .3s var(--ease);
 }
-.wiz-steps li[data-state="current"] .wiz-num { background: var(--accent); border-color: var(--accent); color: #fff; }
-.wiz-steps li[data-state="done"] .wiz-num { color: var(--accent-hot); border-color: rgba(255, 121, 0, .45); }
+.wiz-steps li[data-state="current"] .wiz-num {
+  background: var(--accent-grad); border-color: transparent; color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(255, 79, 66, .16), 0 6px 18px -6px rgba(255, 79, 66, .8);
+}
+.wiz-steps li[data-state="done"] .wiz-num {
+  color: var(--accent-hot); border-color: rgba(255, 79, 66, .45);
+  background: rgba(255, 79, 66, .1);
+}
 .wiz-label {
-  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
-  color: var(--muted-dim);
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--muted-dim); transition: color .3s var(--ease);
 }
 .wiz-steps li[data-state="current"] .wiz-label { color: var(--text); }
+
+.wiz-read {
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  margin: 0; font-size: .78rem; letter-spacing: .04em; color: var(--muted-dim);
+}
+.wiz-pct { color: var(--accent-hot); font-weight: 700; }
+
+/* ---------- step transition ----------
+   The shell owns the height so the Continue button travels instead of jumping;
+   the body owns the slide so the new question arrives from the side it came. */
+.wiz-shell { transition: height .42s var(--ease); }
+.wiz-body { animation: wizIn .42s var(--ease) both; }
+.wiz-body[data-dir="back"] { animation-name: wizInBack; }
+@keyframes wizIn {
+  from { opacity: 0; transform: translate3d(26px, 0, 0); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes wizInBack {
+  from { opacity: 0; transform: translate3d(-26px, 0, 0); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* ---------- panel ---------- */
 .wiz-panel { display: grid; gap: 1rem; }
@@ -47,42 +115,86 @@
 .wiz-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
 .wiz-cards[data-compact="true"] { grid-template-columns: repeat(4, 1fr); }
 .wiz-card {
-  position: relative; text-align: left; cursor: pointer;
-  padding: 1rem 2.4rem 1rem 1rem; border-radius: var(--r-box);
-  background: var(--glass-bg); border: 1px solid var(--outline);
-  backdrop-filter: blur(10px);
-  transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease);
+  position: relative; text-align: left; cursor: pointer; isolation: isolate;
+  padding: 1.05rem 2.6rem 1.05rem 1.05rem; border-radius: 15px;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .018) 55%),
+    rgba(255, 255, 255, .022);
+  border: 1px solid var(--outline);
+  backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+  transition: border-color .25s var(--ease), transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-.wiz-card:hover { transform: translateY(-2px); border-color: var(--outline-hover); }
-.wiz-card[aria-checked="true"] { border-color: var(--accent); background: rgba(213, 42, 34, .1); }
+/* Glow lives on a pseudo-element so it can cross-fade without repainting the
+   card's own backdrop-filter on every frame. */
+.wiz-card::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(255, 79, 66, .22), transparent 60%);
+  opacity: 0; transition: opacity .25s var(--ease);
+}
+.wiz-card:hover { transform: translateY(-3px); border-color: var(--outline-hover); }
+.wiz-card:hover::before { opacity: .55; }
+.wiz-card:focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 3px; }
+.wiz-card[aria-checked="true"] {
+  border-color: rgba(255, 79, 66, .75);
+  box-shadow:
+    0 0 0 1px rgba(255, 79, 66, .35),
+    0 14px 34px -18px rgba(255, 79, 66, .9),
+    inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+.wiz-card[aria-checked="true"]::before { opacity: 1; }
 .wiz-card-label { display: block; font-weight: 700; font-size: .95rem; color: var(--text); }
 .wiz-card-hint { display: block; font-size: .8rem; color: var(--muted); margin-top: .2rem; line-height: 1.4; }
 .wiz-tick {
   position: absolute; top: .85rem; right: .85rem;
-  width: 20px; height: 20px; border-radius: 999px; display: grid; place-items: center;
-  font-size: .68rem; color: #fff; background: var(--accent);
-  opacity: 0; transform: scale(.7); transition: all .25s var(--ease);
+  width: 21px; height: 21px; border-radius: 999px; display: grid; place-items: center;
+  font-size: .68rem; color: #fff; background: var(--accent-grad);
+  box-shadow: 0 4px 12px -4px rgba(255, 79, 66, .9);
+  opacity: 0; transform: scale(.4);
+  transition: opacity .2s var(--ease), transform .32s cubic-bezier(.34, 1.8, .5, 1);
 }
 .wiz-card[aria-checked="true"] .wiz-tick { opacity: 1; transform: none; }
 
 /* ---------- fields ---------- */
 .wiz-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .wiz .field .hint { font-weight: 400; color: var(--muted-dim); font-size: .78rem; }
+.wiz .field input, .wiz .field select, .wiz .field textarea {
+  background: rgba(255, 255, 255, .035);
+  border: 1px solid var(--outline);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: border-color .22s var(--ease), background .22s var(--ease), box-shadow .22s var(--ease);
+}
+.wiz .field input:hover, .wiz .field textarea:hover { border-color: var(--outline-hover); }
+.wiz .field input:focus, .wiz .field select:focus, .wiz .field textarea:focus {
+  background: rgba(255, 255, 255, .06);
+  border-color: rgba(255, 79, 66, .7);
+  box-shadow: 0 0 0 4px rgba(255, 79, 66, .13);
+}
 
 /* ---------- photos ---------- */
 .wiz .drop {
-  border: 1.5px dashed var(--border); border-radius: var(--r-box); background: var(--surface);
+  border: 1.5px dashed var(--outline-hover); border-radius: 15px;
+  background: rgba(255, 255, 255, .03);
+  backdrop-filter: blur(10px);
   padding: 2rem 1.5rem; text-align: center; cursor: pointer;
-  transition: border-color .25s var(--ease), background .25s var(--ease);
+  transition: border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
 }
-.wiz .drop:hover, .wiz .drop:focus-visible { border-color: var(--accent-hot); background: var(--surface-2); }
+.wiz .drop:hover, .wiz .drop:focus-visible {
+  border-color: var(--accent-hot);
+  background: rgba(255, 79, 66, .07);
+  box-shadow: 0 0 0 4px rgba(255, 79, 66, .1);
+}
 .wiz .drop input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .wiz-thumbs { list-style: none; margin: .85rem 0 0; padding: 0; display: grid; gap: .4rem; }
 .wiz-thumbs li {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: .5rem .75rem; border-radius: var(--r-int);
-  background: var(--surface); border: 1px solid var(--border);
+  padding: .55rem .8rem; border-radius: 11px;
+  background: rgba(255, 255, 255, .04); border: 1px solid var(--outline);
+  backdrop-filter: blur(8px);
   font-size: .85rem; color: var(--muted);
+  animation: wizIn .3s var(--ease) both;
 }
 .wiz-thumbs button {
   width: 22px; height: 22px; border-radius: 999px; cursor: pointer; flex: none;
@@ -108,7 +220,16 @@
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .wiz-card { backdrop-filter: none; background: var(--surface); }
+  .wiz, .wiz-card, .wiz .drop, .wiz .field input, .wiz .field textarea, .wiz-num {
+    backdrop-filter: none; background: var(--surface);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The JS already skips the height animation; this covers the panel slide. */
+  .wiz-shell { transition: none; }
+  .wiz-body, .wiz-thumbs li { animation: none; }
+  .wiz-steps::after { transition: none; }
 }
 
 /* ---------- quote page layout ----------

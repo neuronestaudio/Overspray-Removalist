@@ -7,6 +7,7 @@ import WipeVehicle from '../components/WipeVehicle';
 import BeforeAfter from '../components/BeforeAfter';
 import PhotoRail from '../components/PhotoRail';
 import ReviewRail from '../components/ReviewRail';
+import WordParallax from '../components/WordParallax';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
 import { BUSINESS } from '../lib/site';
@@ -112,10 +113,14 @@ export default function HomePage() {
         <PhotoRail items={GALLERY.slice(13)} duration={84} reverse />
       </section>
 
+      <WordParallax stem="texture-wide" />
+
       <section>
         <div className="shell">
           <div className="head">
-            <p className="eyebrow">What people say</p>
+            {/* Not "what people say". There are no reviews to show — the rail
+                carries sourced capability claims until real ones exist. */}
+            <p className="eyebrow">The record</p>
             <h2 className="display">Thirty years of not needing to advertise.</h2>
           </div>
         </div>

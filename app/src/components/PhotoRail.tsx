@@ -93,6 +93,10 @@ export default function PhotoRail({ items, duration = 64, reverse = false }: Pro
           draggable={false}
         />
         <span className="rail-glass" aria-hidden="true" />
+        {/* Carries the beam. A pseudo-element cannot host the rotating layer,
+            and rotating a pre-rasterised gradient is what keeps this off the
+            paint path — see .beam-rim. */}
+        <span className="beam-rim" aria-hidden="true" />
       </figure>
     );
   };

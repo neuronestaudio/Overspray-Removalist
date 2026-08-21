@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pushGtmEvent } from '../lib/gtm';
 import { createSubmissionId, getStoredAttribution } from '../lib/attribution';
@@ -21,9 +21,27 @@ const PHOTO_MAX_EDGE = 1600;
 
 type Errors = Record<string, string>;
 
+/** Long enough to register the tick, short enough not to feel like a wait. */
+const AUTO_ADVANCE_MS = 420;
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+}
+
 export default function QuoteForm() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  /** Which way the next panel should travel in from. */
+  const [dir, setDir] = useState<1 | -1>(1);
+
+  const shellRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const lastHeight = useRef(0);
+  const autoTimer = useRef<number | undefined>(undefined);
 
   const [contaminant, setContaminant] = useState('');
   const [locationType, setLocationType] = useState('');
@@ -62,22 +80,95 @@ export default function QuoteForm() {
     return e;
   }
 
+  /** Single entry point so direction and the pending auto-advance stay in sync. */
+  function goTo(next: number) {
+    window.clearTimeout(autoTimer.current);
+    const target = Math.max(0, Math.min(LAST_STEP, next));
+    if (target === step) return;
+    setDir(target > step ? 1 : -1);
+    setErrors({});
+    setSubmitError('');
+    setStep(target);
+  }
+
   function goNext() {
     const e = validateStep(step);
     if (Object.keys(e).length) {
       setErrors(e);
       return;
     }
-    setErrors({});
-    setSubmitError('');
-    setStep((s) => Math.min(LAST_STEP, s + 1));
+    goTo(step + 1);
   }
 
   function goBack() {
-    setErrors({});
-    setSubmitError('');
-    setStep((s) => Math.max(0, s - 1));
+    goTo(step - 1);
   }
+
+  /* Step one asks a single question with one answer. Advancing on the pick
+     removes a click from the step most likely to be abandoned. Only safe here:
+     every later step collects more than one value. */
+  function pickContaminant(value: string) {
+    setContaminant(value);
+    setErrors({});
+    window.clearTimeout(autoTimer.current);
+    if (prefersReducedMotion()) return;
+    autoTimer.current = window.setTimeout(() => goTo(1), AUTO_ADVANCE_MS);
+  }
+
+  useEffect(() => () => window.clearTimeout(autoTimer.current), []);
+
+  /* The panels differ in height by hundreds of pixels, so swapping one for the
+     next snapped the Continue button up or down the page. Measure, pin the old
+     height, then let CSS run the box to the new one. Height is released
+     afterwards so in-step growth (an error line, a photo thumbnail) is free. */
+  useLayoutEffect(() => {
+    const shell = shellRef.current;
+    const body = bodyRef.current;
+    if (!shell || !body) return;
+
+    const next = body.offsetHeight;
+    const prev = lastHeight.current;
+    lastHeight.current = next;
+
+    if (!prev || prev === next || prefersReducedMotion()) return;
+
+    shell.style.height = `${prev}px`;
+    shell.style.overflow = 'hidden';
+    void shell.offsetHeight; // flush, or the browser coalesces both writes
+    shell.style.height = `${next}px`;
+
+    const release = (ev: TransitionEvent) => {
+      if (ev.propertyName !== 'height') return;
+      shell.style.height = '';
+      shell.style.overflow = '';
+      shell.removeEventListener('transitionend', release);
+    };
+    shell.addEventListener('transitionend', release);
+    return () => {
+      shell.removeEventListener('transitionend', release);
+      shell.style.height = '';
+      shell.style.overflow = '';
+    };
+  }, [step]);
+
+  /* On a phone the panel that just mounted can start below the fold. Pull the
+     progress rail back to the top so the next question is the first thing seen. */
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const head = headRef.current;
+    if (!head) return;
+    const top = head.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight * 0.4) {
+      window.scrollTo({
+        top: window.scrollY + top - 96,
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
+    }
+  }, [step]);
 
   /* Enter inside any text input fires the form's onSubmit. Without this a
      stepped form posts an empty payload from step 1. Continue / Back are
@@ -230,21 +321,41 @@ export default function QuoteForm() {
 
   return (
     <form className="wiz" onSubmit={handleSubmit} onKeyDown={onKeyDown} noValidate aria-label="Get a quote">
-      <ol className="wiz-steps">
-        {STEPS.map((label, i) => (
-          <li key={label} data-state={i === step ? 'current' : i < step ? 'done' : 'todo'}>
-            <span className="wiz-num">{i < step ? '✓' : i + 1}</span>
-            <span className="wiz-label">{label}</span>
-          </li>
-        ))}
-      </ol>
+      <div className="wiz-head" ref={headRef}>
+        {/* One continuous track with a fill that slides, rather than five
+            independent border-tops flicking between two colours. */}
+        <ol
+          className="wiz-steps"
+          style={{ '--wiz-fill': `${(step / LAST_STEP) * 100}%` } as React.CSSProperties}
+        >
+          {STEPS.map((label, i) => (
+            <li key={label} data-state={i === step ? 'current' : i < step ? 'done' : 'todo'}>
+              <span className="wiz-num">{i < step ? '✓' : i + 1}</span>
+              <span className="wiz-label">{label}</span>
+            </li>
+          ))}
+        </ol>
+        <p className="wiz-read" aria-live="polite">
+          <span>
+            Step {step + 1} of {STEPS.length} &mdash; {STEPS[step]}
+          </span>
+          {/* Questions remaining, not "0% complete" — which is what a
+              percentage reads as on the step nobody has finished yet. */}
+          <span className="wiz-pct">
+            {step === LAST_STEP ? 'Last step' : `${LAST_STEP - step} to go`}
+          </span>
+        </p>
+      </div>
+
+      <div className="wiz-shell" ref={shellRef}>
+        <div className="wiz-body" ref={bodyRef} key={step} data-dir={dir === 1 ? 'fwd' : 'back'}>
 
       {step === 0 && (
         <Panel
           title="What landed on it?"
           sub="Pick the closest. If none of them fit, choose “Not sure yet” and send photos."
         >
-          <Cards options={CONTAMINANTS} value={contaminant} onChange={setContaminant} name="contaminant" />
+          <Cards options={CONTAMINANTS} value={contaminant} onChange={pickContaminant} name="contaminant" />
           <Err msg={errors.contaminant} />
         </Panel>
       )}
@@ -402,6 +513,9 @@ export default function QuoteForm() {
           </div>
         </Panel>
       )}
+
+        </div>
+      </div>
 
       <div className="wiz-nav">
         {step > 0 ? (

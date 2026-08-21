@@ -35,6 +35,7 @@ export default function GalleryPage() {
               <figure key={g.stem}>
                 <Img stem={g.stem} alt={g.alt} sizes="(max-width:620px) 100vw, (max-width:1024px) 50vw, 400px" />
                 <figcaption>{g.alt}</figcaption>
+                <span className="beam-rim" aria-hidden="true" />
               </figure>
             ))}
           </div>

@@ -28,8 +28,18 @@ export default function Navbar() {
         </nav>
 
         <div className="hdr-cta">
-          <a className="hdr-call" href={BUSINESS.phoneHref}>
-            {BUSINESS.phone}
+          {/* Icon, not the number: it said the same thing in 130px of header
+              and competed with the quote button for the same glance. The
+              number stays in the drawer, the footer and the closing CTA. */}
+          <a
+            className="hdr-call"
+            href={BUSINESS.phoneHref}
+            aria-label={`Call ${BUSINESS.phone}`}
+            title={`Call ${BUSINESS.phone}`}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z" />
+            </svg>
           </a>
           <Link className="btn btn-primary" to="/quote">
             Get a Quote

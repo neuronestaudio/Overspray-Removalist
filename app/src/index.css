@@ -201,11 +201,24 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--text); }
 .nav a:hover::after, .nav a[aria-current="page"]::after { scale: 1 1; }
 .hdr-cta { display: flex; align-items: center; gap: .7rem; }
+/* Icon only. The number was competing with the quote button for the same
+   glance and costing ~130px of header to say what a handset glyph says. */
 .hdr-call {
-  display: inline-flex; align-items: center; gap: .45rem;
-  font-weight: 700; font-size: .92rem; white-space: nowrap;
+  display: inline-grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid var(--outline);
+  background: rgba(255, 255, 255, .04);
+  backdrop-filter: blur(10px);
+  transition: border-color .22s var(--ease), background .22s var(--ease),
+              box-shadow .22s var(--ease), transform .22s var(--ease);
 }
-.hdr-call svg { width: 16px; height: 16px; fill: var(--accent-hot); }
+.hdr-call:hover {
+  border-color: rgba(255, 79, 66, .6);
+  background: rgba(255, 79, 66, .12);
+  box-shadow: 0 0 0 4px rgba(255, 79, 66, .1);
+  transform: translateY(-1px);
+}
+.hdr-call svg { width: 18px; height: 18px; fill: var(--accent-hot); }
 .burger {
   display: none; background: none; border: 1px solid var(--border);
   border-radius: var(--r-int); padding: .5rem .6rem; cursor: pointer;
@@ -512,7 +525,11 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 
 /* ---------- gallery grid ---------- */
 .gal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.gal figure { margin: 0; border-radius: var(--r-box); overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+.gal figure {
+  margin: 0; border-radius: var(--r-box); overflow: hidden;
+  border: 1px solid var(--border); background: var(--surface);
+  position: relative; isolation: isolate;
+}
 .gal img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: scale .6s var(--ease); }
 .gal figure:hover img { scale: 1.05; }
 .gal figcaption { padding: .85rem 1rem; font-size: .86rem; color: var(--muted); }
