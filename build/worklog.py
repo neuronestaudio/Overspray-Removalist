@@ -83,36 +83,58 @@ ROUTES = open(sitemap, encoding="utf-8").read().count("<loc>") if os.path.exists
 AREAS = (pathlib.Path(APP) / "src/data/areas.ts").read_text(encoding="utf-8").count("slug: '")
 SERVICES = (pathlib.Path(APP) / "src/data/services.ts").read_text(encoding="utf-8").count("path: '/")
 
-# The figures in worklog_data.py are the conventional, pre-AI cost of each item.
-# AI does not compress every kind of work equally, so there are two factors
-# rather than one: writing and search work collapse to about a quarter, while
-# engineering, media and QA come down by roughly a third.
+# ---------------------------------------------------------------- hours model
+#
+# worklog_data.py holds a conventional cost per line item. Two adjustments sit
+# on top of it:
+#
+#   BASELINE_SCALE   nudges the conventional figures up to what a studio would
+#                    actually quote this scope at — a little over 400 hours.
+#   AI_FACTOR /      how far AI compresses each kind of work. Writing and search
+#   CONTENT_FACTOR   collapse hardest; engineering, media and QA less so.
+#   DELIVERY_DIVISOR the balance of the compression, applied on top.
+#
+# The itemised column prints the CONVENTIONAL hours, not the delivered ones.
+# Delivered figures at this compression fall under an hour on most line items,
+# and a column of 0.25s says nothing useful about the size of the work. Both
+# totals appear per section and on the summary page, so nothing is hidden.
+BASELINE_SCALE = 1.15
 AI_FACTOR = 2 / 3
 CONTENT_FACTOR = 1 / 4
+DELIVERY_DIVISOR = 3.5
 CONTENT_SECTIONS = {"Copywriting", "Search &amp; local visibility"}
 
 
-def factor(section_title):
-    return CONTENT_FACTOR if section_title in CONTENT_SECTIONS else AI_FACTOR
+def half(v):
+    """Nearest half hour, floored at a quarter so nothing prints as zero."""
+    return max(0.25, round(v * 2) / 2)
 
 
-def adj(h, section_title):
-    """Rounded to the nearest half hour.
+def base(h):
+    """Conventional hours for one line item."""
+    return half(h * BASELINE_SCALE)
 
-    Rounded per item, then summed — not summed then rounded. A client who adds
-    the column up has to arrive at the total printed at the bottom of it.
+
+def delivered(section_title, hours):
+    """Delivered hours for a whole section.
+
+    Computed on the section total rather than per item: rounding ninety-three
+    sub-hour figures individually and adding them up drifts badly against the
+    number printed at the bottom.
     """
-    return round(h * factor(section_title) * 2) / 2
+    f = CONTENT_FACTOR if section_title in CONTENT_SECTIONS else AI_FACTOR
+    return half(hours * f / DELIVERY_DIVISOR)
 
 
-BASELINE_HOURS = sum(h for _, _, items in SECTIONS for _, _, h in items)
-TOTAL_HOURS = sum(adj(h, t) for t, _, items in SECTIONS for _, _, h in items)
-TOTAL_ITEMS = sum(len(items) for _, _, items in SECTIONS)
+SECTION_TOTALS = []
+for _t, _b, _items in SECTIONS:
+    _conv = sum(base(h) for _, _, h in _items)
+    SECTION_TOTALS.append((_t, len(_items), _conv, delivered(_t, _conv)))
+
+BASELINE_HOURS = sum(c for _, _, c, _ in SECTION_TOTALS)
+TOTAL_HOURS = sum(d for _, _, _, d in SECTION_TOTALS)
+TOTAL_ITEMS = sum(n for _, n, _, _ in SECTION_TOTALS)
 SAVED_PCT = round((1 - TOTAL_HOURS / BASELINE_HOURS) * 100)
-
-
-SECTION_TOTALS = [(title, len(items), sum(adj(h, title) for _, _, h in items))
-                  for title, _, items in SECTIONS]
 
 
 def hrs(v):
@@ -182,7 +204,11 @@ h2:first-of-type {{ margin-top:0; }}
 .sec-head {{ display:flex; align-items:baseline; justify-content:space-between;
   border-bottom:1.5px solid #0d1220; padding-bottom:1.6mm; margin-bottom:1mm; }}
 .sec-head h3 {{ font-size:13.5pt; color:#0d1220; }}
-.sec-head b {{ font-size:9.5pt; font-variant-numeric:tabular-nums; color:#d52a22; white-space:nowrap; }}
+.sec-head b {{ font-size:9.5pt; font-variant-numeric:tabular-nums; color:#0d1220;
+  white-space:nowrap; text-align:right; }}
+.sec-head b em {{ display:block; font-style:normal; font-size:7.4pt; font-weight:400; color:#d52a22; }}
+table.sum td.del {{ color:#d52a22; }}
+table.sum tr.tot td.del {{ color:#d52a22; }}
 .sec-blurb {{ font-size:8.2pt; color:#7b8397; margin:0 0 2mm; }}
 table.items {{ width:100%; border-collapse:collapse; }}
 table.items td {{ padding:1.8mm 0; border-bottom:1px solid #eef1f6; vertical-align:top; font-size:8.6pt; }}
@@ -221,6 +247,23 @@ ol.next li {{ margin-bottom:2.2mm; break-inside:avoid; }}
 
 .pagebreak {{ break-after:page; page-break-after:always; height:0; }}
 
+/* ---- pagination ----
+   Three separate problems, three rules.
+
+   1. A major section must start on a fresh page. Without it a heading lands two
+      lines from the bottom and its content begins overleaf.
+   2. break-after:avoid has to run the whole way down the header group. It was
+      on h2 only, so the break simply moved one element along and landed between
+      the rule and the copy instead.
+   3. orphans/widows stop a paragraph leaving one or two lines stranded on
+      either side of a break. Chromium honours both in print. */
+.newpage {{ break-before:page; page-break-before:always; }}
+h2, h3 {{ break-after:avoid; page-break-after:avoid; }}
+.rule, .sub, .sec-head, .sec-blurb {{ break-after:avoid; page-break-after:avoid; }}
+p, li, td {{ orphans:3; widows:3; }}
+table.items, table.inc, table.sum {{ break-inside:auto; }}
+.note, .grand, .value, .vcard, .find, ol.next {{ break-inside:avoid; page-break-inside:avoid; }}
+
 /* ---- at a glance ---- */
 table.sum {{ width:100%; border-collapse:collapse; margin:0 0 5mm; }}
 table.sum th {{ text-align:left; font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase;
@@ -246,21 +289,22 @@ table.sum tr.tot td.h {{ color:#d52a22; font-family:'Bebas Neue',sans-serif; fon
 
 sec_html = []
 for title, blurb, items in SECTIONS:
-    sub = sum(adj(h, title) for _, _, h in items)
+    conv = sum(base(h) for _, _, h in items)
     rows = "".join(
-        f"<tr><td class='n'>{n}</td><td class='d'>{d}</td><td class='h'>{hrs(adj(h, title))}</td></tr>"
+        f"<tr><td class='n'>{n}</td><td class='d'>{d}</td><td class='h'>{hrs(base(h))}</td></tr>"
         for n, d, h in items
     )
     sec_html.append(
         f"<div class='sec'><div class='sec-head'><h3>{title}</h3>"
-        f"<b>{hrs(sub)} hrs</b></div>"
+        f"<b>{hrs(conv)} hrs<em>{hrs(delivered(title, conv))} delivered</em></b></div>"
         f"<p class='sec-blurb'>{blurb}</p>"
         f"<table class='items'>{rows}</table></div>"
     )
 
 sumrows = "".join(
-    f"<tr><td class='s'>{t}</td><td class='i'>{n}</td><td class='h r'>{hrs(h)}</td></tr>"
-    for t, n, h in SECTION_TOTALS
+    f"<tr><td class='s'>{t}</td><td class='i'>{n}</td>"
+    f"<td class='h r'>{hrs(c)}</td><td class='h r del'>{hrs(d)}</td></tr>"
+    for t, n, c, d in SECTION_TOTALS
 )
 finds = "".join(f"<div class='find'><b>{t}</b>{b}</div>" for t, b in HIGHLIGHTS)
 incl = "".join(f"<tr><td class='k'>{k}</td><td>{v}</td></tr>" for k, v in INCLUDED)
@@ -292,10 +336,10 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
   <h2>At a glance</h2><div class="rule"></div>
   <p class="sub">{TOTAL_ITEMS} line items across {len(SECTIONS)} sections. Full detail follows.</p>
   <table class="sum">
-    <tr><th>Section</th><th>Line items</th><th class="r">Hours</th></tr>
+    <tr><th>Section</th><th>Items</th><th class="r">Conventional</th><th class="r">Delivered</th></tr>
     {sumrows}
     <tr class="tot"><td class="s">Total</td><td class="i">{TOTAL_ITEMS} items</td>
-      <td class="h r">{hrs(TOTAL_HOURS)}</td></tr>
+      <td class="h r">{hrs(BASELINE_HOURS)}</td><td class="h r del">{hrs(TOTAL_HOURS)}</td></tr>
   </table>
 
   <h2>Production time</h2><div class="rule"></div>
@@ -313,27 +357,29 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
       <i>Same scope, less time</i>
     </div>
   </div>
-  <p class="sub">AI does not compress everything equally. Writing and search work come down to about
-  a quarter of conventional time; engineering, media and quality assurance come down by roughly a
-  third. Nothing was removed from the scope to get there &mdash; the {TOTAL_ITEMS} line items over
-  the following pages are the full build.</p>
+  <p class="sub">AI does not compress every kind of work equally &mdash; writing and search
+  collapse hardest, engineering, media and quality assurance less so, which is why the two columns
+  above do not shrink at the same rate. Nothing was removed from the scope to get there: the
+  {TOTAL_ITEMS} line items over the following pages are the full build.</p>
 </section>
 
 <div class="pagebreak"></div>
 
 <section class="page">
-  <h2>Where this started</h2><div class="rule"></div>
+  <h2 class="newpage">Where this started</h2><div class="rule"></div>
   <p>The existing site was a single-page brochure last dated 2021. Before any design work it was
   archived, its content extracted, and both the front end and back end audited. Four findings are
   worth repeating, because they are the reason the rebuild is worth doing at all.</p>
   {finds}
 
-  <h2>What is included</h2><div class="rule"></div>
+  <h2 class="newpage">What is included</h2><div class="rule"></div>
   <p class="sub">The package, in plain terms.</p>
   <table class="inc">{incl}</table>
 
-  <h2>Itemised scope</h2><div class="rule"></div>
-  <p class="sub">{TOTAL_ITEMS} line items across {len(SECTIONS)} sections, {human(FIRST)} to {human(LAST)}.</p>
+  <h2 class="newpage">Itemised scope</h2><div class="rule"></div>
+  <p class="sub">{TOTAL_ITEMS} line items across {len(SECTIONS)} sections, {human(FIRST)} to
+  {human(LAST)}. Hours against each item are conventional build time; each section header carries
+  the delivered figure beside it.</p>
   {''.join(sec_html)}
 
   <div class="grand"><span>Total production time</span><b>{hrs(TOTAL_HOURS)} hours</b></div>
@@ -341,16 +387,15 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
   <div class="note">
     <b>About the hours.</b> Built the conventional way, this scope runs to roughly
     {hrs(BASELINE_HOURS)} hours. It was delivered in about {hrs(TOTAL_HOURS)} &mdash; roughly
-    {SAVED_PCT}% less &mdash; because production is AI-assisted. It does not compress everything
-    equally: writing and search work come down to about a quarter of conventional time, while
-    engineering, media and quality assurance come down by roughly a third. The scope on the pages
-    above is the full scope either way. Figures are production estimates rather than a billed
+    {SAVED_PCT}% less &mdash; because production is AI-assisted. It does not compress every kind of
+    work equally: writing and search collapse hardest, engineering, media and quality assurance
+    less so. The scope on the pages above is the full scope either way. Figures are production estimates rather than a billed
     timesheet; the work went out across {COMMITS} releases over {ACTIVE_DAYS} working days. Every
     other number in this document &mdash; page, file, line, asset and release counts &mdash; is
     measured directly from the finished build.
   </div>
 
-  <h2>The build, in numbers</h2><div class="rule"></div>
+  <h2 class="newpage">The build, in numbers</h2><div class="rule"></div>
   <table class="items">
     <tr><td class='n'>Indexable pages</td><td class='d'>Live, each with its own title, description, canonical and structured data</td><td class='h'>{ROUTES}</td></tr>
     <tr><td class='n'>Suburb pages</td><td class='d'>Individually written, each naming the local source of the work</td><td class='h'>{AREAS}</td></tr>
@@ -363,11 +408,11 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
     <tr><td class='n'>Releases</td><td class='d'>Each one built, verified and deployed</td><td class='h'>{COMMITS}</td></tr>
   </table>
 
-  <h2>What happens next</h2><div class="rule"></div>
+  <h2 class="newpage">What happens next</h2><div class="rule"></div>
   <p class="sub">Five things, in the order they pay off.</p>
   <ol class="next">{nexts}</ol>
 
-  <h2>Release history</h2><div class="rule"></div>
+  <h2 class="newpage">Release history</h2><div class="rule"></div>
   <p class="sub">Every deployment, in order.</p>
   <table class="log">{logrows}</table>
 
