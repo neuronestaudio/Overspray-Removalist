@@ -10,6 +10,7 @@ import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
 import ScrollTitle from '../components/ScrollTitle';
 import CoatingProcess from '../components/CoatingProcess';
+import Stats from '../components/Stats';
 import QuoteForm from '../components/QuoteForm';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
@@ -47,12 +48,10 @@ export default function HomePage() {
                 carries the positioning. Small caps here and a heavier caps
                 statement under the script, with the script between them so the
                 two capitalised lines never sit against each other. */}
-            {/* Both thin lines lead in, the name lands, the script closes.
-                They are sized and toned apart so the two stacked caps lines read
-                as a run-up rather than as one line accidentally set twice. */}
-            <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
-            <p className="hero-claim">We&rsquo;ll take anything off your paint.</p>
+            {/* Name first, then tenure, then the script line. Three items,
+                each a different weight and treatment, so nothing competes. */}
             <h1 className="display hero-shine">The Overspray Removalists</h1>
+            <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
             <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
@@ -90,26 +89,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="stats">
-        <div className="shell">
-          <div className="stat">
-            <div className="stat-n">30+</div>
-            <div className="stat-l">Years removing overspray</div>
-          </div>
-          <div className="stat">
-            <div className="stat-n">Melbourne</div>
-            <div className="stat-l">Wide, all suburbs, on site</div>
-          </div>
-          <div className="stat">
-            <div className="stat-n">100%</div>
-            <div className="stat-l">Original paint kept. No sanding, no respray</div>
-          </div>
-          <div className="stat">
-            <div className="stat-n">Fleet</div>
-            <div className="stat-l">Commercial HV and LV, priced by the lot</div>
-          </div>
-        </div>
-      </section>
+      <Stats />
 
       {/* Where the market is. Removal is the reputation; coating is the growth,
           and the preparation the coating needs is the thing they already do all

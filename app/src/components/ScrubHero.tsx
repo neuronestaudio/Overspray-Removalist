@@ -42,8 +42,10 @@ const GRID_Y = 16;
  * whatever paint is left is left, and the visitor takes it off. All the threshold
  * does is fade in the reset button, because by then they have proved the point
  * and the only thing still worth offering is a way to do it again. */
-const GRID_GATE = 0.72;
-const PIXEL_TARGET = 0.75;
+/* Lowered twice on request: 0.80 -> 0.75 -> 0.65. The gate has to stay below
+   the target or the cheap check never opens and the exact one never runs. */
+const GRID_GATE = 0.62;
+const PIXEL_TARGET = 0.65;
 const SAMPLE_EVERY_MS = 220;
 /** Every Nth pixel's alpha byte. Sparse enough to be quick, dense enough to be right. */
 const SAMPLE_STRIDE = 37;
