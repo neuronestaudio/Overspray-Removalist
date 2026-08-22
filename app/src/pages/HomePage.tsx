@@ -49,8 +49,11 @@ export default function HomePage() {
                 two capitalised lines never sit against each other. */}
             <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
             <h1 className="display hero-shine">The Overspray Removalists</h1>
+            {/* Claim directly under the name, script line last. The script is
+                the most decorative element here, so it closes the stack rather
+                than interrupting it. */}
+            <p className="hero-claim">We&rsquo;ll take anything off your paint.</p>
             <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
-            <p className="lede hero-claim">We&rsquo;ll take anything off your paint.</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
                 Get a quote

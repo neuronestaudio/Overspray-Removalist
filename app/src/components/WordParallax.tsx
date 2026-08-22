@@ -109,7 +109,7 @@ export default function WordParallax({ stem }: { stem: string }) {
         {/* The bridge into the protection half. Removal is what they are known
             for; coating is where the market is, and the two are the same
             skill in opposite directions. */}
-        <p className="wpx-sub">Then we coat it, so the next thing struggles to stick.</p>
+        <p className="wpx-sub">Then we protect it.</p>
         <div className="wpx-links">
           <Link className="btn btn-primary" to="/ceramic-coating">
             Ceramic coating

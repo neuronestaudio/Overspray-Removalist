@@ -695,9 +695,50 @@
   background: radial-gradient(62% 66% at 50% 50%, rgba(8, 11, 22, .96) 44%, rgba(8, 11, 22, 0) 80%);
 }
 .wpx-copy .eyebrow { white-space: nowrap; }
+/* Line one takes the same travelling metallic sheen as the hero title; line two
+   takes a warm version of it, so the payoff reads hotter than the setup. Both
+   are background-position animations on a clipped gradient — no repaint of the
+   glyphs, and nothing else on the band moves. */
+.wpx-copy .display {
+  background-image: linear-gradient(100deg,
+    #c9ccd2 0%, #ffffff 8%, #f3f5f7 18%, #d2d5da 32%, #ffffff 62%,
+    #c9ccd2 78%, #f6f7f9 88%, #ffffff 94%, #c9ccd2 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: wpxSheen 7s ease-in-out infinite;
+}
 .wpx-payoff {
-  background: linear-gradient(180deg, #fff, #ffb2a8 92%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-image: linear-gradient(100deg,
+    #ff8a7c 0%, #ffffff 10%, #ffd9d3 22%, #ff6b5e 38%, #ffffff 58%,
+    #ff8a7c 74%, #ffe3de 88%, #ffffff 95%, #ff8a7c 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: wpxSheen 7s ease-in-out infinite .55s;
+}
+@keyframes wpxSheen {
+  0%   { background-position: 220% 0; }
+  100% { background-position: -220% 0; }
+}
+
+/* A slow brand wash drifting behind the copy plate, so the band has movement
+   even when the belts are still. */
+.wpx-copy::after {
+  content: '';
+  position: absolute; inset: -30% -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38% 46% at 30% 40%, rgba(255, 79, 66, .20), transparent 70%),
+    radial-gradient(34% 40% at 72% 62%, rgba(120, 160, 255, .10), transparent 72%);
+  animation: wpxDrift 18s ease-in-out infinite alternate;
+}
+@keyframes wpxDrift {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.12); }
+}
+
+.wpx-sub {
+  position: relative;
 }
 .wpx-sub {
   margin: .9rem auto 0; max-width: 34ch;
@@ -724,6 +765,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .wpx-copy .display, .wpx-payoff { animation: none; background-position: 50% 0; }
+  .wpx-copy::after { animation: none; }
   .wpx-plate img, .wpx-belt { transform: none; }
   .wpx-plate img { transform: scale(1.05); }
   .beam-rim::before { animation: none; transform: translate(-50%, -50%) rotate(285deg); }

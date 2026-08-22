@@ -55,6 +55,12 @@
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
+  /* Light. Used only by the hero support lines, which are set wide and in caps
+     — at 400 that treatment reads heavy rather than quiet. */
+  font-family: 'DM Sans'; src: url('/assets/fonts/dm-sans-300.woff2') format('woff2');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
   font-family: 'DM Sans'; src: url('/assets/fonts/dm-sans-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
@@ -285,7 +291,42 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.9rem; }
 
 /* ---------- stat row (no cards, hairline separated) ---------- */
-.stats { border-block: 1px solid var(--border-soft); background: var(--bg-lift); }
+/* ---------- stats band ----------
+   Woven mesh under a scrim, plus a corner of angled orange bars echoing the
+   slash in the logo mark. The slash leans the same way and sits at the same
+   angle, so the two read as the same device rather than a stray decoration. */
+.stats {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-block: 1px solid var(--border-soft);
+  background: var(--bg-lift);
+}
+.stats::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -2;
+  background:
+    linear-gradient(rgba(8, 11, 22, .78), rgba(11, 16, 32, .86)),
+    url('/assets/images/carbon-mesh.png') repeat;
+  background-size: auto, 27px 48px;
+}
+/* Four bars of decreasing weight, skewed to the mark's angle and faded out
+   toward the copy so they never compete with the numbers. */
+.stats::after {
+  content: '';
+  position: absolute; z-index: -1; pointer-events: none;
+  top: -30%; right: -3rem; width: clamp(150px, 22vw, 300px); height: 160%;
+  transform: skewX(-24deg);
+  background: repeating-linear-gradient(90deg,
+    #e44206 0, #e44206 14px,
+    transparent 14px, transparent 30px);
+  opacity: .5;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 62%);
+          mask-image: linear-gradient(90deg, transparent, #000 62%);
+}
+
+@media (max-width: 620px) {
+  /* Narrower and softer: at phone width the bars ran into the last stat. */
+  .stats::after { width: 92px; right: -1.75rem; opacity: .38; }
+}
 .stats .shell {
   display: grid; grid-template-columns: repeat(4, 1fr);
   padding-block: 2.4rem;
@@ -1029,21 +1070,30 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 }
 
 
-/* ---------- hero supporting lines ---------- */
+/* ---------- hero supporting lines ----------
+   Both set in light weight, wide tracking and caps. Set in caps by CSS rather
+   than typed in caps, so the sentences keep their real casing in the markup and
+   are not read out letter by letter or indexed as shouting. */
+.hero-eyebrow,
+.hero-claim {
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: .24em;
+  /* Tracking adds space after the final letter too, which pushes a centred
+     line off-centre by half of it. */
+  text-indent: .24em;
+}
 .hero-eyebrow {
-  margin: 0 0 .55rem;
-  font-size: .78rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase;
+  margin: 0 0 .5rem;
+  font-size: clamp(.68rem, 1vw, .8rem);
   color: var(--muted-dim);
 }
-/* Set in caps rather than typed in caps: the sentence keeps its real casing in
-   the markup, so screen readers and search results do not read it as shouting. */
 .hero-claim {
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 700;
-  font-size: clamp(.95rem, 1.5vw, 1.12rem);
-  color: var(--text);
+  margin: .55rem 0 0;
+  font-size: clamp(.8rem, 1.2vw, 1rem);
+  color: var(--muted);
 }
 @media (max-width: 620px) {
-  .hero-eyebrow { letter-spacing: .18em; font-size: .7rem; }
+  .hero-eyebrow,
+  .hero-claim { letter-spacing: .16em; text-indent: .16em; }
 }
