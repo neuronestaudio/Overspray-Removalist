@@ -15,13 +15,12 @@ import Img from './Img';
  * transform, which the compositor handles without a repaint.
  */
 
-/* Two halves of the business, one belt each.
-   Row 0 is what comes off, row 1 is what goes on. Row 1 is the filled row, so
-   the protection work gets the prominent treatment — this section used to read
-   as a removal-only business. */
+/* Everything that comes off, in the client's own vocabulary. The protection
+   belt that used to run here is gone: coating and film are available on request
+   but are not what this business advertises. */
 const BELTS: string[][] = [
-  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI', 'RAIL DUST', 'ACID RAIN', 'SOOT'],
-  ['CERAMIC COATING', 'PAINT PROTECTION', 'PAINT CORRECTION', 'PPF', 'GLOSS', 'DETAILING'],
+  ['OVERSPRAY', 'CEMENT', 'FALLOUT', 'GRAFFITI', 'RAIL DUST'],
+  ['ACID RAIN', 'SOOT', 'EPOXY', 'CONCRETE', 'URETHANE', 'IRON FILINGS'],
 ];
 
 export default function WordParallax({ stem }: { stem: string }) {
@@ -97,7 +96,7 @@ export default function WordParallax({ stem }: { stem: string }) {
       </div>
 
       <div className="wpx-copy">
-        <p className="eyebrow">Take it off. Then protect it.</p>
+        <p className="eyebrow">What we take off</p>
         {/* Hard break. Left to wrap it broke as "...IT COMES / OFF THE PAINT",
             which splits the payoff across both lines instead of landing it on
             the second one. */}
@@ -106,19 +105,12 @@ export default function WordParallax({ stem }: { stem: string }) {
           <br />
           <span className="wpx-payoff">it comes off the paint.</span>
         </h2>
-        {/* The bridge into the protection half. Removal is what they are known
-            for; coating is where the market is, and the two are the same
-            skill in opposite directions. */}
-        <p className="wpx-sub">Then we protect it.</p>
         <div className="wpx-links">
-          <Link className="btn btn-primary" to="/ceramic-coating">
-            Ceramic coating
+          <Link className="btn btn-primary" to="/services">
+            What we remove
           </Link>
-          <Link className="btn btn-ghost" to="/paint-protection">
-            Paint protection
-          </Link>
-          <Link className="btn btn-ghost" to="/services">
-            All services
+          <Link className="btn btn-ghost" to="/gallery">
+            See the work
           </Link>
         </div>
       </div>

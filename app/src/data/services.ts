@@ -68,149 +68,6 @@ export interface Service {
 
 export const SERVICES: Service[] = [
   {
-    slug: 'ceramic-coating',
-    path: '/ceramic-coating',
-    nav: 'Ceramic Coating',
-    h1: 'Ceramic coating',
-    title: 'Ceramic Coating Melbourne | Paint Protection',
-    description:
-      'Ceramic coating applied over a properly decontaminated and corrected finish. Hydrophobic, UV stable, and far easier to wash. Melbourne and Australia wide.',
-    lede:
-      'A coating is only ever as good as the paint underneath it. We spend our days taking contamination off duco, which is exactly the preparation a coating needs.',
-    hero: 'suv-black',
-    heroAlt: 'Black SUV finished to a deep gloss after decontamination',
-    blocks: [
-      {
-        heading: 'Preparation is the job',
-        body: [
-          'A ceramic coating bonds to the top of your clear coat. Anything sitting on that surface, fallout, rail dust, overspray, bonded traffic film, gets sealed under the coating and stays there for years.',
-          'That is the part most of the market rushes. Decontamination is the trade we have done for three decades, so the surface is genuinely clean before anything goes on it.',
-        ],
-      },
-      {
-        heading: 'What it does',
-        body: [
-          'A cured coating is hydrophobic, so water beads and carries dirt off rather than drying on. It is UV stable, which slows oxidation and fade. It resists chemical etching from bird lime, tree sap and industrial fallout.',
-        ],
-        bullets: [
-          'Water beads and sheets off instead of drying on',
-          'Washing gets faster and needs less contact',
-          'UV stable, so colour holds longer',
-          'Better resistance to bird lime, sap and fallout etching',
-        ],
-      },
-      {
-        heading: 'What it is not',
-        body: [
-          'A coating is not armour. It will not stop a stone chip, a trolley or a key, and it does not make a car self-cleaning. Anyone telling you otherwise is selling something. It makes a good finish easier to keep and slower to degrade, and that is worth real money over years of ownership.',
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'paint-protection',
-    path: '/paint-protection',
-    nav: 'Paint Protection',
-    h1: 'Paint protection',
-    title: 'Paint Protection | New Cars, Fleets & Resale',
-    description:
-      'Paint protection for new cars, fleet vehicles and anything heading for resale. Correction first, then a protective layer matched to how the vehicle is actually used.',
-    lede:
-      'New car, fleet vehicle, or something heading back to a lease. Protection is worth doing when the finish underneath is worth protecting.',
-    hero: 'challenger',
-    heroAlt: 'Green Dodge Challenger with a corrected, protected finish',
-    blocks: [
-      {
-        heading: 'Correction before protection',
-        body: [
-          'Sealing swirls, fallout or overspray under a protective layer locks the damage in. Everything is assessed and put right first, using the same non-abrasive methods we use on contamination work, then protected.',
-        ],
-      },
-      {
-        heading: 'Matched to how it is used',
-        body: [
-          'A dealership demo, a site ute parked under a slab pour and a weekend car are three different problems. We match the level of protection to the exposure rather than selling one package to everybody.',
-        ],
-      },
-      {
-        heading: 'Fleets and dealer stock',
-        body: [
-          'Volume work is priced by the lot, same as our remediation work. For fleets and dealer stock the return is in resale and lease return condition, where a car with original paint in good order is worth demonstrably more than one carrying a repair history.',
-        ],
-      },
-    ],
-    levelsHeading: 'How much of the car to cover',
-    levelsNote:
-      'Every job is quoted on the car in front of us. Send photos and we will tell you which of these actually suits it.',
-    levels: [
-      {
-        name: 'Front end',
-        who: 'The cheapest way to stop the damage that actually happens.',
-        covers: [
-          'Leading edge of the bonnet',
-          'Front bumper',
-          'Mirror caps',
-          'Headlight lenses',
-        ],
-      },
-      {
-        name: 'Full front',
-        who: 'Highway kilometres, where stone chips are constant rather than occasional.',
-        covers: [
-          'Full bonnet',
-          'Full front guards',
-          'Front bumper',
-          'Mirror caps and headlights',
-          'A-pillars where exposed',
-        ],
-        common: true,
-      },
-      {
-        name: 'Full body',
-        who: 'New cars, prestige and anything heading for resale with original paint intact.',
-        covers: [
-          'Every painted panel',
-          'Doors, sills and rear quarters',
-          'Boot and rear bumper',
-          'Door edges and handle cups',
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'auto-detailing',
-    path: '/auto-detailing',
-    nav: 'Auto Detailing',
-    h1: 'Auto detailing',
-    title: 'Auto Detailing | Decontamination & Finish Restoration',
-    description:
-      'Detailing built on decontamination rather than a quick polish. Paint, glass, trims and wheels brought back by hand, on site across Melbourne and Australia wide.',
-    lede:
-      'Most detailing hides contamination under a polish. We take it off first, which is why the result lasts past the next wash.',
-    hero: 'ram',
-    heroAlt: 'White RAM pickup restored to a clean, even finish',
-    blocks: [
-      {
-        heading: 'Decontamination first',
-        body: [
-          'Bonded contamination cannot be washed off and polishing over it just buries it. Paint, glass, trims and wheels are decontaminated by hand before anything else happens, which is the same process we use on overspray and fallout work.',
-        ],
-      },
-      {
-        heading: 'What gets touched',
-        body: [
-          'Duco, glass, window trims, lenses, roof racks and external accessories. The same list as a removal job, because contamination does not stop at the painted panels.',
-        ],
-      },
-      {
-        heading: 'On site',
-        body: [
-          'We work where the vehicle is, across all suburbs and Australia wide. For fleets and dealer stock that means the cars never leave the yard.',
-        ],
-      },
-    ],
-  },
-  {
     slug: 'overspray-removal',
     path: '/overspray-removal',
     nav: 'Paint Overspray Removal',
@@ -440,6 +297,153 @@ export const SERVICES: Service[] = [
       caption:
         'Fallout on white duco, where contamination shows worst. Restored without respraying.',
     },
+  },
+
+  /* Available, not advertised. These stay live so an enquiry can be answered
+     and a search can land on them, but they sit after the removal work
+     everywhere the list is rendered: nav, footer and services index. */
+  {
+    slug: 'ceramic-coating',
+    path: '/ceramic-coating',
+    nav: 'Ceramic Coating',
+    h1: 'Ceramic coating',
+    title: 'Ceramic Coating Melbourne | Paint Protection',
+    description:
+      'Ceramic coating applied over a properly decontaminated and corrected finish. Hydrophobic, UV stable, and far easier to wash. Melbourne and Australia wide.',
+    lede:
+      'A coating is only ever as good as the paint underneath it. We spend our days taking contamination off duco, which is exactly the preparation a coating needs.',
+    hero: 'suv-black',
+    heroAlt: 'Black SUV finished to a deep gloss after decontamination',
+    blocks: [
+      {
+        heading: 'Preparation is the job',
+        body: [
+          'A ceramic coating bonds to the top of your clear coat. Anything sitting on that surface, fallout, rail dust, overspray, bonded traffic film, gets sealed under the coating and stays there for years.',
+          'That is the part most of the market rushes. Decontamination is the trade we have done for three decades, so the surface is genuinely clean before anything goes on it.',
+        ],
+      },
+      {
+        heading: 'What it does',
+        body: [
+          'A cured coating is hydrophobic, so water beads and carries dirt off rather than drying on. It is UV stable, which slows oxidation and fade. It resists chemical etching from bird lime, tree sap and industrial fallout.',
+        ],
+        bullets: [
+          'Water beads and sheets off instead of drying on',
+          'Washing gets faster and needs less contact',
+          'UV stable, so colour holds longer',
+          'Better resistance to bird lime, sap and fallout etching',
+        ],
+      },
+      {
+        heading: 'What it is not',
+        body: [
+          'A coating is not armour. It will not stop a stone chip, a trolley or a key, and it does not make a car self-cleaning. Anyone telling you otherwise is selling something. It makes a good finish easier to keep and slower to degrade, and that is worth real money over years of ownership.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'paint-protection',
+    path: '/paint-protection',
+    nav: 'Paint Protection',
+    h1: 'Paint protection',
+    title: 'Paint Protection | New Cars, Fleets & Resale',
+    description:
+      'Paint protection for new cars, fleet vehicles and anything heading for resale. Correction first, then a protective layer matched to how the vehicle is actually used.',
+    lede:
+      'New car, fleet vehicle, or something heading back to a lease. Protection is worth doing when the finish underneath is worth protecting.',
+    hero: 'challenger',
+    heroAlt: 'Green Dodge Challenger with a corrected, protected finish',
+    blocks: [
+      {
+        heading: 'Correction before protection',
+        body: [
+          'Sealing swirls, fallout or overspray under a protective layer locks the damage in. Everything is assessed and put right first, using the same non-abrasive methods we use on contamination work, then protected.',
+        ],
+      },
+      {
+        heading: 'Matched to how it is used',
+        body: [
+          'A dealership demo, a site ute parked under a slab pour and a weekend car are three different problems. We match the level of protection to the exposure rather than selling one package to everybody.',
+        ],
+      },
+      {
+        heading: 'Fleets and dealer stock',
+        body: [
+          'Volume work is priced by the lot, same as our remediation work. For fleets and dealer stock the return is in resale and lease return condition, where a car with original paint in good order is worth demonstrably more than one carrying a repair history.',
+        ],
+      },
+    ],
+    levelsHeading: 'How much of the car to cover',
+    levelsNote:
+      'Every job is quoted on the car in front of us. Send photos and we will tell you which of these actually suits it.',
+    levels: [
+      {
+        name: 'Front end',
+        who: 'The cheapest way to stop the damage that actually happens.',
+        covers: [
+          'Leading edge of the bonnet',
+          'Front bumper',
+          'Mirror caps',
+          'Headlight lenses',
+        ],
+      },
+      {
+        name: 'Full front',
+        who: 'Highway kilometres, where stone chips are constant rather than occasional.',
+        covers: [
+          'Full bonnet',
+          'Full front guards',
+          'Front bumper',
+          'Mirror caps and headlights',
+          'A-pillars where exposed',
+        ],
+        common: true,
+      },
+      {
+        name: 'Full body',
+        who: 'New cars, prestige and anything heading for resale with original paint intact.',
+        covers: [
+          'Every painted panel',
+          'Doors, sills and rear quarters',
+          'Boot and rear bumper',
+          'Door edges and handle cups',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'auto-detailing',
+    path: '/auto-detailing',
+    nav: 'Auto Detailing',
+    h1: 'Auto detailing',
+    title: 'Auto Detailing | Decontamination & Finish Restoration',
+    description:
+      'Detailing built on decontamination rather than a quick polish. Paint, glass, trims and wheels brought back by hand, on site across Melbourne and Australia wide.',
+    lede:
+      'Most detailing hides contamination under a polish. We take it off first, which is why the result lasts past the next wash.',
+    hero: 'ram',
+    heroAlt: 'White RAM pickup restored to a clean, even finish',
+    blocks: [
+      {
+        heading: 'Decontamination first',
+        body: [
+          'Bonded contamination cannot be washed off and polishing over it just buries it. Paint, glass, trims and wheels are decontaminated by hand before anything else happens, which is the same process we use on overspray and fallout work.',
+        ],
+      },
+      {
+        heading: 'What gets touched',
+        body: [
+          'Duco, glass, window trims, lenses, roof racks and external accessories. The same list as a removal job, because contamination does not stop at the painted panels.',
+        ],
+      },
+      {
+        heading: 'On site',
+        body: [
+          'We work where the vehicle is, across all suburbs and Australia wide. For fleets and dealer stock that means the cars never leave the yard.',
+        ],
+      },
+    ],
   },
 ];
 

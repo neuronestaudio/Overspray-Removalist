@@ -42,11 +42,10 @@
 }
 .cf-veil {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  /* No white raking highlight here any more. Over a blurred photograph it did
+     not read as a glass edge, it read as fog across the whole deck. */
   background:
-    /* A frosted highlight raking across the top, so the plate reads as glass
-       lying on the carbon rather than as a hole cut into it. */
-    linear-gradient(158deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .012) 34%, transparent 60%),
-    radial-gradient(120% 80% at 50% 42%, transparent 34%, rgba(6, 8, 15, .58) 100%),
+    radial-gradient(120% 80% at 50% 42%, transparent 34%, rgba(6, 8, 15, .62) 100%),
     linear-gradient(to top, rgba(6, 8, 15, .82) 0%, transparent 32%),
     linear-gradient(to bottom, rgba(6, 8, 15, .7) 0%, transparent 26%);
 }
@@ -84,13 +83,17 @@
   text-align: left; color: #fff; padding: 0;
   transform-style: preserve-3d;
 
-  background: rgba(255, 255, 255, .055);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, .13);
+  /* Smoked glass, not milk. A white tint over a 20px blur of a photograph turns
+     the whole card into grey fog — the tint is now dark and the highlight lives
+     on the top edge only, where a real pane would catch it. */
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .012) 34%, transparent 62%),
+    rgba(9, 13, 24, .74);
+  backdrop-filter: blur(14px) saturate(118%);
+  -webkit-backdrop-filter: blur(14px) saturate(118%);
+  border: 1px solid rgba(255, 255, 255, .11);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .18),
-    inset 0 -1px 0 rgba(255, 255, 255, .04),
+    inset 0 1px 0 rgba(255, 255, 255, .16),
     0 36px 70px -24px rgba(0, 0, 0, .92);
 
   /* placement is entirely from --d / --ad, set in JS */

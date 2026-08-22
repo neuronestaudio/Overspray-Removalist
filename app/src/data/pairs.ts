@@ -111,4 +111,7 @@ export const CERAMIC_CARD: Pair = {
   href: '/ceramic-coating',
 };
 
-export const DECK: Pair[] = [CERAMIC_CARD, HERO_PAIR, ...PAIRS];
+/* No ceramic card. The deck is the first thing a visitor touches, and the
+   business does not advertise coating work — it takes it when asked. CERAMIC_CARD
+   is kept above for whenever that changes. */
+export const DECK: Pair[] = [HERO_PAIR, ...PAIRS];

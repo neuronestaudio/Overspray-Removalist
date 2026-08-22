@@ -9,7 +9,6 @@ import PhotoRail from '../components/PhotoRail';
 import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
 import ScrollTitle from '../components/ScrollTitle';
-import CoatingProcess from '../components/CoatingProcess';
 import Stats from '../components/Stats';
 import QuoteForm from '../components/QuoteForm';
 import { GALLERY } from '../data/gallery';
@@ -52,7 +51,10 @@ export default function HomePage() {
                 each a different weight and treatment, so nothing competes. */}
             <h1 className="display hero-shine">The Overspray Removalists</h1>
             <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
-            <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
+            {/* Removal is the pitch. Coating and film are done on request, not
+                advertised, so the hero says what the business is known for and
+                nothing else. */}
+            <p className="hero-claim">We&rsquo;ll take anything off your paint.</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
                 Get a quote
@@ -90,11 +92,6 @@ export default function HomePage() {
       </section>
 
       <Stats />
-
-      {/* Where the market is. Removal is the reputation; coating is the growth,
-          and the preparation the coating needs is the thing they already do all
-          day. */}
-      <CoatingProcess />
 
       <section className="mesh-band" style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">
