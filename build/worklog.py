@@ -84,37 +84,35 @@ AREAS = (pathlib.Path(APP) / "src/data/areas.ts").read_text(encoding="utf-8").co
 SERVICES = (pathlib.Path(APP) / "src/data/services.ts").read_text(encoding="utf-8").count("path: '/")
 
 # The figures in worklog_data.py are the conventional, pre-AI cost of each item.
-# Actual production runs about a third under that, so the document reports the
-# adjusted figure and quotes the conventional equivalent alongside it.
+# AI does not compress every kind of work equally, so there are two factors
+# rather than one: writing and search work collapse to about a quarter, while
+# engineering, media and QA come down by roughly a third.
 AI_FACTOR = 2 / 3
+CONTENT_FACTOR = 1 / 4
+CONTENT_SECTIONS = {"Copywriting", "Search &amp; local visibility"}
 
 
-def adj(h):
+def factor(section_title):
+    return CONTENT_FACTOR if section_title in CONTENT_SECTIONS else AI_FACTOR
+
+
+def adj(h, section_title):
     """Rounded to the nearest half hour.
 
     Rounded per item, then summed — not summed then rounded. A client who adds
     the column up has to arrive at the total printed at the bottom of it.
     """
-    return round(h * AI_FACTOR * 2) / 2
+    return round(h * factor(section_title) * 2) / 2
 
 
 BASELINE_HOURS = sum(h for _, _, items in SECTIONS for _, _, h in items)
-TOTAL_HOURS = sum(adj(h) for _, _, items in SECTIONS for _, _, h in items)
+TOTAL_HOURS = sum(adj(h, t) for t, _, items in SECTIONS for _, _, h in items)
 TOTAL_ITEMS = sum(len(items) for _, _, items in SECTIONS)
 SAVED_PCT = round((1 - TOTAL_HOURS / BASELINE_HOURS) * 100)
 
 
-# Australian freelance / agency market rate for this kind of work. Used only to
-# express what the scope is worth at market, never to state a fee — what was
-# actually charged is not in this file and does not belong in it.
-RATE_LOW, RATE_HIGH = 100, 150
-
-SECTION_TOTALS = [(title, len(items), sum(adj(h) for _, _, h in items))
+SECTION_TOTALS = [(title, len(items), sum(adj(h, title) for _, _, h in items))
                   for title, _, items in SECTIONS]
-
-
-def money(v):
-    return f"${v:,.0f}"
 
 
 def hrs(v):
@@ -159,9 +157,11 @@ p {{ margin:0 0 .6em; }}
   background-image:url(data:image/png;base64,{b64_img('/assets/images/carbon-mesh.png')});
   background-repeat:repeat; background-size:20px 36px; opacity:.5; }}
 .cover > * {{ position:relative; z-index:1; }}
-/* align-self, or the flex column's default stretch widens the image and the
-   lockup prints squashed. */
-.clogo {{ height:20mm; width:auto; align-self:flex-start; margin-bottom:auto; }}
+/* align-self is doing two jobs: centring the lockup across the page, and
+   stopping the flex column's default stretch from widening it — stretched, the
+   image keeps its 20mm height but takes the full column width and prints
+   squashed. */
+.clogo {{ height:20mm; width:auto; align-self:center; margin-bottom:auto; }}
 .ceyebrow {{ font-size:8pt; letter-spacing:.3em; text-transform:uppercase; color:#ff6b5e; font-weight:700; }}
 .cover h1 {{ font-size:42pt; line-height:.95; margin:5mm 0 3mm; }}
 .cscript {{ font-family:'Allura',cursive; font-size:21pt; color:#ffb2a8; margin:0 0 7mm; }}
@@ -246,9 +246,9 @@ table.sum tr.tot td.h {{ color:#d52a22; font-family:'Bebas Neue',sans-serif; fon
 
 sec_html = []
 for title, blurb, items in SECTIONS:
-    sub = sum(adj(h) for _, _, h in items)
+    sub = sum(adj(h, title) for _, _, h in items)
     rows = "".join(
-        f"<tr><td class='n'>{n}</td><td class='d'>{d}</td><td class='h'>{hrs(adj(h))}</td></tr>"
+        f"<tr><td class='n'>{n}</td><td class='d'>{d}</td><td class='h'>{hrs(adj(h, title))}</td></tr>"
         for n, d, h in items
     )
     sec_html.append(
@@ -298,28 +298,25 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
       <td class="h r">{hrs(TOTAL_HOURS)}</td></tr>
   </table>
 
-  <h2>Commercial value</h2><div class="rule"></div>
-  <p>A line-by-line estimate against Australian freelance and agency market rates for the scope
-  delivered. <b>This is not what Pendulum Digital charged</b> &mdash; it is what this work costs at
-  market, where the going rate for a build of this kind is {money(RATE_LOW)}&ndash;{money(RATE_HIGH)}
-  an hour.</p>
+  <h2>Production time</h2><div class="rule"></div>
   <div class="value">
     <div class="vcard">
-      <span>Production time</span><b>{hrs(TOTAL_HOURS)} hrs</b>
-      <i>Delivered across {COMMITS} releases</i>
+      <span>Conventional build</span><b>{hrs(BASELINE_HOURS)} hrs</b>
+      <i>What this scope takes the usual way</i>
     </div>
     <div class="vcard">
-      <span>Market value at {money(RATE_LOW)}/hr</span><b>{money(TOTAL_HOURS * RATE_LOW)}</b>
-      <i>Freelance end of the range</i>
+      <span>Delivered in</span><b>{hrs(TOTAL_HOURS)} hrs</b>
+      <i>Across {COMMITS} releases</i>
     </div>
     <div class="vcard">
-      <span>Market value at {money(RATE_HIGH)}/hr</span><b>{money(TOTAL_HOURS * RATE_HIGH)}</b>
-      <i>Agency end of the range</i>
+      <span>Compression</span><b>{SAVED_PCT}%</b>
+      <i>Same scope, less time</i>
     </div>
   </div>
-  <p class="sub">Built the conventional way this scope runs to about {hrs(BASELINE_HOURS)} hours,
-  or {money(BASELINE_HOURS * RATE_LOW)}&ndash;{money(BASELINE_HOURS * RATE_HIGH)} at the same rates.
-  AI-assisted production brought it down by roughly {SAVED_PCT}% without reducing what is in it.</p>
+  <p class="sub">AI does not compress everything equally. Writing and search work come down to about
+  a quarter of conventional time; engineering, media and quality assurance come down by roughly a
+  third. Nothing was removed from the scope to get there &mdash; the {TOTAL_ITEMS} line items over
+  the following pages are the full build.</p>
 </section>
 
 <div class="pagebreak"></div>
@@ -344,11 +341,13 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
   <div class="note">
     <b>About the hours.</b> Built the conventional way, this scope runs to roughly
     {hrs(BASELINE_HOURS)} hours. It was delivered in about {hrs(TOTAL_HOURS)} &mdash; roughly
-    {SAVED_PCT}% less &mdash; because production is AI-assisted, which compresses the build without
-    reducing what is in it. The scope on the pages above is the full scope either way. Figures are
-    production estimates rather than a billed timesheet; the work went out across {COMMITS}
-    releases over {ACTIVE_DAYS} working days. Every other number in this document &mdash; page,
-    file, line, asset and release counts &mdash; is measured directly from the finished build.
+    {SAVED_PCT}% less &mdash; because production is AI-assisted. It does not compress everything
+    equally: writing and search work come down to about a quarter of conventional time, while
+    engineering, media and quality assurance come down by roughly a third. The scope on the pages
+    above is the full scope either way. Figures are production estimates rather than a billed
+    timesheet; the work went out across {COMMITS} releases over {ACTIVE_DAYS} working days. Every
+    other number in this document &mdash; page, file, line, asset and release counts &mdash; is
+    measured directly from the finished build.
   </div>
 
   <h2>The build, in numbers</h2><div class="rule"></div>
