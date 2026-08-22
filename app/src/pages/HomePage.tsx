@@ -47,12 +47,12 @@ export default function HomePage() {
                 carries the positioning. Small caps here and a heavier caps
                 statement under the script, with the script between them so the
                 two capitalised lines never sit against each other. */}
+            {/* Both thin lines lead in, the name lands, the script closes.
+                They are sized and toned apart so the two stacked caps lines read
+                as a run-up rather than as one line accidentally set twice. */}
             <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
-            <h1 className="display hero-shine">The Overspray Removalists</h1>
-            {/* Claim directly under the name, script line last. The script is
-                the most decorative element here, so it closes the stack rather
-                than interrupting it. */}
             <p className="hero-claim">We&rsquo;ll take anything off your paint.</p>
+            <h1 className="display hero-shine">The Overspray Removalists</h1>
             <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">

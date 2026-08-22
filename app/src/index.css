@@ -1084,14 +1084,16 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
   text-indent: .24em;
 }
 .hero-eyebrow {
-  margin: 0 0 .5rem;
-  font-size: clamp(.68rem, 1vw, .8rem);
+  margin: 0 0 .3rem;
+  font-size: clamp(.66rem, .95vw, .76rem);
   color: var(--muted-dim);
 }
+/* Larger and brighter than the eyebrow above it, and given room below so the
+   title still lands rather than being crowded by the run-up. */
 .hero-claim {
-  margin: .55rem 0 0;
-  font-size: clamp(.8rem, 1.2vw, 1rem);
-  color: var(--muted);
+  margin: 0 0 .75rem;
+  font-size: clamp(.82rem, 1.25vw, 1.02rem);
+  color: var(--text);
 }
 @media (max-width: 620px) {
   .hero-eyebrow,
