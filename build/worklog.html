@@ -89,6 +89,28 @@ ol.next li { margin-bottom:2.2mm; break-inside:avoid; }
 .log td { padding:1.5mm 0; border-bottom:1px solid #f1f4f8; }
 .log td.dt { width:24mm; color:#7b8397; font-variant-numeric:tabular-nums; }
 
+.pagebreak { break-after:page; page-break-after:always; height:0; }
+
+/* ---- at a glance ---- */
+table.sum { width:100%; border-collapse:collapse; margin:0 0 5mm; }
+table.sum th { text-align:left; font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase;
+  color:#fff; background:#0d1220; padding:2.4mm 4mm; font-weight:700; }
+table.sum th.r, table.sum td.r { text-align:right; }
+table.sum td { padding:2.8mm 4mm; border-bottom:1px solid #eef1f6; font-size:9.2pt; }
+table.sum td.s { font-weight:700; color:#0d1220; }
+table.sum td.i { color:#7b8397; font-size:8.4pt; }
+table.sum td.h { font-weight:700; color:#0d1220; font-variant-numeric:tabular-nums; white-space:nowrap; }
+table.sum tr.tot td { border-bottom:none; border-top:2px solid #0d1220; padding-top:3.4mm;
+  font-family:'Bebas Neue',sans-serif; font-size:15pt; color:#0d1220; }
+table.sum tr.tot td.h { color:#d52a22; font-family:'Bebas Neue',sans-serif; font-size:17pt; }
+
+.value { display:flex; gap:4mm; margin:0 0 5mm; }
+.vcard { flex:1; padding:5mm; border-radius:2.5mm; break-inside:avoid;
+  background:linear-gradient(135deg,#0d1220,#1a2338); color:#fff; }
+.vcard span { display:block; font-size:7.4pt; letter-spacing:.16em; text-transform:uppercase; color:#9aa3b6; }
+.vcard b { display:block; font-family:'Bebas Neue',sans-serif; font-size:26pt; line-height:1.05; margin-top:1.5mm; }
+.vcard i { display:block; font-style:normal; font-size:8pt; color:#aeb6c8; margin-top:1mm; }
+
 .foot { margin-top:7mm; padding-top:3.5mm; border-top:1px solid #e4e8f0; font-size:7.8pt; color:#7b8397; }
 </style></head><body>
 
@@ -105,10 +127,46 @@ ol.next li { margin-bottom:2.2mm; break-inside:avoid; }
     <div class="cstat"><b>63</b><span>PAGES BUILT</span></div>
     <div class="cstat"><b>93</b><span>LINE ITEMS</span></div>
     <div class="cstat"><b>241</b><span>PRODUCTION HOURS</span></div>
-    <div class="cstat"><b>9,389</b><span>LINES WRITTEN</span></div>
-    <div class="cstat"><b>33</b><span>RELEASES</span></div>
+    <div class="cstat"><b>9,649</b><span>LINES WRITTEN</span></div>
+    <div class="cstat"><b>38</b><span>RELEASES</span></div>
   </div>
 </section>
+
+<section class="page">
+  <h2>At a glance</h2><div class="rule"></div>
+  <p class="sub">93 line items across 11 sections. Full detail follows.</p>
+  <table class="sum">
+    <tr><th>Section</th><th>Line items</th><th class="r">Hours</th></tr>
+    <tr><td class='s'>Discovery &amp; audit</td><td class='i'>7</td><td class='h r'>8</td></tr><tr><td class='s'>Design system &amp; brand</td><td class='i'>11</td><td class='h r'>17.5</td></tr><tr><td class='s'>Website infrastructure</td><td class='i'>11</td><td class='h r'>22.5</td></tr><tr><td class='s'>Page templates</td><td class='i'>13</td><td class='h r'>41</td></tr><tr><td class='s'>Interactive features</td><td class='i'>9</td><td class='h r'>38</td></tr><tr><td class='s'>Lead capture</td><td class='i'>8</td><td class='h r'>21.5</td></tr><tr><td class='s'>Search &amp; local visibility</td><td class='i'>9</td><td class='h r'>27</td></tr><tr><td class='s'>Copywriting</td><td class='i'>6</td><td class='h r'>27</td></tr><tr><td class='s'>Media production</td><td class='i'>5</td><td class='h r'>12.5</td></tr><tr><td class='s'>Quality assurance</td><td class='i'>8</td><td class='h r'>17</td></tr><tr><td class='s'>Deployment &amp; hosting</td><td class='i'>6</td><td class='h r'>9</td></tr>
+    <tr class="tot"><td class="s">Total</td><td class="i">93 items</td>
+      <td class="h r">241</td></tr>
+  </table>
+
+  <h2>Commercial value</h2><div class="rule"></div>
+  <p>A line-by-line estimate against Australian freelance and agency market rates for the scope
+  delivered. <b>This is not what Pendulum Digital charged</b> &mdash; it is what this work costs at
+  market, where the going rate for a build of this kind is $100&ndash;$150
+  an hour.</p>
+  <div class="value">
+    <div class="vcard">
+      <span>Production time</span><b>241 hrs</b>
+      <i>Delivered across 38 releases</i>
+    </div>
+    <div class="vcard">
+      <span>Market value at $100/hr</span><b>$24,100</b>
+      <i>Freelance end of the range</i>
+    </div>
+    <div class="vcard">
+      <span>Market value at $150/hr</span><b>$36,150</b>
+      <i>Agency end of the range</i>
+    </div>
+  </div>
+  <p class="sub">Built the conventional way this scope runs to about 360.5 hours,
+  or $36,050&ndash;$54,075 at the same rates.
+  AI-assisted production brought it down by roughly 33% without reducing what is in it.</p>
+</section>
+
+<div class="pagebreak"></div>
 
 <section class="page">
   <h2>Where this started</h2><div class="rule"></div>
@@ -132,7 +190,7 @@ ol.next li { margin-bottom:2.2mm; break-inside:avoid; }
     360.5 hours. It was delivered in about 241 &mdash; roughly
     33% less &mdash; because production is AI-assisted, which compresses the build without
     reducing what is in it. The scope on the pages above is the full scope either way. Figures are
-    production estimates rather than a billed timesheet; the work went out across 33
+    production estimates rather than a billed timesheet; the work went out across 38
     releases over 7 working days. Every other number in this document &mdash; page,
     file, line, asset and release counts &mdash; is measured directly from the finished build.
   </div>
@@ -143,11 +201,11 @@ ol.next li { margin-bottom:2.2mm; break-inside:avoid; }
     <tr><td class='n'>Suburb pages</td><td class='d'>Individually written, each naming the local source of the work</td><td class='h'>46</td></tr>
     <tr><td class='n'>Service pages</td><td class='d'>Including ceramic coating, paint protection and detailing</td><td class='h'>9</td></tr>
     <tr><td class='n'>Page templates</td><td class='d'>Producing all 63 routes</td><td class='h'>13</td></tr>
-    <tr><td class='n'>Components</td><td class='d'>Reusable interface pieces</td><td class='h'>14</td></tr>
-    <tr><td class='n'>Source files</td><td class='d'>9,389 lines of application code and styles</td><td class='h'>50</td></tr>
+    <tr><td class='n'>Components</td><td class='d'>Reusable interface pieces</td><td class='h'>15</td></tr>
+    <tr><td class='n'>Source files</td><td class='d'>9,649 lines of application code and styles</td><td class='h'>51</td></tr>
     <tr><td class='n'>Images processed</td><td class='d'>Cropped, corrected and served at multiple widths</td><td class='h'>57</td></tr>
     <tr><td class='n'>Process videos</td><td class='d'>Lazy-loaded, one decoded at a time</td><td class='h'>4</td></tr>
-    <tr><td class='n'>Releases</td><td class='d'>Each one built, verified and deployed</td><td class='h'>33</td></tr>
+    <tr><td class='n'>Releases</td><td class='d'>Each one built, verified and deployed</td><td class='h'>38</td></tr>
   </table>
 
   <h2>What happens next</h2><div class="rule"></div>
@@ -156,7 +214,7 @@ ol.next li { margin-bottom:2.2mm; break-inside:avoid; }
 
   <h2>Release history</h2><div class="rule"></div>
   <p class="sub">Every deployment, in order.</p>
-  <table class="log"><tr><td class='dt'>2 August 2026</td><td>Archive live site + content extraction + audit</td></tr><tr><td class='dt'>3 August 2026</td><td>Rebuild the site on the Premier infrastructure and design language</td></tr><tr><td class='dt'>3 August 2026</td><td>Make the before/after slider explain itself on the home page</td></tr><tr><td class='dt'>3 August 2026</td><td>Fix the before/after sliders and move the job picker above the image</td></tr><tr><td class='dt'>3 August 2026</td><td>Add the website audit as a client-facing PDF</td></tr><tr><td class='dt'>4 August 2026</td><td>Audit: the contact form exists, and it is broken too</td></tr><tr><td class='dt'>9 August 2026</td><td>Rebuild on the Glossed Out lead-gen infrastructure</td></tr><tr><td class='dt'>9 August 2026</td><td>Home: make the argument physically instead of in prose</td></tr><tr><td class='dt'>9 August 2026</td><td>Hero becomes the deck; the wipe moves down to the services section</td></tr><tr><td class='dt'>9 August 2026</td><td>Quote form becomes a five-step wizard, on the Premier booking pattern</td></tr><tr><td class='dt'>9 August 2026</td><td>Wipe: hold the reveal until the panel is genuinely 90% clean</td></tr><tr><td class='dt'>9 August 2026</td><td>Home reorder, centred hero, pill buttons; the wipe never self-completes</td></tr><tr><td class='dt'>9 August 2026</td><td>Landing splash, and the Premier metallic shine on the hero title</td></tr><tr><td class='dt'>9 August 2026</td><td>Reset control becomes a large circular return icon</td></tr><tr><td class='dt'>10 August 2026</td><td>Red accent, carbon backgrounds, beam outline, rebuilt About page</td></tr><tr><td class='dt'>21 August 2026</td><td>Ceramic coating, paint protection, detailing; reviews; mobile pass</td></tr><tr><td class='dt'>21 August 2026</td><td>Client-safe wording when the quote form has no CRM connected</td></tr><tr><td class='dt'>21 August 2026</td><td>Replace the logo with the new TOR lockup</td></tr><tr><td class='dt'>21 August 2026</td><td>Rebuild the footer</td></tr><tr><td class='dt'>21 August 2026</td><td>Wizard motion and glass, honest proof rail, beam outlines, big-type parallax</td></tr><tr><td class='dt'>22 August 2026</td><td>Lift the carbon weave, split the parallax into two belts, drop Pricing from nav</td></tr><tr><td class='dt'>22 August 2026</td><td>Adopt the Premier review treatment, wired to real data only</td></tr><tr><td class='dt'>22 August 2026</td><td>Verify the Vercel root directory fix</td></tr><tr><td class='dt'>22 August 2026</td><td>Faster form, ceramic and film in the flow, conditional address, coverage panel</td></tr><tr><td class='dt'>22 August 2026</td><td>Add an HTML sitemap and 46 Melbourne suburb pages</td></tr><tr><td class='dt'>22 August 2026</td><td>Add URL-SITEMAP.md</td></tr><tr><td class='dt'>22 August 2026</td><td>Reorder the home page, four live sliders, scroll-scrubbed titles, feather the deck</td></tr><tr><td class='dt'>22 August 2026</td><td>Ceramic coating process carousel, and protection in the band under the hero</td></tr><tr><td class='dt'>22 August 2026</td><td>Gallery band: woven mesh backdrop, retitled</td></tr><tr><td class='dt'>22 August 2026</td><td>Fix the stray rail line, restore mobile navigation, embed the quote form</td></tr><tr><td class='dt'>22 August 2026</td><td>Fix the .scrub collision, and a script line in the hero</td></tr><tr><td class='dt'>22 August 2026</td><td>Mobile pass: centred logo, usable coverflow, simplified form, tightened controls</td></tr><tr><td class='dt'>22 August 2026</td><td>Add the client build-log PDF and its generator</td></tr></table>
+  <table class="log"><tr><td class='dt'>2 August 2026</td><td>Archive live site + content extraction + audit</td></tr><tr><td class='dt'>3 August 2026</td><td>Rebuild the site on the Premier infrastructure and design language</td></tr><tr><td class='dt'>3 August 2026</td><td>Make the before/after slider explain itself on the home page</td></tr><tr><td class='dt'>3 August 2026</td><td>Fix the before/after sliders and move the job picker above the image</td></tr><tr><td class='dt'>3 August 2026</td><td>Add the website audit as a client-facing PDF</td></tr><tr><td class='dt'>4 August 2026</td><td>Audit: the contact form exists, and it is broken too</td></tr><tr><td class='dt'>9 August 2026</td><td>Rebuild on the Glossed Out lead-gen infrastructure</td></tr><tr><td class='dt'>9 August 2026</td><td>Home: make the argument physically instead of in prose</td></tr><tr><td class='dt'>9 August 2026</td><td>Hero becomes the deck; the wipe moves down to the services section</td></tr><tr><td class='dt'>9 August 2026</td><td>Quote form becomes a five-step wizard, on the Premier booking pattern</td></tr><tr><td class='dt'>9 August 2026</td><td>Wipe: hold the reveal until the panel is genuinely 90% clean</td></tr><tr><td class='dt'>9 August 2026</td><td>Home reorder, centred hero, pill buttons; the wipe never self-completes</td></tr><tr><td class='dt'>9 August 2026</td><td>Landing splash, and the Premier metallic shine on the hero title</td></tr><tr><td class='dt'>9 August 2026</td><td>Reset control becomes a large circular return icon</td></tr><tr><td class='dt'>10 August 2026</td><td>Red accent, carbon backgrounds, beam outline, rebuilt About page</td></tr><tr><td class='dt'>21 August 2026</td><td>Ceramic coating, paint protection, detailing; reviews; mobile pass</td></tr><tr><td class='dt'>21 August 2026</td><td>Client-safe wording when the quote form has no CRM connected</td></tr><tr><td class='dt'>21 August 2026</td><td>Replace the logo with the new TOR lockup</td></tr><tr><td class='dt'>21 August 2026</td><td>Rebuild the footer</td></tr><tr><td class='dt'>21 August 2026</td><td>Wizard motion and glass, honest proof rail, beam outlines, big-type parallax</td></tr><tr><td class='dt'>22 August 2026</td><td>Lift the carbon weave, split the parallax into two belts, drop Pricing from nav</td></tr><tr><td class='dt'>22 August 2026</td><td>Adopt the Premier review treatment, wired to real data only</td></tr><tr><td class='dt'>22 August 2026</td><td>Verify the Vercel root directory fix</td></tr><tr><td class='dt'>22 August 2026</td><td>Faster form, ceramic and film in the flow, conditional address, coverage panel</td></tr><tr><td class='dt'>22 August 2026</td><td>Add an HTML sitemap and 46 Melbourne suburb pages</td></tr><tr><td class='dt'>22 August 2026</td><td>Add URL-SITEMAP.md</td></tr><tr><td class='dt'>22 August 2026</td><td>Reorder the home page, four live sliders, scroll-scrubbed titles, feather the deck</td></tr><tr><td class='dt'>22 August 2026</td><td>Ceramic coating process carousel, and protection in the band under the hero</td></tr><tr><td class='dt'>22 August 2026</td><td>Gallery band: woven mesh backdrop, retitled</td></tr><tr><td class='dt'>22 August 2026</td><td>Fix the stray rail line, restore mobile navigation, embed the quote form</td></tr><tr><td class='dt'>22 August 2026</td><td>Fix the .scrub collision, and a script line in the hero</td></tr><tr><td class='dt'>22 August 2026</td><td>Mobile pass: centred logo, usable coverflow, simplified form, tightened controls</td></tr><tr><td class='dt'>22 August 2026</td><td>Add the client build-log PDF and its generator</td></tr><tr><td class='dt'>22 August 2026</td><td>Itemise the scope report, and cut the hours to AI-assisted production</td></tr><tr><td class='dt'>22 August 2026</td><td>Hero copy, mesh on the beam panel, and fix the coating arrows on mobile</td></tr><tr><td class='dt'>22 August 2026</td><td>Light hero support lines, animated sheen on the band, textured stats</td></tr><tr><td class='dt'>22 August 2026</td><td>Hero: claim moves above the name</td></tr><tr><td class='dt'>22 August 2026</td><td>Counting metrics with parallax, centred on phones; hero trimmed; earlier reset</td></tr></table>
 
   <div class="foot">
     Counts read directly from the build on 22 August 2026. Hours are production estimates, not a

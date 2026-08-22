@@ -104,6 +104,19 @@ TOTAL_ITEMS = sum(len(items) for _, _, items in SECTIONS)
 SAVED_PCT = round((1 - TOTAL_HOURS / BASELINE_HOURS) * 100)
 
 
+# Australian freelance / agency market rate for this kind of work. Used only to
+# express what the scope is worth at market, never to state a fee — what was
+# actually charged is not in this file and does not belong in it.
+RATE_LOW, RATE_HIGH = 100, 150
+
+SECTION_TOTALS = [(title, len(items), sum(adj(h) for _, _, h in items))
+                  for title, _, items in SECTIONS]
+
+
+def money(v):
+    return f"${v:,.0f}"
+
+
 def hrs(v):
     return str(int(v)) if float(v).is_integer() else f"{v:g}"
 
@@ -206,6 +219,28 @@ ol.next li {{ margin-bottom:2.2mm; break-inside:avoid; }}
 .log td {{ padding:1.5mm 0; border-bottom:1px solid #f1f4f8; }}
 .log td.dt {{ width:24mm; color:#7b8397; font-variant-numeric:tabular-nums; }}
 
+.pagebreak {{ break-after:page; page-break-after:always; height:0; }}
+
+/* ---- at a glance ---- */
+table.sum {{ width:100%; border-collapse:collapse; margin:0 0 5mm; }}
+table.sum th {{ text-align:left; font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase;
+  color:#fff; background:#0d1220; padding:2.4mm 4mm; font-weight:700; }}
+table.sum th.r, table.sum td.r {{ text-align:right; }}
+table.sum td {{ padding:2.8mm 4mm; border-bottom:1px solid #eef1f6; font-size:9.2pt; }}
+table.sum td.s {{ font-weight:700; color:#0d1220; }}
+table.sum td.i {{ color:#7b8397; font-size:8.4pt; }}
+table.sum td.h {{ font-weight:700; color:#0d1220; font-variant-numeric:tabular-nums; white-space:nowrap; }}
+table.sum tr.tot td {{ border-bottom:none; border-top:2px solid #0d1220; padding-top:3.4mm;
+  font-family:'Bebas Neue',sans-serif; font-size:15pt; color:#0d1220; }}
+table.sum tr.tot td.h {{ color:#d52a22; font-family:'Bebas Neue',sans-serif; font-size:17pt; }}
+
+.value {{ display:flex; gap:4mm; margin:0 0 5mm; }}
+.vcard {{ flex:1; padding:5mm; border-radius:2.5mm; break-inside:avoid;
+  background:linear-gradient(135deg,#0d1220,#1a2338); color:#fff; }}
+.vcard span {{ display:block; font-size:7.4pt; letter-spacing:.16em; text-transform:uppercase; color:#9aa3b6; }}
+.vcard b {{ display:block; font-family:'Bebas Neue',sans-serif; font-size:26pt; line-height:1.05; margin-top:1.5mm; }}
+.vcard i {{ display:block; font-style:normal; font-size:8pt; color:#aeb6c8; margin-top:1mm; }}
+
 .foot {{ margin-top:7mm; padding-top:3.5mm; border-top:1px solid #e4e8f0; font-size:7.8pt; color:#7b8397; }}
 """
 
@@ -223,6 +258,10 @@ for title, blurb, items in SECTIONS:
         f"<table class='items'>{rows}</table></div>"
     )
 
+sumrows = "".join(
+    f"<tr><td class='s'>{t}</td><td class='i'>{n}</td><td class='h r'>{hrs(h)}</td></tr>"
+    for t, n, h in SECTION_TOTALS
+)
 finds = "".join(f"<div class='find'><b>{t}</b>{b}</div>" for t, b in HIGHLIGHTS)
 incl = "".join(f"<tr><td class='k'>{k}</td><td>{v}</td></tr>" for k, v in INCLUDED)
 nexts = "".join(f"<li>{n}</li>" for n in NEXT)
@@ -248,6 +287,42 @@ html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
     <div class="cstat"><b>{COMMITS}</b><span>RELEASES</span></div>
   </div>
 </section>
+
+<section class="page">
+  <h2>At a glance</h2><div class="rule"></div>
+  <p class="sub">{TOTAL_ITEMS} line items across {len(SECTIONS)} sections. Full detail follows.</p>
+  <table class="sum">
+    <tr><th>Section</th><th>Line items</th><th class="r">Hours</th></tr>
+    {sumrows}
+    <tr class="tot"><td class="s">Total</td><td class="i">{TOTAL_ITEMS} items</td>
+      <td class="h r">{hrs(TOTAL_HOURS)}</td></tr>
+  </table>
+
+  <h2>Commercial value</h2><div class="rule"></div>
+  <p>A line-by-line estimate against Australian freelance and agency market rates for the scope
+  delivered. <b>This is not what Pendulum Digital charged</b> &mdash; it is what this work costs at
+  market, where the going rate for a build of this kind is {money(RATE_LOW)}&ndash;{money(RATE_HIGH)}
+  an hour.</p>
+  <div class="value">
+    <div class="vcard">
+      <span>Production time</span><b>{hrs(TOTAL_HOURS)} hrs</b>
+      <i>Delivered across {COMMITS} releases</i>
+    </div>
+    <div class="vcard">
+      <span>Market value at {money(RATE_LOW)}/hr</span><b>{money(TOTAL_HOURS * RATE_LOW)}</b>
+      <i>Freelance end of the range</i>
+    </div>
+    <div class="vcard">
+      <span>Market value at {money(RATE_HIGH)}/hr</span><b>{money(TOTAL_HOURS * RATE_HIGH)}</b>
+      <i>Agency end of the range</i>
+    </div>
+  </div>
+  <p class="sub">Built the conventional way this scope runs to about {hrs(BASELINE_HOURS)} hours,
+  or {money(BASELINE_HOURS * RATE_LOW)}&ndash;{money(BASELINE_HOURS * RATE_HIGH)} at the same rates.
+  AI-assisted production brought it down by roughly {SAVED_PCT}% without reducing what is in it.</p>
+</section>
+
+<div class="pagebreak"></div>
 
 <section class="page">
   <h2>Where this started</h2><div class="rule"></div>

@@ -30,7 +30,10 @@ const BODY = path.resolve(__dirname, '.wl-body.pdf');
 
   const c = await load();
   await c.evaluate(() => {
-    document.querySelector('.page').remove();
+    /* querySelectorAll, not querySelector. There is more than one .page now,
+       and removing only the first left the rest to render into the cover pass
+       at zero margin — a 9 page document came out as 20. */
+    document.querySelectorAll('.page, .pagebreak').forEach((el) => el.remove());
     const cover = document.querySelector('.cover');
     cover.style.margin = '0';
     cover.style.pageBreakAfter = 'auto'; // nothing follows; avoids a blank sheet
