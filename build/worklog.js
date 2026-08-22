@@ -42,7 +42,16 @@ const BODY = path.resolve(__dirname, '.wl-body.pdf');
   await c.close();
 
   const b = await load();
-  await b.evaluate(() => document.querySelector('.cover').remove());
+  await b.evaluate(() => {
+    document.querySelector('.cover').remove();
+    /* The stylesheet sets `@page { margin: 0 }` so the cover can bleed to the
+       paper edge. CSS wins over the margin option below, so without this the
+       body also ran edge to edge and the footer template printed on top of the
+       last rows. Later rule, same specificity, so this one takes it. */
+    const s = document.createElement('style');
+    s.textContent = '@page { size: A4; margin: 14mm 0 26mm; }';
+    document.head.appendChild(s);
+  });
   await b.pdf({
     path: BODY, format: 'A4', printBackground: true,
     displayHeaderFooter: true,
@@ -54,7 +63,7 @@ const BODY = path.resolve(__dirname, '.wl-body.pdf');
         <span class="pageNumber"></span>
       </div>`,
     // bottom must clear the footer template or the last line collides with it
-    margin: { top: '14mm', bottom: '18mm', left: '0', right: '0' },
+    margin: { top: '14mm', bottom: '26mm', left: '0', right: '0' },
   });
   await b.close();
 
