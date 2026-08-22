@@ -117,6 +117,9 @@ export default function WordParallax({ stem }: { stem: string }) {
           <Link className="btn btn-ghost" to="/paint-protection">
             Paint protection
           </Link>
+          <Link className="btn btn-ghost" to="/services">
+            All services
+          </Link>
         </div>
       </div>
     </section>

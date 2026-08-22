@@ -1027,3 +1027,23 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
   /* The gradient clip kills any text-shadow, so the glow goes on a filter. */
   filter: drop-shadow(0 4px 18px rgba(255, 79, 66, .35));
 }
+
+
+/* ---------- hero supporting lines ---------- */
+.hero-eyebrow {
+  margin: 0 0 .55rem;
+  font-size: .78rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--muted-dim);
+}
+/* Set in caps rather than typed in caps: the sentence keeps its real casing in
+   the markup, so screen readers and search results do not read it as shouting. */
+.hero-claim {
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700;
+  font-size: clamp(.95rem, 1.5vw, 1.12rem);
+  color: var(--text);
+}
+@media (max-width: 620px) {
+  .hero-eyebrow { letter-spacing: .18em; font-size: .7rem; }
+}

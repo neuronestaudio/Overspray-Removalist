@@ -43,12 +43,14 @@ export default function HomePage() {
       <section className="hero-deck">
         <div className="shell">
           <div className="hero-deck-copy">
+            {/* Tenure and territory above the name; the script line below it
+                carries the positioning. Small caps here and a heavier caps
+                statement under the script, with the script between them so the
+                two capitalised lines never sit against each other. */}
+            <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
             <h1 className="display hero-shine">The Overspray Removalists</h1>
-            {/* The all-caps kicker was a third competing weight under an
-                already loud title. One script line instead, carrying the
-                positioning rather than the tenure. */}
             <p className="hero-script">Ceramic coating &amp; paint protection specialists</p>
-            <p className="lede">We&rsquo;ll take anything off your paint.</p>
+            <p className="lede hero-claim">We&rsquo;ll take anything off your paint.</p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to="/quote">
                 Get a quote

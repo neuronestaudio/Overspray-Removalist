@@ -405,7 +405,13 @@
   position: relative;
   border-radius: var(--r-box);
   padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 3vw, 2.5rem);
-  background: rgba(8, 11, 22, .55);
+  /* The woven mesh under the scrim, so the panel reads as the same material as
+     the gallery band rather than as a flat tint inside the beam. */
+  background:
+    linear-gradient(rgba(8, 11, 22, .82), rgba(11, 16, 32, .88)),
+    url('/assets/images/carbon-mesh.png') repeat;
+  background-size: auto, 27px 48px;
+  overflow: hidden;
   isolation: isolate;
 }
 .beam::before {
@@ -771,7 +777,14 @@
   pointer-events: none; user-select: none; white-space: nowrap;
 }
 
-.coat-inner { display: grid; gap: clamp(1.5rem, 3vw, 2.4rem); }
+/* minmax(0, 1fr), not the default auto track. An auto track is floored at its
+   content's min-content width, and the pip strip inside will not shrink — so
+   the panel measured 448px inside a 390px viewport and the right arrow sat off
+   the screen entirely. */
+.coat-inner {
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.4rem);
+}
 .coat-head { max-width: 46rem; }
 .coat-head .lede { margin-top: .5rem; }
 
@@ -823,7 +836,7 @@
 }
 .coat-txt p { margin: 0; color: var(--muted); line-height: 1.7; font-size: .95rem; }
 
-.coat-controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+.coat-controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; min-width: 0; }
 .coat-arrow {
   width: 44px; height: 44px; flex: none; border-radius: 999px; cursor: pointer;
   display: grid; place-items: center;
@@ -833,7 +846,7 @@
 .coat-arrow:hover { background: rgba(255, 79, 66, .16); border-color: rgba(255, 79, 66, .55); }
 .coat-arrow svg { width: 18px; height: 18px; }
 
-.coat-pips { display: flex; gap: .4rem; flex-wrap: wrap; flex: 1; }
+.coat-pips { display: flex; gap: .4rem; flex-wrap: wrap; flex: 1; min-width: 0; }
 .coat-pip {
   cursor: pointer; padding: .5rem .85rem; border-radius: 999px;
   font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -853,7 +866,10 @@
   /* One scrolling line above the arrows. Wrapped, the four labels broke into
      a ragged three-row block with the arrows stranded mid-way through it. */
   .coat-pips {
-    order: -1; width: 100%;
+    /* flex-basis 100%, not width:100%. The base rule sets flex:1, whose
+       flex-basis of 0 wins on the main axis — so width was ignored, the strip
+       stayed on the arrows' row and the pills were clipped behind them. */
+    order: -1; flex: 0 0 100%;
     flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
     scrollbar-width: none; padding-bottom: .15rem;
   }
