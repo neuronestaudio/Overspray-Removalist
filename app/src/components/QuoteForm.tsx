@@ -549,7 +549,7 @@ export default function QuoteForm() {
               id="q-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Whether it can be worked on where it sits, access, deadlines, anything the photos do not show."
+              placeholder="Access, deadlines, how many vehicles, anything the photos do not show."
             />
           </div>
         </Panel>
