@@ -69,18 +69,6 @@ export const HANDLED_BY_FROM_JOB: Record<string, string> = {
   commercial_fleet: 'fleet_dealer',
 };
 
-export const LOCATION_TYPES: Choice[] = [
-  { value: 'on_site', label: 'Come to us', hint: 'We work on site, all suburbs across Melbourne' },
-  { value: 'drop_off', label: 'I can bring it in', hint: 'Drop off at Epping VIC 3076' },
-];
-
-export const COVERAGE: Choice[] = [
-  { value: 'light', label: 'Light', hint: 'A dusting, or one or two panels' },
-  { value: 'partial', label: 'Partial', hint: 'One side, or the top surfaces' },
-  { value: 'full', label: 'Full coverage', hint: 'Whole vehicle, including glass and trims' },
-  { value: 'not_sure', label: 'Not sure', hint: 'Hard to tell, photos will show it' },
-];
-
 export const WHEN_HAPPENED: Choice[] = [
   { value: 'days', label: 'In the last few days', hint: 'Still fresh' },
   { value: 'weeks', label: 'A few weeks ago', hint: 'Starting to bond' },
@@ -97,4 +85,6 @@ export const HANDLED_BY: Choice[] = [
 
 /* "Job", not "Damage": step one now covers protection work, where nothing is
    damaged. */
-export const STEPS = ['Job', 'Location', 'Vehicle', 'Photos', 'Details'] as const;
+/* Timing is step two on purpose. It is the question whose answer decides how
+   urgent the job is, and asking it early sets the tone of the rest. */
+export const STEPS = ['Job', 'Timing', 'Vehicle', 'Photos', 'Details'] as const;

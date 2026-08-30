@@ -5,8 +5,6 @@ import { createSubmissionId, getStoredAttribution } from '../lib/attribution';
 import { BUSINESS, GHL_WEBHOOK, REQUEST_TIMEOUT_MS } from '../lib/site';
 import {
   CONTAMINANTS,
-  LOCATION_TYPES,
-  COVERAGE,
   WHEN_HAPPENED,
   HANDLED_BY,
   HANDLED_BY_FROM_JOB,
@@ -47,11 +45,10 @@ export default function QuoteForm() {
   const autoTimer = useRef<number | undefined>(undefined);
 
   const [contaminant, setContaminant] = useState('');
-  const [locationType, setLocationType] = useState('');
   const [location, setLocation] = useState('');
+  const [postcode, setPostcode] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [vehicles, setVehicles] = useState('1');
-  const [coverage, setCoverage] = useState('');
   const [whenHappened, setWhenHappened] = useState('');
   const [handledBy, setHandledBy] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
@@ -69,12 +66,11 @@ export default function QuoteForm() {
   function validateStep(s: number): Errors {
     const e: Errors = {};
     if (s === 0 && !contaminant) e.contaminant = 'Pick what you need, or "Not sure yet".';
-    if (s === 1) {
-      if (!locationType) e.locationType = 'Let us know where the work happens.';
-      /* Only asked for when we are the ones travelling. Demanding an address
-         from someone who just told us they are driving to Epping is a question
-         with no answer. */
-      if (locationType === 'on_site' && !location.trim()) e.location = 'A suburb is enough.';
+    if (s === 1 && !whenHappened) e.whenHappened = 'Roughly how long has it been on there?';
+    if (s === 2) {
+      if (!location.trim()) e.location = 'Which suburb is the vehicle in?';
+      if (!postcode.trim()) e.postcode = 'Postcode too, please.';
+      else if (!/^\d{4}$/.test(postcode.trim())) e.postcode = 'An Australian postcode is four digits.';
     }
     if (s === 4) {
       if (!name.trim()) e.name = 'Please tell us your name.';
@@ -122,15 +118,6 @@ export default function QuoteForm() {
     advance(1);
   }
 
-  /* "I can bring it in" is a complete answer on its own, so it moves on.
-     "Come to us" is not — it reveals the address field and waits. */
-  function pickLocationType(value: string) {
-    setLocationType(value);
-    setErrors({});
-    if (value === 'drop_off') advance(2);
-    else window.clearTimeout(autoTimer.current);
-  }
-
   function advance(to: number) {
     window.clearTimeout(autoTimer.current);
     if (prefersReducedMotion()) {
@@ -138,6 +125,14 @@ export default function QuoteForm() {
       return;
     }
     autoTimer.current = window.setTimeout(() => goTo(to), AUTO_ADVANCE_MS);
+  }
+
+  /* Step two asks one question with one answer, same as step one, so it moves
+     on by itself rather than making someone reach for Continue. */
+  function pickWhen(value: string) {
+    setWhenHappened(value);
+    setErrors({});
+    advance(2);
   }
 
   useEffect(() => () => window.clearTimeout(autoTimer.current), []);
@@ -269,13 +264,10 @@ export default function QuoteForm() {
       email: email.trim(),
       contaminant,
       contaminantLabel: labelFor(CONTAMINANTS, contaminant),
-      locationType,
-      locationTypeLabel: labelFor(LOCATION_TYPES, locationType),
       location: location.trim(),
+      postcode: postcode.trim(),
       vehicle: vehicle.trim(),
       vehicles: vehicles.trim() || '1',
-      coverage,
-      coverageLabel: labelFor(COVERAGE, coverage),
       whenHappened,
       whenHappenedLabel: labelFor(WHEN_HAPPENED, whenHappened),
       handledBy,
@@ -386,40 +378,24 @@ export default function QuoteForm() {
       )}
 
       {step === 1 && (
-        <Panel title="Where is the vehicle?" sub="We work on site across every Melbourne suburb.">
+        <Panel
+          title="When did it happen?"
+          sub="Fresh contamination lifts more easily than contamination that has had months to bond."
+        >
           <Cards
-            options={LOCATION_TYPES}
-            value={locationType}
-            onChange={pickLocationType}
-            name="locationType"
+            options={WHEN_HAPPENED}
+            value={whenHappened}
+            onChange={pickWhen}
+            name="whenHappened"
           />
-          <Err msg={errors.locationType} />
-          {/* Only when we are travelling. Drop-off already told us the address:
-              it is theirs. */}
-          {locationType === 'on_site' && (
-            <div className="field wiz-reveal" style={{ marginTop: '1.25rem' }}>
-              <label htmlFor="q-location">
-                Suburb or site address <span aria-hidden="true">*</span>
-              </label>
-              <input
-                id="q-location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                autoComplete="address-level2"
-                placeholder="e.g. Epping VIC, or the site address"
-                aria-invalid={errors.location ? true : undefined}
-                autoFocus
-              />
-              <Err msg={errors.location} />
-            </div>
-          )}
+          <Err msg={errors.whenHappened} />
         </Panel>
       )}
 
       {step === 2 && (
         <Panel
-          title="Tell us about the vehicle"
-          sub="Rough answers are fine. Photos settle the rest."
+          title="The vehicle, and where it is"
+          sub="Rough answers are fine. The photos settle the rest."
         >
           <div className="wiz-row">
             <div className="field">
@@ -449,17 +425,38 @@ export default function QuoteForm() {
             </div>
           </div>
 
-          <p className="wiz-legend">How much of it is covered?</p>
-          <Cards options={COVERAGE} value={coverage} onChange={setCoverage} name="coverage" compact />
-
-          <p className="wiz-legend">When did it happen?</p>
-          <Cards
-            options={WHEN_HAPPENED}
-            value={whenHappened}
-            onChange={setWhenHappened}
-            name="whenHappened"
-            compact
-          />
+          <div className="wiz-row">
+            <div className="field">
+              <label htmlFor="q-location">
+                Suburb <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="q-location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                autoComplete="address-level2"
+                placeholder="e.g. Epping"
+                aria-invalid={errors.location ? true : undefined}
+              />
+              <Err msg={errors.location} />
+            </div>
+            <div className="field">
+              <label htmlFor="q-postcode">
+                Postcode <span aria-hidden="true">*</span>
+              </label>
+              <input
+                id="q-postcode"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                autoComplete="postal-code"
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="3076"
+                aria-invalid={errors.postcode ? true : undefined}
+              />
+              <Err msg={errors.postcode} />
+            </div>
+          </div>
         </Panel>
       )}
 
@@ -520,7 +517,7 @@ export default function QuoteForm() {
       )}
 
       {step === 4 && (
-        <Panel title="Where do we send the price?" sub="We will come back with a number, or a time to come and look.">
+        <Panel title="Where do we send the quote?" sub="We come back with a number, or a time to look at it.">
           <div className="wiz-row">
             <div className="field">
               <label htmlFor="q-name">
@@ -546,7 +543,7 @@ export default function QuoteForm() {
           </div>
           <div className="field">
             <label htmlFor="q-notes">
-              Anything else? <span className="hint">optional</span>
+              Any comments / special request <span className="hint">optional</span>
             </label>
             <textarea
               id="q-notes"
@@ -576,7 +573,7 @@ export default function QuoteForm() {
           </button>
         ) : (
           <button className="btn btn-primary" type="submit" disabled={loading} aria-busy={loading}>
-            {loading ? 'Sending…' : 'Get my price'}
+            {loading ? 'Sending…' : 'Get my quote'}
           </button>
         )}
       </div>
