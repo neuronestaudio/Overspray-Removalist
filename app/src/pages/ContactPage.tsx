@@ -33,8 +33,9 @@ export default function ContactPage() {
           </p>
           <h1 className="display">Contact</h1>
           <p className="lede">
-            Two of us take the calls. If one does not pick up, try the other, or send photos through
-            the quote form and we will come back to you.
+            Two of us take the calls — both founders, both auto detailing specialists, with more
+            than 30 years servicing Melbourne. If one does not pick up, try the other, or send
+            photos through the quote form and we will come back to you.
           </p>
         </div>
       </section>
@@ -45,12 +46,14 @@ export default function ContactPage() {
             <ul className="who">
               <li>
                 <h2>{BUSINESS.phoneContact}</h2>
+                <p className="who-role">{BUSINESS.phoneContactRole}</p>
                 <p>
                   <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>
                 </p>
               </li>
               <li>
                 <h2>{BUSINESS.phoneAltContact}</h2>
+                <p className="who-role">{BUSINESS.phoneAltContactRole}</p>
                 <p>
                   <a href={BUSINESS.phoneAltHref}>{BUSINESS.phoneAlt}</a>
                 </p>

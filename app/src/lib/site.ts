@@ -20,10 +20,13 @@ export const BUSINESS = {
   phoneHref: 'tel:0412107464',
   phoneE164: '+61412107464',
   phoneContact: 'Renny',
+  /** Both principals are founders who still do the work themselves. */
+  phoneContactRole: 'Founder & auto detailing specialist',
   /** Secondary number, footer and contact page only. */
   phoneAlt: '0410 939 700',
   phoneAltHref: 'tel:0410939700',
   phoneAltContact: 'Adrianus',
+  phoneAltContactRole: 'Founder & auto detailing specialist',
   address: {
     locality: 'Epping',
     region: 'VIC',

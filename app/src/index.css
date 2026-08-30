@@ -524,6 +524,9 @@ section { padding-block: clamp(4rem, 8vw, 7rem); }
 .who-ico svg { width: 19px; height: 19px; fill: var(--accent-hot); }
 .who h4 { font-size: 1rem; font-weight: 700; margin-bottom: .18rem; }
 .who p { font-size: .9rem; color: var(--muted); }
+/* Role sits between the name and the number, quieter than both. */
+.who-role { font-size: .72rem; text-transform: uppercase; letter-spacing: .09em;
+  font-weight: 700; opacity: .8; margin-bottom: .3rem; }
 
 /* ---------- process rail ----------
    Named .steprail, not .rail. It used to be .rail, which is also the marquee in
