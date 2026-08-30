@@ -262,16 +262,20 @@ export default function QuoteForm() {
       name: name.trim(),
       phone: mobile.trim(),
       email: email.trim(),
+      /* snake_case, because GoHighLevel derives a custom field's key by
+         slugifying its name: a field called "Contaminant Label" is
+         contact.contaminant_label. camelCase keys here would arrive with
+         nothing to map to and sit in the payload unread. */
       contaminant,
-      contaminantLabel: labelFor(CONTAMINANTS, contaminant),
+      contaminant_label: labelFor(CONTAMINANTS, contaminant),
       location: location.trim(),
       postcode: postcode.trim(),
       vehicle: vehicle.trim(),
       vehicles: vehicles.trim() || '1',
-      whenHappened,
-      whenHappenedLabel: labelFor(WHEN_HAPPENED, whenHappened),
-      handledBy,
-      handledByLabel: labelFor(HANDLED_BY, handledBy),
+      when_happened: whenHappened,
+      when_happened_label: labelFor(WHEN_HAPPENED, whenHappened),
+      handled_by: handledBy,
+      handled_by_label: labelFor(HANDLED_BY, handledBy),
       notes: notes.trim(),
       photo_count: String(photos.length),
       source: 'Website Quote Form',
