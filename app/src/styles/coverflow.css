@@ -12,14 +12,15 @@
   position: relative;
   height: clamp(490px, 54vh, 560px);
   overflow: hidden;
-  /* A defined edge, not a dissolve. Feathering the backdrop out to nothing read
-     as a smudge on the carbon rather than as an edge; a rounded plate carrying
-     the active photograph reads as deliberate. The plate is a picture, which is
-     why it does not come back as the flat slab this replaced. */
+  /* Translucent, not opaque. Three versions got here: a flat slab read as a hole
+     cut in the carbon, feathering it away read as a smudge, and an opaque photo
+     plate read as a rectangle stuck on top. This one lets the weave carry
+     straight through the plate, so the shape is defined but the material is
+     continuous and there is no contrast edge to notice. */
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, .07);
-  background: #06080f;
-  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .95);
+  border: 1px solid rgba(255, 255, 255, .04);
+  background: rgba(6, 8, 15, .35);
+  box-shadow: 0 30px 80px -46px rgba(0, 0, 0, .85);
   isolation: isolate;
   /* pan-y, not none: this sits in the hero and the visitor must be able to
      scroll past it. Horizontal drags swipe the deck, vertical scrolls on. */
@@ -33,7 +34,7 @@
   opacity: 0;
   transition: opacity .9s cubic-bezier(.4, 0, .2, 1);
 }
-.cf-bg[data-on="true"] { opacity: 1; }
+.cf-bg[data-on="true"] { opacity: .5; }
 .cf-bg img {
   width: 100%; height: 100%; object-fit: cover;
   /* Was blur 38 at 42% brightness, which is a wash rather than a picture. Less
@@ -51,9 +52,9 @@
   /* No white raking highlight here any more. Over a blurred photograph it did
      not read as a glass edge, it read as fog across the whole deck. */
   background:
-    radial-gradient(120% 80% at 50% 42%, transparent 42%, rgba(6, 8, 15, .55) 100%),
-    linear-gradient(to top, rgba(6, 8, 15, .74) 0%, transparent 34%),
-    linear-gradient(to bottom, rgba(6, 8, 15, .58) 0%, transparent 28%);
+    radial-gradient(120% 80% at 50% 42%, transparent 48%, rgba(6, 8, 15, .38) 100%),
+    linear-gradient(to top, rgba(6, 8, 15, .55) 0%, transparent 36%),
+    linear-gradient(to bottom, rgba(6, 8, 15, .4) 0%, transparent 30%);
 }
 
 /* ---------- stage ---------- */
