@@ -44,22 +44,31 @@ export const BUSINESS = {
  * must be changed with it — it is inlined there rather than injected so the
  * container loads before React boots.
  */
-export const GTM_ID = 'GTM-XXXXXXX';
+export const GTM_ID: string = import.meta.env.VITE_GTM_ID || 'GTM-XXXXXXX';
 
 /**
  * GoHighLevel inbound webhook that receives every lead.
  *
- * REPLACE before launch with the Overspray sub-account's own webhook trigger
- * URL. Leaving another client's URL here would post this business's leads into
- * that client's CRM, so the form refuses to submit while it still reads
- * REPLACE_ME (see QuoteForm).
+ * Read from the environment, NOT written here. This repository is public, and a
+ * GoHighLevel inbound webhook has no authentication on it — anyone holding the
+ * URL can POST arbitrary JSON and create contacts in the CRM. Committed to
+ * source it would be greppable by the bots that scan GitHub for exactly this
+ * pattern.
+ *
+ * It is still visible to anyone who opens DevTools on the live site, because the
+ * form posts to it straight from the browser. That is inherent to a static site
+ * with no server of its own, and it is the reason the form carries a honeypot
+ * rather than relying on the URL being secret.
+ *
+ * Set it in two places:
+ *   local   app/.env.local          VITE_GHL_WEBHOOK=https://...
+ *   hosting Vercel project settings  VITE_GHL_WEBHOOK
  *
  * Annotated `: string` deliberately. Without it TypeScript narrows this to the
- * literal placeholder, and the guard comparing it to 'REPLACE_ME' becomes a
- * no-overlap type error the moment a real URL is pasted in: setting the webhook
- * would break the build.
+ * literal fallback and the guard comparing it to 'REPLACE_ME' becomes a
+ * no-overlap type error the moment a real URL is supplied.
  */
-export const GHL_WEBHOOK: string = 'REPLACE_ME';
+export const GHL_WEBHOOK: string = import.meta.env.VITE_GHL_WEBHOOK || 'REPLACE_ME';
 
 /** Paths worth their own dataLayer event because they signal buying intent. */
 export const KEY_SERVICE_PATHS = [
