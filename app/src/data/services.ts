@@ -207,8 +207,8 @@ export const SERVICES: Service[] = [
       'Road marking paint, tar, bitumen and asphalt residue removed from vehicle paint without abrasives. Melbourne wide, on site.',
     lede:
       'Line marking crews and hot mix trucks throw material a long way. It lands hot, it bonds fast, and it is on the lower panels and wheels before anyone notices.',
-    hero: 'landcruiser',
-    heroAlt: 'Toyota Landcruiser ute after decontamination',
+    hero: 'job-merc-2',
+    heroAlt: 'Dark speckled contamination across a white rear quarter and tail light',
     blocks: [
       {
         heading: 'Fresh line marking is the worst of it',

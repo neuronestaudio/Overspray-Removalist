@@ -46,8 +46,28 @@ export const CONTAMINANTS: Choice[] = [
     label: 'Roadwork contamination',
     hint: 'Road paint, tar, bitumen or asphalt residue',
   },
+  {
+    value: 'insurance_claim',
+    label: 'Insurance claim',
+    hint: 'Assessment and paperwork handled with the insurer',
+  },
+  {
+    value: 'commercial_fleet',
+    label: 'Commercial fleet',
+    hint: 'Several vehicles or a whole site, priced as one job',
+  },
   { value: 'not_sure', label: 'Not sure yet', hint: "Send photos and we'll identify the problem" },
 ];
+
+/**
+ * Two of the choices above are not contaminants, they are who is carrying the
+ * job — which is the question step five asks. Picking one here answers that
+ * question, so it is carried straight across rather than asked twice.
+ */
+export const HANDLED_BY_FROM_JOB: Record<string, string> = {
+  insurance_claim: 'insurance_claim',
+  commercial_fleet: 'fleet_dealer',
+};
 
 export const LOCATION_TYPES: Choice[] = [
   { value: 'on_site', label: 'Come to us', hint: 'We work on site, all suburbs across Melbourne' },

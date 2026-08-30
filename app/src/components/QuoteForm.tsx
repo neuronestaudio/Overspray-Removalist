@@ -9,6 +9,7 @@ import {
   COVERAGE,
   WHEN_HAPPENED,
   HANDLED_BY,
+  HANDLED_BY_FROM_JOB,
   STEPS,
   type Choice,
 } from '../data/quoteSteps';
@@ -113,6 +114,10 @@ export default function QuoteForm() {
      removes a click from the step most likely to be abandoned. */
   function pickContaminant(value: string) {
     setContaminant(value);
+    /* Insurance and fleet are answers to step five, not step one. Carrying the
+       value across means nobody is asked the same thing twice. */
+    const carried = HANDLED_BY_FROM_JOB[value];
+    if (carried) setHandledBy(carried);
     setErrors({});
     advance(1);
   }

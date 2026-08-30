@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
+import QuoteForm from '../components/QuoteForm';
 import { SITE_ORIGIN, BUSINESS } from '../lib/site';
 
 export default function ContactPage() {
@@ -72,10 +73,6 @@ export default function ContactPage() {
                 <p>{BUSINESS.hours}</p>
               </li>
             </ul>
-
-            <Link className="btn btn-primary btn-lg" to="/quote">
-              Send photos and get a quote
-            </Link>
           </div>
 
           <div>
@@ -97,6 +94,25 @@ export default function ContactPage() {
               We are a mobile operation, so the workshop is a base rather than a showroom. For a
               job, tell us where the vehicles are and we come to them.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* The form itself, not a button that goes and finds it. This is the
+          contact page: making someone travel to another page to make contact
+          is the friction the old site was built on. */}
+      <section className="home-quote">
+        <div className="shell">
+          <div className="head" style={{ textAlign: 'center', marginInline: 'auto' }}>
+            <p className="eyebrow">Send it through</p>
+            <h2 className="display">Photos get you a price fastest</h2>
+            <p className="lede" style={{ marginInline: 'auto' }}>
+              Five quick questions and a couple of photos. They tell us the contamination type and
+              how hard it has bonded, which is usually enough to quote without seeing the vehicle.
+            </p>
+          </div>
+          <div className="home-quote-form">
+            <QuoteForm />
           </div>
         </div>
       </section>
