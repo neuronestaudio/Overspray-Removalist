@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import QuoteForm from '../components/QuoteForm';
+import ScrollTitle from '../components/ScrollTitle';
 import { SITE_ORIGIN, BUSINESS } from '../lib/site';
 
 export default function ContactPage() {
@@ -33,71 +34,10 @@ export default function ContactPage() {
           </p>
           <h1 className="display">Contact</h1>
           <p className="lede">
-            Two of us take the calls — both founders, both auto detailing specialists, with more
-            than 30 years servicing Melbourne. If one does not pick up, try the other, or send
-            photos through the quote form and we will come back to you.
+            Two of us take the calls, both founders, with more than thirty years between us
+            servicing Melbourne. If one does not pick up, try the other. Fastest of all is the form
+            below: send photos and we come back with a price.
           </p>
-        </div>
-      </section>
-
-      <section>
-        <div className="shell split">
-          <div>
-            <ul className="who">
-              <li>
-                <h2>{BUSINESS.phoneContact}</h2>
-                <p className="who-role">{BUSINESS.phoneContactRole}</p>
-                <p>
-                  <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>
-                </p>
-              </li>
-              <li>
-                <h2>{BUSINESS.phoneAltContact}</h2>
-                <p className="who-role">{BUSINESS.phoneAltContactRole}</p>
-                <p>
-                  <a href={BUSINESS.phoneAltHref}>{BUSINESS.phoneAlt}</a>
-                </p>
-              </li>
-              <li>
-                <h2>Email</h2>
-                <p>
-                  <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
-                </p>
-              </li>
-              <li>
-                <h2>Based in</h2>
-                <p>
-                  {locality} {region} {postcode}. We work on site across all suburbs and Australia
-                  wide.
-                </p>
-              </li>
-              <li>
-                <h2>Hours</h2>
-                <p>{BUSINESS.hours}</p>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="split-media">
-              {/* Points at the actual service base. The old embed was centred on
-                  the whole of Australia at continent zoom and still carried the
-                  original developer's locale parameter. */}
-              <iframe
-                title={`Map showing the ${BUSINESS.name} service base in ${locality} ${region} ${postcode}`}
-                src={`https://www.google.com/maps?q=${locality}+${region}+${postcode}+Australia&output=embed`}
-                width="100%"
-                height="340"
-                style={{ border: 0, display: 'block' }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            <p className="form-note">
-              We are a mobile operation, so the workshop is a base rather than a showroom. For a
-              job, tell us where the vehicles are and we come to them.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -119,6 +59,74 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      <section>
+        <div className="shell">
+          <ScrollTitle className="head">
+            <p className="eyebrow">Or reach us directly</p>
+            <h2 className="display">Two people, both on the tools</h2>
+          </ScrollTitle>
+
+          <div className="cx-grid">
+            <div className="cx-card beam">
+              <ul className="cx-list">
+                <li>
+                  <span className="cx-k">{BUSINESS.phoneContact}</span>
+                  <span className="cx-role">{BUSINESS.phoneContactRole}</span>
+                  <a className="cx-v" href={BUSINESS.phoneHref}>
+                    {BUSINESS.phone}
+                  </a>
+                </li>
+                <li>
+                  <span className="cx-k">{BUSINESS.phoneAltContact}</span>
+                  <span className="cx-role">{BUSINESS.phoneAltContactRole}</span>
+                  <a className="cx-v" href={BUSINESS.phoneAltHref}>
+                    {BUSINESS.phoneAlt}
+                  </a>
+                </li>
+                <li>
+                  <span className="cx-k">Email</span>
+                  <a className="cx-v" href={`mailto:${BUSINESS.email}`}>
+                    {BUSINESS.email}
+                  </a>
+                </li>
+                <li>
+                  <span className="cx-k">Workshop</span>
+                  <span className="cx-v cx-plain">
+                    {locality} {region} {postcode}
+                  </span>
+                </li>
+                <li>
+                  <span className="cx-k">Hours</span>
+                  <span className="cx-v cx-plain">{BUSINESS.hours}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="cx-map">
+              <div className="split-media">
+                {/* Points at the actual service base. The old embed was centred
+                    on the whole of Australia at continent zoom and still carried
+                    the original developer's locale parameter. */}
+                <iframe
+                  title={`Map showing the ${BUSINESS.name} workshop in ${locality} ${region} ${postcode}`}
+                  src={`https://www.google.com/maps?q=${locality}+${region}+${postcode}+Australia&output=embed`}
+                  width="100%"
+                  height="340"
+                  style={{ border: 0, display: 'block' }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              <p className="cx-note">
+                Vehicles are brought to the Epping workshop. Where a whole site or a fleet is
+                affected, tell us how many and where, and we will come and assess it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </>
   );
 }

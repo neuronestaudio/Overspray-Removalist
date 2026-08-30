@@ -1080,3 +1080,45 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
   .hero-eyebrow,
   .hero-claim { letter-spacing: .16em; text-indent: .16em; }
 }
+
+
+/* ---------- contact detail block ----------
+   Was a bare list with the name, the role and the number all on one line at
+   three different sizes, which read as a table that had lost its columns. Each
+   entry is now a stack: label, role, then the number at full size as the thing
+   you actually came for. */
+.cx-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start;
+}
+.cx-card { padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.4rem, 2.6vw, 2.2rem); }
+.cx-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.cx-list li {
+  display: grid; gap: .1rem;
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--border-soft);
+}
+.cx-list li:first-child { border-top: 0; padding-top: 0; }
+.cx-list li:last-child { padding-bottom: 0; }
+.cx-k {
+  font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--accent-hot);
+}
+.cx-role {
+  font-size: .76rem; letter-spacing: .04em; color: var(--muted-dim);
+}
+.cx-v {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  line-height: 1.1; letter-spacing: .02em;
+  color: var(--text); margin-top: .15rem;
+  transition: color .22s var(--ease);
+}
+a.cx-v:hover { color: var(--accent-hot); }
+.cx-plain { color: var(--muted); }
+
+.cx-note { margin: 1rem 0 0; font-size: .86rem; color: var(--muted); line-height: 1.7; }
+
+@media (max-width: 860px) {
+  .cx-grid { grid-template-columns: minmax(0, 1fr); }
+}
