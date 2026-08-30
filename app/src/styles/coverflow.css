@@ -12,10 +12,14 @@
   position: relative;
   height: clamp(490px, 54vh, 560px);
   overflow: hidden;
-  /* No plate colour and no rounded rect. Both drew a hard-edged slab across the
-     carbon; the deck now dissolves into it instead. The feather lives on the
-     backdrop layers below, so cards, arrows and pips stay crisp on top. */
-  background: none;
+  /* A defined edge, not a dissolve. Feathering the backdrop out to nothing read
+     as a smudge on the carbon rather than as an edge; a rounded plate carrying
+     the active photograph reads as deliberate. The plate is a picture, which is
+     why it does not come back as the flat slab this replaced. */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  background: #06080f;
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .95);
   isolation: isolate;
   /* pan-y, not none: this sits in the hero and the visitor must be able to
      scroll past it. Horizontal drags swipe the deck, vertical scrolls on. */
@@ -32,7 +36,9 @@
 .cf-bg[data-on="true"] { opacity: 1; }
 .cf-bg img {
   width: 100%; height: 100%; object-fit: cover;
-  filter: blur(38px) saturate(1.3) brightness(.42);
+  /* Was blur 38 at 42% brightness, which is a wash rather than a picture. Less
+     blur and more light so the job behind the deck is actually legible. */
+  filter: blur(24px) saturate(1.25) brightness(.66);
   transform: scale(1.18);
   animation: cfDrift 26s ease-in-out infinite alternate;
 }
@@ -45,24 +51,9 @@
   /* No white raking highlight here any more. Over a blurred photograph it did
      not read as a glass edge, it read as fog across the whole deck. */
   background:
-    radial-gradient(120% 80% at 50% 42%, transparent 34%, rgba(6, 8, 15, .62) 100%),
-    linear-gradient(to top, rgba(6, 8, 15, .82) 0%, transparent 32%),
-    linear-gradient(to bottom, rgba(6, 8, 15, .7) 0%, transparent 26%);
-}
-
-/* Feathered edges, applied to the backdrop layers only.
-   Two linear masks intersected rather than one radial: the deck is wide and
-   short, and a radial mask that cleared the sides ate the top and bottom. */
-.cf-bgs,
-.cf-veil {
-  -webkit-mask-image:
-    linear-gradient(to right, transparent 0, #000 11%, #000 89%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 13%, #000 84%, transparent 100%);
-  -webkit-mask-composite: source-in;
-          mask-image:
-    linear-gradient(to right, transparent 0, #000 11%, #000 89%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 13%, #000 84%, transparent 100%);
-          mask-composite: intersect;
+    radial-gradient(120% 80% at 50% 42%, transparent 42%, rgba(6, 8, 15, .55) 100%),
+    linear-gradient(to top, rgba(6, 8, 15, .74) 0%, transparent 34%),
+    linear-gradient(to bottom, rgba(6, 8, 15, .58) 0%, transparent 28%);
 }
 
 /* ---------- stage ---------- */
