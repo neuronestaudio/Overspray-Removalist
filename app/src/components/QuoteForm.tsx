@@ -543,7 +543,7 @@ export default function QuoteForm() {
           </div>
           <div className="field">
             <label htmlFor="q-notes">
-              Any comments / special request <span className="hint">optional</span>
+              Any comments / Special Requests <span className="hint">optional</span>
             </label>
             <textarea
               id="q-notes"

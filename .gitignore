@@ -17,3 +17,7 @@ build/.body.pdf
 app/node_modules/
 app/dist/
 app/.vercel
+
+# Python bytecode from the build scripts
+__pycache__/
+*.pyc
