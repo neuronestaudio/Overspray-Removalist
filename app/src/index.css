@@ -924,61 +924,6 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 }
 
 
-/* ---------- protection coverage levels ----------
-   Three glass cards, one flagged. No price on any of them: see ProtectionLevel
-   in services.ts for why. */
-.lvls {
-  list-style: none; margin: 2rem 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;
-}
-.lvl {
-  position: relative; isolation: isolate;
-  display: grid; gap: .7rem; align-content: start;
-  padding: 1.6rem 1.5rem;
-  border-radius: 18px;
-  border: 1px solid var(--outline);
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .015) 55%),
-    rgba(12, 17, 33, .5);
-  backdrop-filter: blur(16px) saturate(135%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09);
-}
-.lvl[data-common='true'] {
-  border-color: rgba(255, 79, 66, .6);
-  box-shadow:
-    0 0 0 1px rgba(255, 79, 66, .28),
-    0 22px 50px -28px rgba(255, 79, 66, .8),
-    inset 0 1px 0 rgba(255, 255, 255, .12);
-}
-.lvl-tag {
-  position: absolute; top: -.7rem; left: 1.4rem;
-  padding: .28rem .7rem; border-radius: 999px;
-  font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
-  color: #fff; background: var(--accent-grad);
-  box-shadow: 0 6px 16px -6px rgba(255, 79, 66, .9);
-}
-.lvl h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: .01em; margin: 0; }
-.lvl-who { margin: 0; font-size: .88rem; color: var(--muted); line-height: 1.55; }
-.lvl-covers { list-style: none; margin: .2rem 0 .6rem; padding: 0; display: grid; gap: .45rem; }
-.lvl-covers li {
-  position: relative; padding-left: 1.4rem;
-  font-size: .88rem; color: var(--text);
-}
-.lvl-covers li::before {
-  content: ''; position: absolute; left: 0; top: .48em;
-  width: 7px; height: 7px; border-radius: 2px;
-  background: var(--accent-grad);
-}
-.lvl .btn { justify-self: start; }
-
-@media (max-width: 900px) {
-  .lvls { grid-template-columns: 1fr; gap: 1.4rem; }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .lvl { backdrop-filter: none; background: var(--surface); }
-}
-
 /* ---------- HTML sitemap ---------- */
 .smap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); }
 .smap-group { display: grid; gap: 1rem; align-content: start; }

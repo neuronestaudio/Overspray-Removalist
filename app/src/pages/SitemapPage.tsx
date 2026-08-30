@@ -36,7 +36,7 @@ export default function SitemapPage() {
     <>
       <PageMeta
         title={`Sitemap | Every Service & Suburb | ${BUSINESS.name}`}
-        description={`Every page on ${BUSINESS.name}: overspray, cement splatter, graffiti and industrial fallout removal, ceramic coating and paint protection, plus every Melbourne suburb we service.`}
+        description={`Every page on ${BUSINESS.name}: overspray, cement splatter, graffiti, industrial fallout and roadwork contamination removal, plus every Melbourne suburb we service.`}
         path="/sitemap"
         jsonLd={[
           {

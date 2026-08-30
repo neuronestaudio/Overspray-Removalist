@@ -9,10 +9,6 @@ import {
   COVERAGE,
   WHEN_HAPPENED,
   HANDLED_BY,
-  CERAMIC_SCOPE,
-  PPF_SCOPE,
-  PAINT_CONDITION,
-  isProtectionJob,
   STEPS,
   type Choice,
 } from '../data/quoteSteps';
@@ -55,10 +51,6 @@ export default function QuoteForm() {
   const [vehicle, setVehicle] = useState('');
   const [vehicles, setVehicles] = useState('1');
   const [coverage, setCoverage] = useState('');
-  /* Protection jobs only. Kept separate from coverage/whenHappened so that
-     switching job type never carries a removal answer onto a coating quote. */
-  const [scope, setScope] = useState('');
-  const [paintCondition, setPaintCondition] = useState('');
   const [whenHappened, setWhenHappened] = useState('');
   const [handledBy, setHandledBy] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
@@ -120,15 +112,6 @@ export default function QuoteForm() {
   /* Step one asks a single question with one answer, so advancing on the pick
      removes a click from the step most likely to be abandoned. */
   function pickContaminant(value: string) {
-    /* Switching between a removal job and a protection job invalidates the
-       other branch's answers. Clearing them here is what stops a coating quote
-       arriving with "full coverage, months ago" attached. */
-    if (isProtectionJob(value) !== isProtectionJob(contaminant)) {
-      setCoverage('');
-      setWhenHappened('');
-      setScope('');
-      setPaintCondition('');
-    }
     setContaminant(value);
     setErrors({});
     advance(1);
@@ -286,17 +269,10 @@ export default function QuoteForm() {
       location: location.trim(),
       vehicle: vehicle.trim(),
       vehicles: vehicles.trim() || '1',
-      /* Which branch the answers came from, so the CRM does not have to infer
-         it from which fields happen to be blank. */
-      jobKind: isProtectionJob(contaminant) ? 'protection' : 'removal',
       coverage,
       coverageLabel: labelFor(COVERAGE, coverage),
       whenHappened,
       whenHappenedLabel: labelFor(WHEN_HAPPENED, whenHappened),
-      scope,
-      scopeLabel: labelFor(contaminant === 'paint_protection' ? PPF_SCOPE : CERAMIC_SCOPE, scope),
-      paintCondition,
-      paintConditionLabel: labelFor(PAINT_CONDITION, paintCondition),
       handledBy,
       handledByLabel: labelFor(HANDLED_BY, handledBy),
       notes: notes.trim(),
@@ -362,8 +338,6 @@ export default function QuoteForm() {
       clearTimeout(timer);
     }
   }
-
-  const protection = isProtectionJob(contaminant);
 
   return (
     <form className="wiz" onSubmit={handleSubmit} onKeyDown={onKeyDown} noValidate aria-label="Get a quote">
@@ -440,11 +414,7 @@ export default function QuoteForm() {
       {step === 2 && (
         <Panel
           title="Tell us about the vehicle"
-          sub={
-            protection
-              ? 'What it is and what you want on it. Photos settle the rest.'
-              : 'Rough answers are fine. Photos settle the rest.'
-          }
+          sub="Rough answers are fine. Photos settle the rest."
         >
           <div className="wiz-row">
             <div className="field">
@@ -474,43 +444,17 @@ export default function QuoteForm() {
             </div>
           </div>
 
-          {/* A coating job has nothing to measure the spread of and no date it
-              happened. It has a scope and the condition of what is underneath. */}
-          {protection ? (
-            <>
-              <p className="wiz-legend">What would you like covered?</p>
-              <Cards
-                options={contaminant === 'paint_protection' ? PPF_SCOPE : CERAMIC_SCOPE}
-                value={scope}
-                onChange={setScope}
-                name="scope"
-                compact
-              />
+          <p className="wiz-legend">How much of it is covered?</p>
+          <Cards options={COVERAGE} value={coverage} onChange={setCoverage} name="coverage" compact />
 
-              <p className="wiz-legend">Condition of the paint now</p>
-              <Cards
-                options={PAINT_CONDITION}
-                value={paintCondition}
-                onChange={setPaintCondition}
-                name="paintCondition"
-                compact
-              />
-            </>
-          ) : (
-            <>
-              <p className="wiz-legend">How much of it is covered?</p>
-              <Cards options={COVERAGE} value={coverage} onChange={setCoverage} name="coverage" compact />
-
-              <p className="wiz-legend">When did it happen?</p>
-              <Cards
-                options={WHEN_HAPPENED}
-                value={whenHappened}
-                onChange={setWhenHappened}
-                name="whenHappened"
-                compact
-              />
-            </>
-          )}
+          <p className="wiz-legend">When did it happen?</p>
+          <Cards
+            options={WHEN_HAPPENED}
+            value={whenHappened}
+            onChange={setWhenHappened}
+            name="whenHappened"
+            compact
+          />
         </Panel>
       )}
 

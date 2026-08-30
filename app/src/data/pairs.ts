@@ -98,20 +98,4 @@ export const PAIRS: Pair[] = [
  * The deck cards only ever render `beforeStem`, so a service card sets both
  * stems to the same photo rather than the type needing a second shape.
  */
-export const CERAMIC_CARD: Pair = {
-  id: 'ceramic',
-  label: 'Ceramic coating',
-  vehicle: 'Paint protection',
-  beforeStem: 'suv-black',
-  afterStem: 'suv-black',
-  beforeAlt: 'Black SUV finished to a deep gloss',
-  afterAlt: 'Black SUV finished to a deep gloss',
-  caption:
-    'A coating is only as good as the paint under it. Thirty years of taking contamination off duco is exactly the preparation one needs.',
-  href: '/ceramic-coating',
-};
-
-/* No ceramic card. The deck is the first thing a visitor touches, and the
-   business does not advertise coating work — it takes it when asked. CERAMIC_CARD
-   is kept above for whenever that changes. */
 export const DECK: Pair[] = [HERO_PAIR, ...PAIRS];
