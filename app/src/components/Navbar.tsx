@@ -8,6 +8,7 @@ import { BUSINESS } from '../lib/site';
 const NAV = [
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
+  { label: 'Service Areas', to: '/service-areas' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ];

@@ -47,8 +47,8 @@ export const PROOF: ProofPoint[] = [
     source: 'Insurance claims',
   },
   {
-    kicker: 'We come to you',
-    body: 'Work is done on site. Vehicles in a car park, a compound or a dealer yard are worked through where they sit.',
+    kicker: 'Melbourne wide',
+    body: 'Single vehicles come to the Epping workshop. Where an event hits a car park, a compound or a dealer yard, the lot is assessed where it sits.',
     source: 'Service area',
   },
   {

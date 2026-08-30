@@ -5,6 +5,7 @@ import { SERVICES } from '../data/services';
 const COMPANY = [
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
+  { label: 'Service Areas', to: '/service-areas' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },

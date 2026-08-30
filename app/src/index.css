@@ -1122,3 +1122,30 @@ a.cx-v:hover { color: var(--accent-hot); }
 @media (max-width: 860px) {
   .cx-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- service areas hub ---------- */
+.sa-regions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.6rem); align-items: start; }
+.sa-region { padding: clamp(1.2rem, 2.2vw, 1.8rem) clamp(1.2rem, 2.2vw, 1.9rem); }
+.sa-h {
+  display: flex; align-items: center; gap: .7rem;
+  margin: 0 0 1rem; padding-bottom: .8rem;
+  border-bottom: 1px solid var(--border-soft);
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: .04em;
+}
+.sa-h span {
+  font-family: 'DM Sans', sans-serif; font-size: .68rem; font-weight: 700;
+  padding: .16rem .5rem; border-radius: 999px; color: #fff; background: var(--accent-grad);
+}
+.sa-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.sa-list a {
+  display: flex; align-items: baseline; justify-content: space-between; gap: .6rem;
+  padding: .6rem .7rem; border-radius: 9px; border: 1px solid transparent;
+  color: var(--muted); font-size: .9rem;
+  transition: color .18s var(--ease), background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease);
+}
+.sa-list a:hover { color: var(--text); background: rgba(255,255,255,.045); border-color: var(--outline); transform: translateX(3px); }
+.sa-list strong { font-weight: 600; }
+.sa-list em { font-style: normal; font-size: .74rem; color: var(--muted-dim); flex: none; }
+
+@media (max-width: 900px) { .sa-regions { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .sa-list { grid-template-columns: minmax(0, 1fr); } }

@@ -22,6 +22,7 @@ const MAIN = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
   { to: '/gallery', label: 'Gallery' },
+  { to: '/service-areas', label: 'Service Areas' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/about', label: 'About' },
   { to: '/quote', label: 'Get a Quote' },

@@ -32,6 +32,7 @@ import ContactPage from './pages/ContactPage';
 import ThankYouPage from './pages/ThankYouPage';
 import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
+import ServiceAreasPage from './pages/ServiceAreasPage';
 import AreaPage from './pages/AreaPage';
 import { SERVICES } from './data/services';
 import { AREAS, areaPath } from './data/areas';
@@ -60,6 +61,7 @@ export const ROUTES: RouteDef[] = [
   { path: '/contact', element: <ContactPage /> },
   { path: '/thank-you', element: <ThankYouPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
+  { path: '/service-areas', element: <ServiceAreasPage /> },
   { path: '/sitemap', element: <SitemapPage /> },
 
   /* One component, one data file, one URL per suburb. Same generative pattern

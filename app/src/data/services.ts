@@ -252,7 +252,7 @@ export const SERVICES: Service[] = [
       {
         heading: 'We come to the site',
         body: [
-          'We work on site, across all suburbs and Australia wide. Vehicles do not need to be driven to a workshop, which matters when the affected cars belong to residents, staff or customers who did not ask to be involved.',
+          'When a whole car park, compound or yard is affected we assess it where it sits, rather than asking residents, staff or customers who did not ask to be involved to drive somewhere. Single vehicles come to the Epping workshop.',
         ],
       },
       {

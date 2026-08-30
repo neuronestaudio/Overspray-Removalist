@@ -28,7 +28,7 @@ export default function AreaPage({ slug }: { slug: string }) {
   const title = `Overspray Removal ${area.name} | Paint, Cement & Fallout | ${BUSINESS.name}`;
   const description =
     `Overspray, cement splatter and industrial fallout removal in ${area.name} ${area.postcode}. ` +
-    `Removed by hand without abrasives or respraying. On site across ${area.name} and greater Melbourne.`;
+    `Removed by hand without abrasives or respraying. Workshop in Epping, serving ${area.name} and greater Melbourne.`;
 
   return (
     <>
@@ -113,7 +113,7 @@ export default function AreaPage({ slug }: { slug: string }) {
             <p className="body-muted">
               {isBase
                 ? `Our workshop is in ${area.name}, so we can usually get to a ${area.name} job the same week — often sooner if a whole site is affected.`
-                : `${area.name} is about ${area.kmFromBase}km from our Epping workshop. We work on site, so the vehicle stays where it is, or you can bring it to us.`}
+                : `${area.name} is about ${area.kmFromBase}km from our Epping workshop. Bring the vehicle to us, or if a whole car park or yard is affected, tell us how many and we will come and assess it.`}
             </p>
           </div>
           <div className="split-media">
@@ -170,7 +170,7 @@ export default function AreaPage({ slug }: { slug: string }) {
             ))}
           </ul>
           <p className="body-muted" style={{ marginTop: '1rem' }}>
-            <Link to="/sitemap">See every suburb we service</Link>
+            <Link to="/service-areas">See every suburb we service</Link>
           </p>
         </div>
       </section>

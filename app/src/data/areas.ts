@@ -94,6 +94,26 @@ export const AREAS: Area[] = [
     leads: ['cement-splatter-removal', 'overspray-removal'],
   },
   {
+    slug: 'kalkallo',
+    name: 'Kalkallo',
+    postcode: '3064',
+    region: 'North',
+    kmFromBase: 10,
+    local:
+      'The Merrifield business park is being built out across open ground, which means tilt-slab pours, line marking and render on land with nothing between the work and the road. Distribution warehouses go up here faster than the landscaping does.',
+    leads: ['cement-splatter-removal', 'fleet-and-construction'],
+  },
+  {
+    slug: 'roxburgh-park',
+    name: 'Roxburgh Park',
+    postcode: '3064',
+    region: 'North',
+    kmFromBase: 11,
+    local:
+      'Housing estates hard against the Hume Highway freight corridor. Trucks throw road film and brake dust off the highway, and the estates behind it are still finishing, so both causes run at once.',
+    leads: ['industrial-fallout', 'cement-splatter-removal'],
+  },
+  {
     slug: 'wollert',
     name: 'Wollert',
     postcode: '3750',
@@ -122,6 +142,16 @@ export const AREAS: Area[] = [
     local:
       'Established streets sitting next to land still being developed. Most South Morang jobs come from a neighbouring build — a render crew, a driveway pour, or a fence being sprayed on a windy day.',
     leads: ['cement-splatter-removal', 'overspray-removal'],
+  },
+  {
+    slug: 'lalor',
+    name: 'Lalor',
+    postcode: '3075',
+    region: 'North',
+    kmFromBase: 3,
+    local:
+      'Lalor sits directly against the Epping industrial precinct, so it catches the drift from whatever is being sprayed or cut on the other side of the boundary. It is also the closest suburb to our workshop, which usually means same-week turnaround.',
+    leads: ['overspray-removal', 'industrial-fallout'],
   },
   {
     slug: 'mill-park',
@@ -172,6 +202,26 @@ export const AREAS: Area[] = [
     local:
       'The Upfield line and the level crossing works along it generate steel dust and concrete cutting residue. Cars parked near the corridor pick up both.',
     leads: ['industrial-fallout', 'cement-splatter-removal'],
+  },
+  {
+    slug: 'fawkner',
+    name: 'Fawkner',
+    postcode: '3060',
+    region: 'North',
+    kmFromBase: 15,
+    local:
+      'The industrial pocket along Sydney Road runs fabrication and coating work a street away from housing, and the Upfield line runs through the middle of it. Overspray and rail dust are both regular here.',
+    leads: ['overspray-removal', 'industrial-fallout'],
+  },
+  {
+    slug: 'glenroy',
+    name: 'Glenroy',
+    postcode: '3046',
+    region: 'North',
+    kmFromBase: 17,
+    local:
+      'Level crossing removal work along the Upfield line means concrete cutting, steel dust and constant heavy plant in residential streets. Cars parked near the works pick up all three.',
+    leads: ['cement-splatter-removal', 'industrial-fallout'],
   },
   {
     slug: 'greensborough',
@@ -236,6 +286,16 @@ export const AREAS: Area[] = [
     leads: ['industrial-fallout', 'overspray-removal'],
   },
   {
+    slug: 'altona-north',
+    name: 'Altona North',
+    postcode: '3025',
+    region: 'West',
+    kmFromBase: 36,
+    local:
+      'Millers Road carries freight between the refinery precinct and the port all day, and the industrial estates either side of it run coating and metal work. What settles here is a mix of road film, chemical fallout and iron.',
+    leads: ['industrial-fallout', 'overspray-removal'],
+  },
+  {
     slug: 'brooklyn',
     name: 'Brooklyn',
     postcode: '3012',
@@ -256,6 +316,16 @@ export const AREAS: Area[] = [
     leads: ['industrial-fallout', 'cement-splatter-removal'],
   },
   {
+    slug: 'deer-park',
+    name: 'Deer Park',
+    postcode: '3023',
+    region: 'West',
+    kmFromBase: 32,
+    local:
+      'Quarries, the Ravenhall logistics estates and the freight line all sit within a few kilometres. The dust here is mineral and abrasive, which is exactly the kind that must not be wiped off dry.',
+    leads: ['industrial-fallout', 'cement-splatter-removal'],
+  },
+  {
     slug: 'footscray',
     name: 'Footscray',
     postcode: '3011',
@@ -263,6 +333,26 @@ export const AREAS: Area[] = [
     kmFromBase: 28,
     local:
       'Grain terminals, the port rail corridor and apartment towers going up on every second block. Cars parked on the street here collect grain dust, rail dust and render in the same week.',
+    leads: ['industrial-fallout', 'overspray-removal'],
+  },
+  {
+    slug: 'yarraville',
+    name: 'Yarraville',
+    postcode: '3013',
+    region: 'West',
+    kmFromBase: 29,
+    local:
+      'Grain terminals, the port rail corridor and the West Gate approach all meet here. Grain dust, rail dust and brake dust settle on streets where most parking is on the kerb.',
+    leads: ['industrial-fallout', 'overspray-removal'],
+  },
+  {
+    slug: 'williamstown',
+    name: 'Williamstown',
+    postcode: '3016',
+    region: 'West',
+    kmFromBase: 32,
+    local:
+      'Working docks and shipyards, with blasting and marine coating going on beside a residential foreshore. Salt air then accelerates whatever has landed, so contamination left here does more damage than the same contamination inland.',
     leads: ['industrial-fallout', 'overspray-removal'],
   },
   {
@@ -274,6 +364,16 @@ export const AREAS: Area[] = [
     local:
       'Warehouse estates still being built out, with tilt-slab panels being poured and craned into place daily. Concrete slurry and line-marking overspray dominate here.',
     leads: ['cement-splatter-removal', 'overspray-removal'],
+  },
+  {
+    slug: 'tarneit',
+    name: 'Tarneit',
+    postcode: '3029',
+    region: 'West',
+    kmFromBase: 40,
+    local:
+      'One of the fastest-building corridors in the country, with whole streets under construction at once. When a render crew works an open estate it is rarely one car that cops it.',
+    leads: ['cement-splatter-removal', 'fleet-and-construction'],
   },
   {
     slug: 'derrimut',
@@ -336,6 +436,16 @@ export const AREAS: Area[] = [
     local:
       'Bulk handling at the port throws iron ore and mineral dust, and the prevailing wind carries it inland. It looks like orange speckling and it rusts into the clear coat if it is left.',
     leads: ['industrial-fallout', 'overspray-removal'],
+  },
+  {
+    slug: 'docklands',
+    name: 'Docklands',
+    postcode: '3008',
+    region: 'Inner',
+    kmFromBase: 25,
+    local:
+      'Towers going up over streets where parking sits directly beneath the facade. Slurry, sealant and render falling from height land on roofs, bonnets and boot lids first.',
+    leads: ['cement-splatter-removal', 'overspray-removal'],
   },
   {
     slug: 'richmond',
@@ -410,6 +520,16 @@ export const AREAS: Area[] = [
     leads: ['overspray-removal', 'industrial-fallout'],
   },
   {
+    slug: 'kilsyth',
+    name: 'Kilsyth',
+    postcode: '3137',
+    region: 'East',
+    kmFromBase: 40,
+    local:
+      'A long-established industrial estate of engineering shops, powder coaters and spray booths backing onto residential streets. Overspray here is industrial rather than architectural, and it is usually harder.',
+    leads: ['overspray-removal', 'industrial-fallout'],
+  },
+  {
     slug: 'scoresby',
     name: 'Scoresby',
     postcode: '3179',
@@ -452,6 +572,16 @@ export const AREAS: Area[] = [
     leads: ['industrial-fallout', 'overspray-removal'],
   },
   {
+    slug: 'cheltenham',
+    name: 'Cheltenham',
+    postcode: '3192',
+    region: 'South-East',
+    kmFromBase: 46,
+    local:
+      'The edge of the Moorabbin industrial belt, where trade premises meet shopping strips. Fine particulate settles on cars parked in the open for a full working day.',
+    leads: ['industrial-fallout', 'overspray-removal'],
+  },
+  {
     slug: 'clayton',
     name: 'Clayton',
     postcode: '3168',
@@ -470,6 +600,16 @@ export const AREAS: Area[] = [
     local:
       'Panel shops, mechanical trades and light industry mixed straight into shopping strips, so overspray tends to land on customer cars rather than the workshop that made it.',
     leads: ['overspray-removal', 'industrial-fallout'],
+  },
+  {
+    slug: 'noble-park',
+    name: 'Noble Park',
+    postcode: '3174',
+    region: 'South-East',
+    kmFromBase: 43,
+    local:
+      'Light industry packed against the rail line, with level crossing works along it. Steel dust off the corridor and cutting residue off the works turn up together.',
+    leads: ['industrial-fallout', 'cement-splatter-removal'],
   },
   {
     slug: 'keysborough',
@@ -500,6 +640,16 @@ export const AREAS: Area[] = [
     local:
       'Coastal air, a rail terminus and ongoing town-centre construction. Salt accelerates anything already sitting on the paint, so fallout left here does more damage than the same fallout inland.',
     leads: ['industrial-fallout', 'cement-splatter-removal'],
+  },
+  {
+    slug: 'pakenham',
+    name: 'Pakenham',
+    postcode: '3810',
+    region: 'South-East',
+    kmFromBase: 62,
+    local:
+      'The far end of the south-east growth corridor: estates, kerb-and-channel work and slab pours on streets where there is nowhere to park but the road. Cement splatter down one flank is the usual call.',
+    leads: ['cement-splatter-removal', 'overspray-removal'],
   },
 ];
 

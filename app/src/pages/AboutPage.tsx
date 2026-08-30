@@ -255,9 +255,10 @@ export default function AboutPage() {
             <div className="person">
               <h3 className="display">Where we work</h3>
               <p className="body-muted">
-                Based in {BUSINESS.address.locality} {BUSINESS.address.region}{' '}
-                {BUSINESS.address.postcode}. On site across all suburbs and Australia wide, because
-                the vehicles usually belong to people who did not ask to be involved.
+                Workshop in {BUSINESS.address.locality} {BUSINESS.address.region}{' '}
+                {BUSINESS.address.postcode}, serving Melbourne. Single vehicles come to us. Where a
+                whole car park or yard is affected we assess it where it sits, because those
+                vehicles usually belong to people who did not ask to be involved.
               </p>
               <a className="btn btn-ghost" href={`mailto:${BUSINESS.email}`}>
                 {BUSINESS.email}
