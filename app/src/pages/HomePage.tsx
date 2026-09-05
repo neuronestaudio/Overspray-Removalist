@@ -117,7 +117,7 @@ export default function HomePage() {
             {/* Not "what people say". There are no reviews to show — the rail
                 carries sourced capability claims until real ones exist. */}
             <p className="eyebrow">The record</p>
-            <h2 className="display">Thirty years of not needing to advertise.</h2>
+            <h2 className="display">Thirty years. Nothing resprayed.</h2>
           </ScrollTitle>
         </div>
         <ReviewRail />

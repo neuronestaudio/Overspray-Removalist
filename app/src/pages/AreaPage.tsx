@@ -5,6 +5,7 @@ import BeforeAfter from '../components/BeforeAfter';
 import { areaBySlug, AREAS, areaPath, type Area } from '../data/areas';
 import { serviceBySlug } from '../data/services';
 import { PAIRS } from '../data/pairs';
+import { GALLERY } from '../data/gallery';
 import { SITE_ORIGIN, BUSINESS } from '../lib/site';
 
 /** Same region first, then nearest by road. Six is enough to link sideways. */
@@ -19,11 +20,27 @@ function nearby(area: Area): Area[] {
     .slice(0, 6);
 }
 
+/**
+ * A different job photo per suburb.
+ *
+ * Every one of these pages used to carry the same shot of the white Tarago —
+ * one van, sixty-one pages. There are sixty-one gallery photos, so indexing by
+ * the suburb's own position gives each page its own vehicle with no repeats.
+ *
+ * Deterministic on purpose: these pages are pre-rendered, so anything random
+ * would change between the build and a re-build and churn the diff for nothing.
+ */
+function photoFor(slug: string) {
+  const i = AREAS.findIndex((a) => a.slug === slug);
+  return GALLERY[(i < 0 ? 0 : i) % GALLERY.length];
+}
+
 export default function AreaPage({ slug }: { slug: string }) {
   const area = areaBySlug(slug);
   const leads = area.leads.map(serviceBySlug);
   const others = nearby(area);
   const isBase = area.kmFromBase === 0;
+  const photo = photoFor(slug);
 
   const title = `Overspray Removal ${area.name} | Paint, Cement & Fallout | ${BUSINESS.name}`;
   const description =
@@ -36,8 +53,8 @@ export default function AreaPage({ slug }: { slug: string }) {
         title={title}
         description={description}
         path={areaPath(area)}
-        ogImage="job-tarago-before"
-        ogAlt="Vehicle covered in paint overspray before restoration"
+        ogImage={photo.stem}
+        ogAlt={photo.alt}
         jsonLd={[
           {
             '@context': 'https://schema.org',
@@ -118,8 +135,8 @@ export default function AreaPage({ slug }: { slug: string }) {
           </div>
           <div className="split-media">
             <Img
-              stem="job-tarago-before"
-              alt={`Vehicle with paint overspray of the kind we treat in ${area.name}`}
+              stem={photo.stem}
+              alt={photo.alt}
               sizes="(max-width:860px) 100vw, 50vw"
             />
           </div>

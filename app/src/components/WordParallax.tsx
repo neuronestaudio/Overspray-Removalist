@@ -96,7 +96,7 @@ export default function WordParallax({ stem }: { stem: string }) {
       </div>
 
       <div className="wpx-copy">
-        <p className="eyebrow">What we take off</p>
+        <p className="eyebrow">We'll take anything off your paint</p>
         {/* Hard break. Left to wrap it broke as "...IT COMES / OFF THE PAINT",
             which splits the payoff across both lines instead of landing it on
             the second one. */}

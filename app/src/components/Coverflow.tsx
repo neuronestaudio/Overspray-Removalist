@@ -110,16 +110,10 @@ export default function Coverflow({ items, autoMs = 4600 }: Props) {
 
   return (
     <div className="cf" ref={rootRef} data-touched={touched ? 'true' : 'false'}>
-      {/* blurred backdrop, opacity-only crossfade */}
-      <div className="cf-bgs" aria-hidden="true">
-        {items.map((p, i) => (
-          <div key={p.id} className="cf-bg" data-on={i === current ? 'true' : 'false'}>
-            <img src={src(p.beforeStem)} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
-          </div>
-        ))}
-      </div>
-      <div className="cf-veil" aria-hidden="true" />
-
+      {/* No backdrop layer. The deck used to sit on a blurred, drifting copy of
+          the active photo behind a gradient veil; together they read as a
+          cloudy rectangle pasted over the carbon. Dropping it also drops a
+          second full-size load of every job photo. */}
       <div
         className="cf-stage"
         onPointerDown={onPointerDown}

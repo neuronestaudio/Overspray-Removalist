@@ -1,60 +1,29 @@
 /* ==========================================================================
    Coverflow: the hero.
 
-   Ported from the Formula build and re-pitched to Overspray's red. The
-   backdrop is the active card's photo blurred hard and graded, because glass
-   needs a soft colourful surface to refract against; a sharp photo fights it.
-   It also makes source resolution irrelevant, which matters here since the
-   job photos run as small as 540px and still have to hold up full-bleed.
+   Ported from the Formula build and re-pitched to Overspray's red.
+
+   The deck sits directly on the carbon weave. It used to sit on a plate: a
+   blurred, slowly drifting copy of the active photo under a gradient veil,
+   there to give the glass cards something soft to refract against. It read as
+   a cloudy rectangle stuck over the background and it is gone. Selection is
+   now carried by the cards alone — the active one is opaque, the rest stay
+   translucent and let the weave through.
    ========================================================================== */
 
 .cf {
   position: relative;
   height: clamp(490px, 54vh, 560px);
   overflow: hidden;
-  /* Translucent, not opaque. Three versions got here: a flat slab read as a hole
-     cut in the carbon, feathering it away read as a smudge, and an opaque photo
-     plate read as a rectangle stuck on top. This one lets the weave carry
-     straight through the plate, so the shape is defined but the material is
-     continuous and there is no contrast edge to notice. */
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, .04);
-  background: rgba(6, 8, 15, .35);
-  box-shadow: 0 30px 80px -46px rgba(0, 0, 0, .85);
+  /* No plate. Four versions were tried here — flat slab, feathered edge, opaque
+     photo panel, translucent ground — and every one read as a rectangle sitting
+     on top of the carbon rather than part of it. There is nothing to get right
+     once the deck floats directly on the weave, so this element is now purely a
+     positioning context and a clip boundary. */
   isolation: isolate;
   /* pan-y, not none: this sits in the hero and the visitor must be able to
      scroll past it. Horizontal drags swipe the deck, vertical scrolls on. */
   touch-action: pan-y;
-}
-
-/* ---------- backdrop ---------- */
-.cf-bgs { position: absolute; inset: 0; z-index: 0; }
-.cf-bg {
-  position: absolute; inset: -8%;            /* overscan so blur never shows an edge */
-  opacity: 0;
-  transition: opacity .9s cubic-bezier(.4, 0, .2, 1);
-}
-.cf-bg[data-on="true"] { opacity: .5; }
-.cf-bg img {
-  width: 100%; height: 100%; object-fit: cover;
-  /* Was blur 38 at 42% brightness, which is a wash rather than a picture. Less
-     blur and more light so the job behind the deck is actually legible. */
-  filter: blur(24px) saturate(1.25) brightness(.66);
-  transform: scale(1.18);
-  animation: cfDrift 26s ease-in-out infinite alternate;
-}
-@keyframes cfDrift {
-  from { transform: scale(1.18) translate3d(-1.2%, -.8%, 0); }
-  to   { transform: scale(1.28) translate3d(1.2%, .8%, 0); }
-}
-.cf-veil {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  /* No white raking highlight here any more. Over a blurred photograph it did
-     not read as a glass edge, it read as fog across the whole deck. */
-  background:
-    radial-gradient(120% 80% at 50% 42%, transparent 48%, rgba(6, 8, 15, .38) 100%),
-    linear-gradient(to top, rgba(6, 8, 15, .55) 0%, transparent 36%),
-    linear-gradient(to bottom, rgba(6, 8, 15, .4) 0%, transparent 30%);
 }
 
 /* ---------- stage ---------- */
@@ -102,6 +71,12 @@
   will-change: transform, opacity;
 }
 .cf-card[data-active="true"] {
+  /* Solid, now that there is no plate to sit against: the selected card is the
+     only opaque thing on the weave, which is what makes it read as selected.
+     The unselected cards keep the smoked glass and let the carbon through. */
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .015) 34%, transparent 62%),
+    rgba(9, 13, 24, .97);
   border-color: rgba(213, 42, 34, .55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .22),
@@ -224,7 +199,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cf-bg img { animation: none; }
   .cf-card { transition: opacity .2s ease; }
 }
 
@@ -240,6 +214,13 @@
    exactly what happened first time and the pips stayed 26x3.
    ========================================================================== */
 @media (max-width: 860px) {
+  /* Full-bleed on phones. With the plate gone the container edge is invisible,
+     so a neighbouring card was being sliced by a hard line 20px inside the
+     screen. Widening the deck to the viewport puts that clip on the screen
+     edge, where a card running off the side reads as a carousel rather than
+     as a rendering fault. */
+  .cf { width: 100vw; margin-inline: calc(50% - 50vw); }
+
   .cf-go { padding: 1.05rem 1.4rem; font-size: .72rem; min-height: 46px; }
 
   /* A real 44px box with the 3px bar drawn inside it. An oversized ::after hit
