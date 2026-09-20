@@ -20,7 +20,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
 
-const SITE_ORIGIN = 'https://oversprayremovalists.com.au';
+const SITE_ORIGIN = 'https://overspray.com.au';
 const FALLBACK_TITLE = 'Overspray Removal Australia | The Overspray Removalist';
 const FALLBACK_DESC =
   'Specialist paint overspray, cement splatter, graffiti and industrial fallout removal from vehicles, fleets and property. Over 30 years, non-abrasive, Australia wide.';

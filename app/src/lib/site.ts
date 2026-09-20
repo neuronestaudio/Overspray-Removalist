@@ -7,7 +7,7 @@
  * tel: tracking and the form's failure message at once.
  */
 
-export const SITE_ORIGIN = 'https://oversprayremovalists.com.au';
+export const SITE_ORIGIN = 'https://overspray.com.au';
 
 export const BUSINESS = {
   name: 'The Overspray Removalist',
