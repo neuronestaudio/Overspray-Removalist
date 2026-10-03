@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pushGtmEvent } from '../lib/gtm';
 import { createSubmissionId, getStoredAttribution } from '../lib/attribution';
-import { BUSINESS, GHL_WEBHOOK, REQUEST_TIMEOUT_MS } from '../lib/site';
+import { BUSINESS, LEAD_ENDPOINT, REQUEST_TIMEOUT_MS } from '../lib/site';
 import {
   CONTAMINANTS,
   WHEN_HAPPENED,
@@ -237,20 +237,6 @@ export default function QuoteForm() {
     setErrors({});
     setSubmitError('');
 
-    if (GHL_WEBHOOK === 'REPLACE_ME') {
-      /* Refuses loudly rather than posting nowhere. Shipping with a placeholder
-         would drop every lead silently, which is the exact failure this site is
-         being rebuilt to fix. */
-      /* Client-safe wording. This is visible on a demo link, so it must not
-         read like a stack trace; the developer-facing note lives in the comment
-         on GHL_WEBHOOK and in the README, not on the customer's screen. */
-      setSubmitError(
-        `Online quotes are not switched on yet. Please call ${BUSINESS.phone} ` +
-          `or email ${BUSINESS.email} and we will come straight back to you.`,
-      );
-      return;
-    }
-
     inFlight.current = true;
     setLoading(true);
 
@@ -299,7 +285,10 @@ export default function QuoteForm() {
     const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
-      const res = await fetch(GHL_WEBHOOK, {
+      /* api/lead.js answers non-2xx when the lead reached neither the CRM nor
+         the alert inbox, so an unconfigured or failing backend lands on the
+         retry message below rather than a thank-you nobody earned. */
+      const res = await fetch(LEAD_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

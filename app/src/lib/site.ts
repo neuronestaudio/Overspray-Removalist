@@ -47,28 +47,20 @@ export const BUSINESS = {
 export const GTM_ID: string = import.meta.env.VITE_GTM_ID || 'GTM-XXXXXXX';
 
 /**
- * GoHighLevel inbound webhook that receives every lead.
+ * Where the quote form posts every lead: this site's own function, api/lead.js.
  *
- * Read from the environment, NOT written here. This repository is public, and a
- * GoHighLevel inbound webhook has no authentication on it — anyone holding the
- * URL can POST arbitrary JSON and create contacts in the CRM. Committed to
- * source it would be greppable by the bots that scan GitHub for exactly this
- * pattern.
+ * The form used to post straight from the browser to a GoHighLevel inbound
+ * webhook. That webhook answers 200 whether or not its workflow is published,
+ * so while the workflow sat in draft every lead was accepted and thrown away.
+ * The function writes the contact with the GoHighLevel API instead and sends
+ * the alert email and SMS itself, so a lead is kept whatever the workflow is
+ * doing.
  *
- * It is still visible to anyone who opens DevTools on the live site, because the
- * form posts to it straight from the browser. That is inherent to a static site
- * with no server of its own, and it is the reason the form carries a honeypot
- * rather than relying on the URL being secret.
- *
- * Set it in two places:
- *   local   app/.env.local          VITE_GHL_WEBHOOK=https://...
- *   hosting Vercel project settings  VITE_GHL_WEBHOOK
- *
- * Annotated `: string` deliberately. Without it TypeScript narrows this to the
- * literal fallback and the guard comparing it to 'REPLACE_ME' becomes a
- * no-overlap type error the moment a real URL is supplied.
+ * Nothing about the CRM reaches the browser any more. The token, the
+ * sub-account id and the webhook URL are Vercel environment variables read by
+ * the function; they are listed at the top of api/lead.js.
  */
-export const GHL_WEBHOOK: string = import.meta.env.VITE_GHL_WEBHOOK || 'REPLACE_ME';
+export const LEAD_ENDPOINT = '/api/lead';
 
 /** Paths worth their own dataLayer event because they signal buying intent. */
 export const KEY_SERVICE_PATHS = [

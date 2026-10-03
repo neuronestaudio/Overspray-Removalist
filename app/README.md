@@ -19,7 +19,7 @@ Two placeholders. Both are load-bearing.
 | What | Where | Why it matters |
 |---|---|---|
 | **GTM container ID** | `index.html` (×2) and `GTM_ID` in `src/lib/site.ts` | Currently `GTM-XXXXXXX`, so nothing is measured |
-| **GoHighLevel webhook** | `GHL_WEBHOOK` in `src/lib/site.ts` | Currently `REPLACE_ME`. The form refuses to submit and says so, rather than posting leads nowhere |
+| **GoHighLevel credentials** | `GHL_TOKEN` and `GHL_LOCATION_ID` in Vercel | `api/lead.js` writes the lead with them. Without them it answers 502 and the form shows the retry message, rather than accepting a lead nobody will see |
 
 Optional, for photo attachments: set `RESEND_API_KEY` (and optionally `QUOTE_TO`,
 `QUOTE_FROM`) in Vercel. Without it the lead still reaches the CRM; only the photo email fails.
@@ -29,9 +29,12 @@ Optional, for photo attachments: set `RESEND_API_KEY` (and optionally `QUOTE_TO`
 ```
 visitor lands  ->  captureAttribution()      first touch written to localStorage, gap-fill only
                                               10 ad params + first_landing_page
-submit         ->  validate, then POST JSON straight to the GHL webhook
+submit         ->  validate, then POST JSON to /api/lead
                    payload = form fields + attribution + submission_id
-2xx from GHL   ->  dataLayer: quote_form_submit, generate_lead
+/api/lead      ->  upsert the contact in GHL, tag it "website lead"
+                   alert email to info@ and Dion, alert SMS to Dion's mobile
+                   poke the GHL inbound webhook so the workflow runs once published
+2xx            ->  dataLayer: quote_form_submit, generate_lead
                    photos POST separately to /api/quote-photos, fire and forget
                    navigate to /thank-you
 non-2xx        ->  no events, fields kept, retry message with the phone number
@@ -140,6 +143,7 @@ src/
 ├── components/         PageMeta, Img, Navbar, Footer, QuoteForm
 ├── data/               services, gallery, images (generated)
 └── pages/              one per route; ServicePage covers all six services
+api/lead.js             lead -> GHL contact, alert email + SMS
 api/quote-photos.js     photo email, keyed by submission_id
 ```
 
