@@ -428,6 +428,7 @@ export default function WipeVehicle({ onClean, onReady }: Props) {
         canvas.removeEventListener('pointerleave', onUp);
         maskTex.dispose();
         renderer.dispose();
+        renderer.forceContextLoss();
         scene.traverse((o) => {
           const mesh = o as import('three').Mesh;
           if (!mesh.isMesh) return;

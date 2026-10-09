@@ -5,7 +5,7 @@ import { SERVICES } from '../data/services';
 const COMPANY = [
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
-  { label: 'Service Areas', to: '/service-areas' },
+  { label: 'Where we work', to: '/service-areas' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
@@ -52,7 +52,7 @@ export default function Footer() {
             terminates on the same two actions the header opens with. */}
         <div className="ftr-cta">
           <div>
-            <p className="ftr-cta-kicker">Thirty years, Melbourne wide</p>
+            <p className="ftr-cta-kicker">Thirty years, Australia wide</p>
             <h4 className="ftr-cta-title">Send us a photo. We&rsquo;ll tell you if it comes off.</h4>
           </div>
           <div className="ftr-cta-actions">

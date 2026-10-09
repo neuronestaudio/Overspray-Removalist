@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import { SERVICES } from '../data/services';
 import { AREAS, AREAS_BY_REGION, areaPath } from '../data/areas';
+import { CITIES, CITIES_BY_STATE, cityPath } from '../data/cities';
 import { SITE_ORIGIN, BUSINESS } from '../lib/site';
 
 /**
@@ -22,7 +23,7 @@ const MAIN = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
   { to: '/gallery', label: 'Gallery' },
-  { to: '/service-areas', label: 'Service Areas' },
+  { to: '/service-areas', label: 'Where we work' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/about', label: 'About' },
   { to: '/quote', label: 'Get a Quote' },
@@ -31,13 +32,13 @@ const MAIN = [
 ];
 
 export default function SitemapPage() {
-  const total = MAIN.length + SERVICES.length + AREAS.length + 1;
+  const total = MAIN.length + SERVICES.length + CITIES.length + AREAS.length + 1;
 
   return (
     <>
       <PageMeta
         title={`Sitemap | Every Service & Suburb | ${BUSINESS.name}`}
-        description={`Every page on ${BUSINESS.name}: overspray, cement splatter, graffiti, industrial fallout and roadwork contamination removal, plus every Melbourne suburb we service.`}
+        description={`Every page on ${BUSINESS.name}: overspray, cement splatter, graffiti, industrial fallout and roadwork contamination removal, plus every city and Melbourne suburb we service, Australia wide.`}
         path="/sitemap"
         jsonLd={[
           {
@@ -57,8 +58,9 @@ export default function SitemapPage() {
           </p>
           <h1 className="display">Sitemap</h1>
           <p className="lede">
-            Every page on the site — {total} in total. Services, and the Melbourne suburbs we
-            service, each with what actually causes the damage there.
+            Every page on the site — {total} in total. Services, the cities we work in across
+            Australia, and the Melbourne suburbs on home ground, each with what actually causes
+            the damage there.
           </p>
         </div>
       </section>
@@ -92,10 +94,45 @@ export default function SitemapPage() {
         </div>
       </section>
 
+      <section>
+        <div className="shell">
+          <div className="head">
+            <p className="eyebrow">Australia wide</p>
+            <h2 className="display">Overspray removal by city</h2>
+            <p className="body-muted">
+              {CITIES.length} cities across every state. Each page covers the port, refinery,
+              shipyard or construction programme that puts contamination on vehicles there, and how
+              an interstate job runs.
+            </p>
+          </div>
+
+          <div className="smap-areas">
+            {CITIES_BY_STATE.map(({ state, label, cities }) => (
+              <div className="smap-group" key={state}>
+                <h3 className="smap-region">
+                  {label}
+                  <span>{cities.length}</span>
+                </h3>
+                <ul className="smap-list">
+                  {cities.map((c) => (
+                    <li key={c.slug}>
+                      <Link to={cityPath(c)}>
+                        Overspray Removal {c.name}
+                        <em>{c.state}</em>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="band">
         <div className="shell">
           <div className="head">
-            <p className="eyebrow">Service areas</p>
+            <p className="eyebrow">Home ground</p>
             <h2 className="display">Overspray removal by suburb</h2>
             <p className="body-muted">
               {AREAS.length} suburbs across Melbourne. Each page covers the local source of the

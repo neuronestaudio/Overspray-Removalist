@@ -221,6 +221,14 @@ export default function AboutPage() {
               a single location, we price the lot rather than each vehicle.
             </p>
             <p>
+              That work is not limited to Melbourne. A fleet in Brisbane, a dealer yard in Perth or
+              a street in Canberra is handled the same way: photos and the postcode first, one price
+              for the lot with travel included, then we come to the site.{' '}
+              <Link to="/service-areas" style={{ color: 'var(--accent-hot)', fontWeight: 700 }}>
+                See where we work
+              </Link>
+            </p>
+            <p>
               <Link className="btn btn-primary" to="/fleet-and-construction">
                 Fleet and site work
               </Link>
@@ -256,9 +264,9 @@ export default function AboutPage() {
               <h3 className="display">Where we work</h3>
               <p className="body-muted">
                 Workshop in {BUSINESS.address.locality} {BUSINESS.address.region}{' '}
-                {BUSINESS.address.postcode}, serving Melbourne. Single vehicles come to us. Where a
-                whole car park or yard is affected we assess it where it sits, because those
-                vehicles usually belong to people who did not ask to be involved.
+                {BUSINESS.address.postcode}. Single vehicles come to us. Fleet, construction and
+                insurance work takes us to the site, in any state, because those vehicles usually
+                belong to people who did not ask to be involved.
               </p>
               <a className="btn btn-ghost" href={`mailto:${BUSINESS.email}`}>
                 {BUSINESS.email}

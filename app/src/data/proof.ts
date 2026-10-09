@@ -47,8 +47,8 @@ export const PROOF: ProofPoint[] = [
     source: 'Insurance claims',
   },
   {
-    kicker: 'Melbourne wide',
-    body: 'Single vehicles come to the Epping workshop. Where an event hits a car park, a compound or a dealer yard, the lot is assessed where it sits.',
+    kicker: 'Australia wide',
+    body: 'Single vehicles come to the Epping workshop. Fleet, site and claim work is assessed where it sits, in any state.',
     source: 'Service area',
   },
   {

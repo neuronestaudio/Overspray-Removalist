@@ -45,7 +45,7 @@ export default function AreaPage({ slug }: { slug: string }) {
   const title = `Overspray Removal ${area.name} | Paint, Cement & Fallout | ${BUSINESS.name}`;
   const description =
     `Overspray, cement splatter and industrial fallout removal in ${area.name} ${area.postcode}. ` +
-    `Removed by hand without abrasives or respraying. Workshop in Epping, serving ${area.name} and greater Melbourne.`;
+    `Removed by hand without abrasives or respraying. Workshop in Epping, serving ${area.name}, greater Melbourne and Australia wide.`;
 
   return (
     <>

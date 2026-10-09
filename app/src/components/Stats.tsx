@@ -24,7 +24,7 @@ interface Metric {
 
 const METRICS: Metric[] = [
   { to: 30, suffix: '+', label: 'Years removing overspray' },
-  { to: null, suffix: 'Melbourne', label: 'Wide. Workshop in Epping' },
+  { to: null, suffix: 'Australia', label: 'Wide. Workshop in Epping VIC' },
   { to: 100, suffix: '%', label: 'Original paint kept. No sanding, no respray' },
   { to: null, suffix: 'Fleet', label: 'Commercial HV and LV, priced by the lot' },
 ];

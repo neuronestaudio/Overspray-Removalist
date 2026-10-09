@@ -34,8 +34,10 @@ import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
 import ServiceAreasPage from './pages/ServiceAreasPage';
 import AreaPage from './pages/AreaPage';
+import CityPage from './pages/CityPage';
 import { SERVICES } from './data/services';
 import { AREAS, areaPath } from './data/areas';
+import { CITIES, cityPath } from './data/cities';
 
 export interface RouteDef {
   path: string;
@@ -71,6 +73,13 @@ export const ROUTES: RouteDef[] = [
   ...AREAS.map((a) => ({
     path: areaPath(a),
     element: <AreaPage slug={a.slug} />,
+  })),
+
+  /* The national layer: one page per city, same mechanics as the suburbs and
+     the same canonical check. cities.ts carries the rule on what earns a page. */
+  ...CITIES.map((c) => ({
+    path: cityPath(c),
+    element: <CityPage slug={c.slug} />,
   })),
 ];
 

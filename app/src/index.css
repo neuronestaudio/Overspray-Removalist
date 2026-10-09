@@ -1066,9 +1066,14 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 }
 .hero-eyebrow {
   margin: 0 0 .3rem;
-  font-size: clamp(.66rem, .95vw, .76rem);
-  color: var(--muted-dim);
+  font-size: clamp(.7rem, 1vw, .8rem);
+  /* Readable, not whispered. This is the line that says where the business
+     works, and the dimmest grey on the site was hiding it. */
+  color: var(--muted);
 }
+/* The dots between the three facts, in brand red, so the line reads as three
+   items rather than one run of tracked capitals. */
+.hero-eyebrow i { font-style: normal; color: var(--accent-hot); padding: 0 .55em; }
 /* Larger and brighter than the eyebrow above it, and given room below so the
    title still lands rather than being crowded by the run-up. */
 .hero-claim {
@@ -1149,3 +1154,51 @@ a.cx-v:hover { color: var(--accent-hot); }
 
 @media (max-width: 900px) { .sa-regions { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 520px) { .sa-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- where we work: the drawn map and the city rows ----------
+   The map is an inline SVG (components/AustraliaMap.tsx). Land in the surface
+   tone with the site's one outline colour; capitals in brand red; hubs in the
+   muted text tone; the Epping workshop as the home mark with a slow pulse. */
+.wwm-map {
+  border-radius: var(--r-box); border: 1px solid var(--border);
+  background: var(--surface); padding: clamp(.8rem, 2vw, 1.4rem);
+}
+.aumap { display: block; width: 100%; height: auto; }
+.aumap-land { fill: var(--border); stroke: var(--outline); stroke-width: 1.4; stroke-linejoin: round; }
+.aumap-link { cursor: pointer; }
+.aumap-link:focus-visible { outline: none; }
+.aumap-link:focus-visible .aumap-cap,
+.aumap-link:focus-visible .aumap-hub { stroke: var(--text); stroke-width: 2; }
+.aumap-hub, .aumap-cap {
+  transition: transform .25s var(--ease);
+  transform-box: fill-box; transform-origin: center;
+}
+.aumap-hub { fill: var(--muted); }
+.aumap-cap { fill: var(--accent-hot); }
+.aumap-link:hover .aumap-cap, .aumap-link:hover .aumap-hub { transform: scale(1.5); }
+.aumap-cap-l { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; fill: var(--text); letter-spacing: .01em; }
+.aumap-link:hover .aumap-cap-l { fill: var(--accent-hot); }
+.aumap-home-dot { fill: #fff; stroke: var(--accent-hot); stroke-width: 2.5; }
+.aumap-home-pulse {
+  fill: none; stroke: var(--accent-hot); stroke-width: 1.5; opacity: .7;
+  transform-box: fill-box; transform-origin: center;
+  animation: aumap-pulse 2.6s var(--ease) infinite;
+}
+.aumap-home-l { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; fill: var(--muted); }
+@keyframes aumap-pulse {
+  0% { transform: scale(.6); opacity: .8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .aumap-home-pulse { animation: none; opacity: .5; } }
+
+/* A row of city links: the capitals as pills, then one link to the hub. */
+.city-row { list-style: none; margin: 1.2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.city-row a {
+  display: inline-flex; align-items: center; padding: .45rem .95rem; border-radius: 999px;
+  border: 1px solid var(--outline); color: var(--muted); font-size: .9rem; font-weight: 500;
+  transition: color .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+}
+.city-row a:hover { color: var(--text); border-color: var(--outline-hover); background: rgba(255, 255, 255, .045); }
+.city-row a.city-row-all { color: var(--accent-hot); border-color: transparent; font-weight: 700; }
+.muted-inline { color: var(--muted-dim); font-size: .85em; margin-left: .35em; }
+@media (max-width: 860px) { .wwm-map { padding: .6rem; } }

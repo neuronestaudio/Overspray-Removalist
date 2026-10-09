@@ -10,9 +10,11 @@ import ReviewRail from '../components/ReviewRail';
 import WordParallax from '../components/WordParallax';
 import ScrollTitle from '../components/ScrollTitle';
 import Stats from '../components/Stats';
+import AustraliaMap from '../components/AustraliaMap';
 import QuoteForm from '../components/QuoteForm';
 import { GALLERY } from '../data/gallery';
 import { HERO_PAIR, PAIRS, DECK } from '../data/pairs';
+import { CAPITALS, cityPath } from '../data/cities';
 import { BUSINESS } from '../lib/site';
 import { pushGtmEvent } from '../lib/gtm';
 
@@ -49,8 +51,10 @@ export default function HomePage() {
                 two capitalised lines never sit against each other. */}
             {/* Name first, then tenure, then the script line. Three items,
                 each a different weight and treatment, so nothing competes. */}
-            <h1 className="display hero-shine">The Overspray Removalists</h1>
-            <p className="hero-eyebrow">Servicing Melbourne for 30+ years</p>
+            <h1 className="display hero-shine">The Overspray Removalist</h1>
+            <p className="hero-eyebrow">
+              Australia wide<i>·</i>30+ years<i>·</i>Workshop in Epping VIC
+            </p>
             {/* Removal is the pitch. Coating and film are done on request, not
                 advertised, so the hero says what the business is known for and
                 nothing else. */}
@@ -77,6 +81,7 @@ export default function HomePage() {
       <section>
         <div className="shell">
           <ScrollTitle className="head beam">
+            <span className="beam-rim" aria-hidden="true" />
             <h2 className="display">
               Let the results
               <br />
@@ -93,11 +98,48 @@ export default function HomePage() {
 
       <Stats />
 
+      {/* Where we work. The country before the suburbs: a visitor from another
+          state who found the site through its Australia-wide titles should see
+          their city here, not sixty-one suburbs of somewhere else. */}
+      <section className="wwm">
+        <div className="shell split">
+          <div>
+            <ScrollTitle className="head">
+              <p className="eyebrow">Where we work</p>
+              <h2 className="display">
+                Australia wide.
+                <br />
+                <span className="hl">Workshop in Epping.</span>
+              </h2>
+              <p className="lede">
+                Single vehicles come to the workshop. When a fallout event hits a car park, a
+                compound or a dealer yard, we go to it, in any state.
+              </p>
+            </ScrollTitle>
+            <ul className="city-row">
+              {CAPITALS.map((c) => (
+                <li key={c.slug}>
+                  <Link to={cityPath(c)}>{c.name}</Link>
+                </li>
+              ))}
+              <li>
+                <Link className="city-row-all" to="/service-areas">
+                  Every city and suburb<span aria-hidden="true"> →</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="wwm-map">
+            <AustraliaMap />
+          </div>
+        </div>
+      </section>
+
       <section className="mesh-band" style={{ paddingBottom: 'clamp(3rem,6vw,5rem)' }}>
         <div className="shell">
           <ScrollTitle className="head">
             <h2 className="display">Our gallery</h2>
-            <p className="gal-sub">Servicing Melbourne for over 30 years</p>
+            <p className="gal-sub">Thirty years of jobs, Australia wide</p>
             <p className="lede">
               Vehicles restored and released.{' '}
               <Link to="/gallery" style={{ color: 'var(--accent-hot)', fontWeight: 700 }}>

@@ -47,8 +47,8 @@ export default function QuotePage() {
                 <span>Removal by hand. The factory finish stays on the car.</span>
               </li>
               <li>
-                <strong>Melbourne wide</strong>
-                <span>Workshop in Epping. Whole sites assessed on location.</span>
+                <strong>Australia wide</strong>
+                <span>Workshop in Epping VIC. Whole sites assessed on location, any state.</span>
               </li>
               <li>
                 <strong>Thirty years</strong>

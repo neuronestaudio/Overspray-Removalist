@@ -35,7 +35,7 @@ export default function ContactPage() {
           <h1 className="display">Contact</h1>
           <p className="lede">
             Two of us take the calls, both founders, with more than thirty years between us
-            servicing Melbourne. If one does not pick up, try the other. Fastest of all is the form
+            servicing vehicles Australia wide. If one does not pick up, try the other. Fastest of all is the form
             below: send photos and we come back with a price.
           </p>
         </div>
@@ -69,6 +69,7 @@ export default function ContactPage() {
 
           <div className="cx-grid">
             <div className="cx-card beam">
+              <span className="beam-rim" aria-hidden="true" />
               <ul className="cx-list">
                 <li>
                   <span className="cx-k">{BUSINESS.phoneContact}</span>

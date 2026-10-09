@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import PageMeta from '../components/PageMeta';
 import Img from '../components/Img';
 import { serviceBySlug, SERVICES } from '../data/services';
+import { CAPITALS, cityPath } from '../data/cities';
 import { SITE_ORIGIN, BUSINESS } from '../lib/site';
 
 export default function ServicePage({ slug }: { slug: string }) {
@@ -101,6 +102,34 @@ export default function ServicePage({ slug }: { slug: string }) {
                 <Link to={o.path}>{o.nav}</Link>
               </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* How a search engine learns the Sydney page and this service belong to
+          each other, and how a visitor on the claims page finds out the claim
+          can be handled in Perth. */}
+      <section className="band where-band">
+        <div className="shell">
+          <div className="head">
+            <p className="eyebrow">Where we do this</p>
+            <h2 className="display">Australia wide, from Epping VIC</h2>
+            <p className="lede">
+              Single vehicles come to the workshop. Fleet, site and insurance work is assessed where
+              it sits, in any state.
+            </p>
+          </div>
+          <ul className="city-row">
+            {CAPITALS.map((c) => (
+              <li key={c.slug}>
+                <Link to={cityPath(c)}>{c.name}</Link>
+              </li>
+            ))}
+            <li>
+              <Link className="city-row-all" to="/service-areas">
+                Every city and suburb<span aria-hidden="true"> →</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </section>

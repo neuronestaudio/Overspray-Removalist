@@ -202,9 +202,9 @@ export const SERVICES: Service[] = [
     path: '/roadwork-contamination',
     nav: 'Roadwork Contamination',
     h1: 'Roadwork contamination removal',
-    title: 'Road Paint, Tar & Bitumen Removal | Melbourne',
+    title: 'Road Paint, Tar & Bitumen Removal | Australia',
     description:
-      'Road marking paint, tar, bitumen and asphalt residue removed from vehicle paint without abrasives. Melbourne wide, on site.',
+      'Road marking paint, tar, bitumen and asphalt residue removed from vehicle paint without abrasives. Australia wide; whole sites assessed on location.',
     lede:
       'Line marking crews and hot mix trucks throw material a long way. It lands hot, it bonds fast, and it is on the lower panels and wheels before anyone notices.',
     hero: 'job-merc-2',

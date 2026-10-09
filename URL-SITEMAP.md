@@ -1,9 +1,9 @@
 # The Overspray Removalist — URL sitemap
 
-Production: https://overspray-removalist.vercel.app
-Canonical domain (for launch): https://oversprayremovalists.com.au
+Production: https://overspray.com.au
+Canonical domain: https://overspray.com.au (oversprayremovalists.com.au serves the same site)
 
-77 indexable URLs. XML feed: /sitemap.xml   Hub page: /service-areas
+93 indexable URLs. XML feed: /sitemap.xml   Hub page: /service-areas (Where we work)
 
 ## Core pages
 
@@ -27,7 +27,44 @@ Canonical domain (for launch): https://oversprayremovalists.com.au
 /fleet-and-construction
 /insurance-claims
 
-## Service areas — overspray removal by suburb (61)
+## Where we work — overspray removal by city, Australia wide (16)
+
+Same URL level as the suburbs. No workshop in any of these: fleet, site and insurance
+work is assessed where it sits; single vehicles come to Epping. See app/src/data/cities.ts.
+
+### New South Wales (3)
+/overspray-removal/sydney                       Overspray Removal Sydney NSW  (capital)
+/overspray-removal/newcastle                    Overspray Removal Newcastle NSW
+/overspray-removal/wollongong                   Overspray Removal Wollongong NSW
+
+### Queensland (5)
+/overspray-removal/brisbane                     Overspray Removal Brisbane QLD  (capital)
+/overspray-removal/gold-coast                   Overspray Removal Gold Coast QLD  (capital)
+/overspray-removal/gladstone                    Overspray Removal Gladstone QLD
+/overspray-removal/townsville                   Overspray Removal Townsville QLD
+/overspray-removal/mackay                       Overspray Removal Mackay QLD
+
+### Western Australia (2)
+/overspray-removal/perth                        Overspray Removal Perth WA  (capital)
+/overspray-removal/port-hedland                 Overspray Removal Port Hedland WA
+
+### South Australia (2)
+/overspray-removal/adelaide                     Overspray Removal Adelaide SA  (capital)
+/overspray-removal/whyalla                      Overspray Removal Whyalla SA
+
+### Australian Capital Territory (1)
+/overspray-removal/canberra                     Overspray Removal Canberra ACT  (capital)
+
+### Tasmania (1)
+/overspray-removal/hobart                       Overspray Removal Hobart TAS  (capital)
+
+### Northern Territory (1)
+/overspray-removal/darwin                       Overspray Removal Darwin NT  (capital)
+
+### Victoria (1)
+/overspray-removal/geelong                      Overspray Removal Geelong VIC
+
+## Service areas — overspray removal by Melbourne suburb (61)
 
 ### North (22)
 /overspray-removal/epping                       Overspray Removal Epping 3076

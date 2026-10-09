@@ -397,9 +397,12 @@
 
 
 /* ---------- beam outline ----------
-   A conic gradient rotating behind a 1px inset panel, so only the rim shows.
-   Cheap: one animated custom property, no repaint of the content inside. */
-@property --beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+   A 1px rim panel. The moving beam itself is a .beam-rim child (see the
+   gallery beam outlines below): the first build animated a --beam angle on a
+   conic-gradient here, which re-rasterises every panel every frame. With the
+   thirteen panels on /service-areas that was enough to make the tab
+   unresponsive to a screenshot, and it was the same cost the photo rail had
+   already measured and fixed. Same look, compositor only. */
 
 .beam {
   position: relative;
@@ -414,29 +417,13 @@
   overflow: hidden;
   isolation: isolate;
 }
-.beam::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(from var(--beam),
-    transparent 0deg, transparent 200deg,
-    rgba(213, 42, 34, .25) 250deg, #ff3b2f 300deg, rgba(213, 42, 34, .25) 330deg,
-    transparent 360deg);
-  /* mask out the middle so the gradient only paints the 1px rim */
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  animation: beamSpin 6s linear infinite;
-}
 .beam::after {
   content: ''; position: absolute; inset: 0; z-index: -2; border-radius: inherit;
   border: 1px solid var(--outline);
 }
-@keyframes beamSpin { to { --beam: 360deg; } }
-
-@media (prefers-reduced-motion: reduce) {
-  .beam::before { animation: none; --beam: 285deg; }
-}
+/* Staggered so a column of panels does not pulse in unison. */
+.sa-region:nth-child(3n+2) .beam-rim::before { animation-delay: -2.7s; }
+.sa-region:nth-child(3n+3) .beam-rim::before { animation-delay: -5.4s; }
 
 /* ---------- about: chips + people ---------- */
 .chip-grid {
@@ -609,6 +596,9 @@
   will-change: transform;
 }
 @keyframes beamRot { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .beam-rim::before { animation: none; transform: translate(-50%, -50%) rotate(285deg); }
+}
 /* Staggered so twenty-six cards do not pulse in unison. */
 .rail-card:nth-child(3n+2) .beam-rim::before,
 .gal figure:nth-child(3n+2) .beam-rim::before { animation-delay: -2.7s; }
