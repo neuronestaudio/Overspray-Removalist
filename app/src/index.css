@@ -1074,6 +1074,7 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 /* The dots between the three facts, in brand red, so the line reads as three
    items rather than one run of tracked capitals. */
 .hero-eyebrow i { font-style: normal; color: var(--accent-hot); padding: 0 .55em; }
+.hero-eyebrow span { white-space: nowrap; }
 /* Larger and brighter than the eyebrow above it, and given room below so the
    title still lands rather than being crowded by the run-up. */
 .hero-claim {

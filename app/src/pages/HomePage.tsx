@@ -52,8 +52,14 @@ export default function HomePage() {
             {/* Name first, then tenure, then the script line. Three items,
                 each a different weight and treatment, so nothing competes. */}
             <h1 className="display hero-shine">The Overspray Removalist</h1>
+            {/* Three facts, each unbreakable, so a phone wraps between them
+                rather than stranding "VIC" on a line of its own. */}
             <p className="hero-eyebrow">
-              Australia wide<i>·</i>30+ years<i>·</i>Workshop in Epping VIC
+              <span>Australia wide</span>
+              <i>·</i>
+              <span>30+ years</span>
+              <i>·</i>
+              <span>Workshop in Epping VIC</span>
             </p>
             {/* Removal is the pitch. Coating and film are done on request, not
                 advertised, so the hero says what the business is known for and
