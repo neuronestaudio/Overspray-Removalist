@@ -1085,6 +1085,11 @@ img.ftr-logo { display: block; height: 86px; width: auto; margin-bottom: 1.35rem
 @media (max-width: 620px) {
   .hero-eyebrow,
   .hero-claim { letter-spacing: .16em; text-indent: .16em; }
+  /* JSX drops the whitespace between the facts, so the line has no break
+     point and ran 24px past a 390px phone, dragging the page sideways. The
+     workshop goes on its own line and its dot goes with the break. */
+  .hero-eyebrow i:nth-of-type(2) { display: none; }
+  .hero-eyebrow span:last-child { display: block; }
 }
 
 
